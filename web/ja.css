@@ -1,0 +1,379 @@
+/* 温泉ひとめぐり（日本語版・英語版共通）。韓国語版と同じ配色：和紙・オートミール60%、墨・苔30%、テラコッタ10%。 */
+html,body{background:#f7f5f0}
+/* 変数名（ai-*, shu）は互換のため残し、値だけ新しい配色に */
+:root{--ai-900:#2c2a29;--ai-800:#3e4a3d;--ai-700:#4c5a4b;--ai-100:#d4ddcb;--shu:#c86d51;--shu-ink:#9a4e36;--ink:#2c2a29;--muted:#5e5a54;--paper:#f7f5f0;--panel:#fbfaf7;--hinoki:#eae5dc;--line:#d8d1c4;--line-soft:#e6e0d5;--on-dark:#f7f5f0;--on-dark-2:#bdb5a8;--green:var(--ai-800);--mincho:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;--ease-out:cubic-bezier(.22,1,.36,1);--ease:cubic-bezier(.4,0,.2,1);
+/* 角丸は韓国語版と同じ、障子のようにほぼ角ばった値 */
+--r-lg:6px;--r-md:4px;--r-sm:3px;
+/* 宿カードの紙色（韓国語版 style.css と同じ値） */
+--card-bg:#fffcf6;
+/* 縦書き・和名は英語版でも明朝で（英語版の見出し書体を変えても和文はこちらを使う） */
+--mincho-ja:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+/* お気に入り・未確認（韓国語版 style.css と同じ値） */
+--heart:#b8324a;--unk:#8a5200;--unk-bg:#faebcb;
+/* Astryx Core 0.7.16 のトークン名と既定値（React部品は使わない） */
+--spacing-1:.25rem;--spacing-2:.5rem;--spacing-3:.75rem;--spacing-4:1rem;--spacing-5:1.25rem;--spacing-6:1.5rem;--spacing-8:2rem;--spacing-10:2.5rem;--spacing-11:2.75rem;--spacing-12:3rem;--section-gap:calc(var(--spacing-12) * 2);
+--focus-outline-width:2px;--focus-outline-style:solid;--focus-outline-color:var(--shu-ink);--focus-outline-offset:3px;--button-focus-offset:var(--focus-outline-offset);
+--duration-fast-min:130ms;--duration-fast:175ms;--duration-fast-max:230ms;--duration-medium-min:310ms;--duration-medium:410ms;--duration-slow-min:730ms;--duration-slow:975ms;--duration-slow-max:1300ms;--duration-exit:var(--duration-fast)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;color:var(--ink);caret-color:var(--shu-ink);font:16px/1.75 "Yu Gothic","YuGothic","Hiragino Sans",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:rgb(200 109 81 / .28)}
+a{color:inherit;text-underline-offset:3px}
+.skip{position:absolute;top:-5rem;left:1rem;background:var(--ai-900);color:var(--on-dark);padding:.5rem .8rem;border-radius:8px;z-index:5}.skip:focus{top:1rem}
+:focus-visible{outline:var(--focus-outline-width) var(--focus-outline-style) var(--focus-outline-color);outline-offset:var(--focus-outline-offset)}
+
+/* 上部 */
+/* 余白・文字サイズは韓国語版 style.css の .top / .hero と同じ値 */
+/* 和紙の上部：下に細い線一本だけ。帯や二重線の飾りは置かない（韓国語版と同じ） */
+.top{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px 32px;flex-wrap:wrap;background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line);padding:12px clamp(16px,2.4vw,36px)}
+.intro,footer{--focus-outline-color:var(--on-dark)}
+.brand{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-decoration:none;font:700 21px/1.2 var(--mincho);letter-spacing:.04em}
+.brand::before{content:"湯";grid-row:span 2;width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:var(--shu);color:var(--paper);font-size:17px;letter-spacing:0}
+.brand small{display:block;font:12px/1.4 "Yu Gothic",Meiryo,sans-serif;color:var(--muted)}
+.top nav{display:flex;gap:2px;flex-wrap:wrap}
+.top nav a,.top nav button{position:relative;display:flex;align-items:center;gap:6px;min-height:44px;padding:8px 12px;border:0;border-radius:var(--r-sm);background:none;text-decoration:none;font:inherit;font-size:14.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:color var(--duration-fast) var(--ease)}
+.top nav a:hover,.top nav button:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:6px}
+.top nav a[aria-current]:hover{text-decoration:none}
+/* お気に入り（言語版の JS が数を入れる）：韓国語版 #favToggle と同じ見た目 */
+#favCount{font-size:12.5px;min-width:22px;text-align:center;background:var(--hinoki);color:var(--ink);border-radius:99px;padding:0 7px}
+#favToggle[aria-pressed="true"]{background:var(--hinoki);color:var(--ink)}
+#favToggle[aria-pressed="true"] #favCount{background:var(--ai-800);color:var(--on-dark)}
+.top nav a[aria-current]{color:var(--ink)}
+.top nav a[aria-current]::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:2px;background:var(--shu)}
+/* 言語切替と円換算（language.js が .header-tools に入れる）：和紙の上部に合わせた白いセレクト */
+.header-tools{display:grid;justify-items:end;gap:6px;padding-left:18px;border-left:1px solid var(--line)}
+.fx{display:grid;justify-items:end;margin:0;line-height:1.3;font-size:12px;color:var(--muted)}
+.fx b{font-size:13.5px;color:var(--ink);font-weight:700}
+.fx small{font-size:11px}
+/* language.css は暗い上部用の明るい文字なので、和紙の上部に合わせて戻す */
+.top .header-tools .fx{color:var(--muted)}
+.top .header-tools .fx b{color:var(--ink)}
+.language-switch{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.language-switch select{min-height:36px;padding:4px 30px 4px 12px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235E5A54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E") right 10px center/14px no-repeat;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-sm);font:inherit;font-size:13px;appearance:none;cursor:pointer}
+.language-switch select:hover{border-color:var(--ai-700)}
+.language-switch option{color:var(--ink);background:var(--paper)}
+
+/* 導入：写真が主役。額縁の線は置かず、下側だけ暗くして文字を読ませる。
+   高さを抑え、最初の画面で検索の始まりが見えるようにする */
+.intro{position:relative;isolation:isolate;overflow:hidden;min-height:clamp(300px,38vh,420px);margin:clamp(16px,2vw,28px) clamp(16px,2vw,28px) 0;border-radius:var(--r-lg);padding:0 clamp(22px,4vw,56px) clamp(48px,6vh,64px);display:flex;align-items:flex-end;color:#fff;background:linear-gradient(0deg,rgb(44 42 41 / .82) 0%,rgb(44 42 41 / .4) 38%,rgb(44 42 41 / 0) 70%),url('images/gunma.jpg') center 60%/cover var(--ai-900)}
+.intro .onsen-transition-veil{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;background:linear-gradient(105deg,transparent 20%,rgb(247 245 240 / .35) 70%,transparent)}
+.intro>div:first-child{max-width:36rem;margin-right:72px;text-shadow:0 2px 18px rgb(0 0 0 / .42)}
+.intro p{margin:0;color:rgb(255 255 255 / .86)}
+.intro .eyebrow{font-size:14px;font-weight:600}
+.intro h1{font:700 clamp(36px,4.4vw,60px)/1.15 var(--mincho);letter-spacing:.04em;margin:8px 0 12px;color:#fff}
+/* 雪景色など明るい写真でも白い縦書きが読めるよう、影を濃くして文字の周りだけ沈める */
+.tate{position:absolute;z-index:1;right:clamp(24px,4vw,52px);top:clamp(72px,10vh,88px);margin:0;writing-mode:vertical-rl;font:500 clamp(16px,1.4vw,21px)/1.6 var(--mincho-ja);letter-spacing:.24em;color:rgb(255 255 255 / .88);text-shadow:0 0 18px rgb(0 0 0 / .5),0 1px 3px rgb(0 0 0 / .35)}
+.intro-credit{position:absolute;z-index:1;right:12px;bottom:10px;max-width:min(60%,520px);background:rgb(44 42 41 / .6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:3px 9px;border-radius:var(--r-sm);font-size:12px;line-height:1.4;color:#fff}
+/* 英語版の写真切替（en.html の位置指定はそのまま、ボタンの見た目だけ日本語版 .intro-controls と揃える） */
+.en-hero-controls button{min-height:42px;min-width:42px;padding:0 13px;border:1px solid rgb(255 255 255 / .5);border-radius:24px;background:rgb(44 42 41 / .72);color:#fff;font:inherit;font-size:14px;cursor:pointer;transition:background var(--duration-fast) var(--ease)}
+.en-hero-controls button:hover{background:rgb(44 42 41 / .88)}
+.en-hero-controls #heroPrev,.en-hero-controls #heroNext{font-size:24px;line-height:1}
+.intro-credit a{text-decoration:underline}
+
+/* 検索 */
+/* 条件欄は地図を載せるので 300px：都道府県の境が読める最小の幅 */
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:var(--spacing-8);max-width:1350px;margin:auto;padding:var(--spacing-10) clamp(16px,3vw,40px)}
+/* 地図などで高くなっても下端が隠れないよう、画面の高さで止めて中だけスクロール */
+.filters{align-self:start;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;background:var(--hinoki);padding:20px;border:1px solid var(--line);border-radius:var(--r-lg)}
+.filters h2{font:700 18px/1.3 var(--mincho);letter-spacing:.04em;margin:0 0 14px}
+.filters .map-panel #prefMap{border-color:var(--line);border-radius:var(--r-md)}
+.result-head h2{font:700 clamp(21px,1.8vw,26px)/1.2 var(--mincho);letter-spacing:.04em;margin:0}
+.result-head h2 #count{color:var(--shu-ink)}
+.filters label:not(.check){font-weight:700;font-size:13px;color:var(--muted)}
+/* 条件のまとまりの見出しは本文色で、項目ラベルより一段上に */
+.filters legend{padding:0;font-weight:700;font-size:14.5px;color:var(--ink)}
+.filters select{display:block;width:100%;min-height:44px;padding:9px 34px 9px 12px;margin:6px 0 18px;border:1px solid var(--line);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235E5A54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E") right 10px center/18px no-repeat;border-radius:var(--r-sm);font:inherit;font-size:15px;appearance:none}
+.filters select:hover{border-color:var(--ai-700)}
+.filters fieldset{border:0;border-top:1px solid var(--line);margin:0 0 12px;padding:14px 0 0}
+.check{display:flex;align-items:center;gap:10px;min-height:40px;margin:2px 0;font-size:14.5px;cursor:pointer}
+/* チェック欄は韓国語版 .rowopt input と同じ四角と印 */
+.check input{appearance:none;width:20px;height:20px;margin:0;flex:none;border:1.5px solid #8c8477;border-radius:6px;background:#fff center/14px no-repeat;cursor:pointer;transition:background-color var(--duration-fast-min) var(--ease),border-color var(--duration-fast-min) var(--ease)}
+.check input:checked{background-color:var(--ai-800);border-color:var(--ai-800);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")}
+.check:hover input:not(:checked){border-color:var(--ai-700)}
+.filters button{margin-top:12px;min-height:44px;padding:8px 20px;background:#fff;color:var(--ai-800);border:1px solid var(--ai-700);border-radius:var(--r-sm);font:inherit;font-weight:700;font-size:14px;cursor:pointer;transition:background var(--duration-fast) var(--ease)}
+.filters button:hover{background:var(--ai-100)}
+/* 結果見出し：墨の一本線で一覧の始まりを示す */
+.result-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px 18px;flex-wrap:wrap;border-bottom:1px solid var(--ink);padding-bottom:12px;margin-bottom:var(--spacing-5)}
+.result-head p{font-size:13px;color:var(--muted);margin:0}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--spacing-5)}
+/* 宿カード：一軒ずつ独立した項目なので Card。高さは枠線一本で表し、影や浮き上がりは付けない */
+.listing{position:relative;display:flex;flex-direction:column;background:var(--card-bg);border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden;transition:border-color var(--duration-fast) var(--ease)}
+.listing:hover{border-color:#bfb6a6}
+.listing img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block}
+.listing .no-image{height:80px;display:grid;place-items:center;color:var(--muted);background:var(--hinoki);font-size:13px}
+.listing-body{padding:var(--spacing-4) var(--spacing-5) var(--spacing-5);display:flex;flex-direction:column;flex:1}
+.listing h3{font:700 21px/1.4 var(--mincho);letter-spacing:.03em;margin:0}
+.place{color:var(--muted);font-size:14px;margin:4px 0}
+/* タグ：塗りの丸ではなく、細い線の角ばった札 */
+.tags{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:12px 0}
+.tags li{background:transparent;color:#4a443c;border:1px solid var(--line);font-size:12.5px;font-weight:600;border-radius:var(--r-sm);padding:1px 9px}
+.price{border-top:1px solid var(--line-soft);padding-top:14px;margin:auto 0 14px;font-weight:700}
+.price span{font:700 22px/1.4 var(--mincho);color:var(--ai-800)}
+.price small{display:block;color:var(--muted);font-weight:400;font-size:13px;line-height:1.6}
+/* ボタン：一覧には同じカードが並ぶため朱の primary を置かず（Astryx Button: primary は一画面に一つ）、
+   施設情報は藍の淡色、予約サイトは線のみの secondary にして強弱をつけます */
+.links{display:flex;gap:var(--spacing-2);flex-wrap:wrap}
+.links a{display:inline-flex;align-items:center;min-height:var(--spacing-11);border:1px solid var(--ai-700);border-radius:var(--r-sm);padding:var(--spacing-1) var(--spacing-4);font-size:14px;font-weight:600;color:var(--ai-800);text-decoration:none;transition:background var(--duration-fast) var(--ease),transform var(--duration-fast-min) var(--ease)}
+.links a:focus-visible,.filters button:focus-visible{outline-offset:var(--button-focus-offset)}
+.links a:hover{background:var(--ai-100)}
+.links a:active,.filters button:active{transform:scale(.97);transition-duration:var(--duration-exit)}
+.links a:first-child{background:var(--ai-100);border-color:var(--ai-800);color:var(--ai-900);font-weight:700}
+.links a:first-child:hover{background:#d3d9cc}
+/* 写真の出典は画像のすぐ下に常に見せます */
+.credit{display:block;padding:4px 12px;color:var(--on-dark);background:var(--ai-900);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.credit a{text-decoration:underline}
+.source{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.source summary{cursor:pointer;min-height:32px;display:inline-flex;align-items:center;font-weight:600;color:var(--ai-700)}
+.source summary:hover{color:var(--shu-ink)}
+.empty{grid-column:1/-1;padding:44px 24px;background:var(--panel);border:1px dashed var(--line);border-radius:var(--r-lg);text-align:center}
+.empty strong{font:700 19px var(--mincho)}
+
+/* 結果見出し：件数を左、並び順を右、注記は下の行に */
+.result-head{align-items:center}
+.result-head h2{margin-right:auto}
+.result-head p{order:3;flex-basis:100%}
+.result-head label{font-size:13px;font-weight:700;color:var(--muted);margin-right:-8px}
+.result-head select{min-height:44px;padding:8px 34px 8px 12px;border:1px solid var(--line);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235E5A54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9.5l6 6 6-6'/%3E%3C/svg%3E") right 10px center/18px no-repeat;border-radius:var(--r-sm);color:var(--ink);font:inherit;font-size:14px;font-weight:600;appearance:none;cursor:pointer;transition:border-color var(--duration-fast-min) var(--ease)}
+.result-head select:hover{border-color:var(--ai-700)}
+/* 未確認の条件がある施設の区切り（日本語版は class なしの p、英語版は p.empty） */
+.list>p:not([class]){grid-column:1/-1;margin:var(--spacing-3) 0 0;padding:12px 18px;background:var(--unk-bg);color:#5c3800;font-weight:700;border-radius:var(--r-md)}
+.list>p.empty{padding:14px 18px;text-align:left;font-weight:700;color:#5c3800;background:var(--unk-bg);border:0}
+
+/* 宿カードの中：名前 → 和名 → 所在地 → 紹介 → 札 → 料金 → お気に入り → 詳細、の順で一段ずつ弱める */
+.listing-body>p:not([class]){margin:6px 0 0;font-size:14.5px;line-height:1.7}
+.listing-body>p[lang="ja"]{margin:2px 0 0;font:500 14px/1.5 var(--mincho-ja);letter-spacing:.06em;color:var(--muted)}
+.place{margin:6px 0 2px}
+/* お気に入り：線だけの小さなボタン。押した状態は韓国語版のハートと同じ色 */
+.listing-body>button[data-fav]{align-self:flex-start;min-height:40px;padding:6px 14px;margin:0 0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:border-color var(--duration-fast) var(--ease),color var(--duration-fast) var(--ease),background var(--duration-fast) var(--ease)}
+.listing-body>button[data-fav]:hover{border-color:var(--heart);color:var(--heart)}
+.listing-body>button[data-fav][aria-pressed="true"]{border-color:var(--heart);color:var(--heart);background:rgb(184 50 74 / .06)}
+/* 詳細の開閉：下線つきの文字リンク風。開くと墨の線で区切った帳面式の表 */
+.listing-body>details{margin-top:6px;border-top:1px solid var(--line-soft)}
+.listing-body>details>summary{display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;list-style:none;font-weight:700;font-size:14px;color:var(--ai-700)}
+.listing-body>details>summary::-webkit-details-marker{display:none}
+.listing-body>details>summary::after{content:"";width:7px;height:7px;margin:-3px 0 0 2px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform var(--duration-fast) var(--ease)}
+.listing-body>details[open]>summary::after{margin-top:3px;transform:rotate(-135deg)}
+.listing-body>details>summary:hover{color:var(--shu-ink)}
+/* 施設ごとの補足（.locale-property-notes、language.css）は対象外にするため直下の dl だけに当てる */
+.listing-body>details>dl,.en-detail>dl{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);margin:12px 0;border-top:1px solid var(--ink);font-size:13.5px;line-height:1.55}
+.en-detail>dl>div{display:contents}
+.listing-body>details>dl dt,.listing-body>details>dl dd,.en-detail>dl dt,.en-detail>dl dd{margin:0;padding:7px 0;border-bottom:1px solid var(--line-soft)}
+.listing-body>details>dl dt,.en-detail>dl dt{padding-right:12px;color:var(--muted);font-weight:600}
+.listing-body details>p,.en-detail>p{font-size:13px;color:var(--muted);margin:8px 0}
+.en-detail h4{margin:4px 0 8px;font:700 16px/1.4 var(--mincho)}
+.en-detail details>summary{cursor:pointer;min-height:40px;display:inline-flex;align-items:center;font-weight:600;font-size:13.5px;color:var(--ai-700)}
+.en-detail figure{margin:8px 0 12px}
+.en-detail figcaption{font-size:11px;color:var(--muted);margin-top:4px}
+.en-detail .links{margin-top:12px}
+
+/* ヒント */
+/* 案内はページの区画なのでカードで囲まず、順番のある内容でもないため番号は付けず、見出しと余白だけで区切ります */
+.guide{--guide-x:24px;position:relative;max-width:950px;margin:var(--spacing-8) auto var(--section-gap);padding:var(--section-gap) var(--guide-x) 0}
+.guide h2{font:700 clamp(24px,2.4vw,32px)/1.35 var(--mincho);letter-spacing:.04em;margin:0 0 var(--spacing-3);text-wrap:balance}
+.guide>p{color:var(--muted);margin:0;max-width:40em}
+.guide dl{display:grid;grid-template-columns:11em minmax(0,1fr);margin:var(--spacing-10) 0 0;border-top:1px solid var(--ink)}
+.guide dt{font:700 17px/1.5 var(--mincho);letter-spacing:.03em;margin:0;padding:16px 16px 16px 0;border-bottom:1px solid var(--line-soft)}
+.guide dd{margin:0;padding:16px 0;color:var(--muted);border-bottom:1px solid var(--line-soft);font-size:15px}
+.guide-page>h1{margin:0;font:500 clamp(2rem,5vw,3.4rem)/1.2 var(--mincho);letter-spacing:.04em;text-wrap:balance}
+/* 支払いの箇条書き：韓国語版 .plain と同じ角印 */
+.guide ul{display:grid;gap:6px;margin:var(--spacing-4) 0 0;padding-left:18px;list-style:square;color:var(--muted);max-width:44em}
+.guide li::marker{color:var(--shu)}
+.guide a{color:var(--ai-700);font-weight:600}
+footer{background:var(--ai-900);color:var(--on-dark-2);padding:28px clamp(16px,2.4vw,36px);font-size:14px}
+footer p{margin:0}
+footer a{color:var(--on-dark)}
+
+/* 条件欄の開閉見出し（英語版。日本語版は ja-gallery.css が余白を足す）：見出しと同じ明朝、右に開閉の印 */
+.filters details>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;list-style:none;cursor:pointer;font:700 17px/1.3 var(--mincho);letter-spacing:.04em}
+.filters details>summary::-webkit-details-marker{display:none}
+.filters details>summary::after{content:"";flex:none;width:8px;height:8px;margin:-4px 4px 0 0;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform var(--duration-fast) var(--ease)}
+.filters details[open]>summary::after{margin-top:4px;transform:rotate(-135deg)}
+.filters p:not([class]){font-size:12.5px;line-height:1.6;color:var(--muted);margin:6px 0 10px}
+.filters output{display:block;margin:4px 0 6px;font:700 18px/1.3 var(--mincho);color:var(--ai-800)}
+.filters input[type="range"]{width:100%;accent-color:var(--ai-800)}
+
+/* 英語版：和文用の字間（.04em）と明朝は欧文には広すぎるので、欧文向けの書体と字間に戻す。外部フォントは読み込まない */
+html:lang(en){--mincho:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+html:lang(en) body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.6}
+html:lang(en) .brand,html:lang(en) .filters h2,html:lang(en) .filters details>summary,html:lang(en) .result-head h2,html:lang(en) .listing h3,html:lang(en) .guide h2,html:lang(en) .guide dt,html:lang(en) .guide-page>h1{letter-spacing:-.005em}
+html:lang(en) .intro h1{letter-spacing:-.015em;line-height:1.08}
+html:lang(en) .brand::before{font-family:var(--mincho-ja)}
+
+/* チェックリストへのリンク：朱の primary と重ならない線だけの secondary */
+.guide-link{display:inline-flex;align-items:center;gap:var(--spacing-2);min-height:var(--spacing-11);margin-top:var(--spacing-3);padding:var(--spacing-2) var(--spacing-4);background:#fff;border:1px solid var(--ai-700);border-radius:var(--r-sm);color:var(--ai-800);font-size:14px;font-weight:700;line-height:1.3;text-decoration:none;transition:background var(--duration-fast) var(--ease)}
+.guide-link:hover{background:var(--ai-100)}
+.intro .guide-link,.top .guide-link{background:rgb(44 42 41 / .5);border-color:rgb(255 255 255 / .4);color:#fff}
+.intro .guide-link:hover,.top .guide-link:hover{background:rgb(44 42 41 / .75)}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr;gap:20px}.filters{position:static;max-height:none;overflow:visible}.list{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+  .top nav{order:2;width:100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+  .top nav a,.top nav button{flex:none;white-space:nowrap}
+  .top .header-tools{order:1}
+  .listing .credit{font-size:12px;line-height:1.5}
+}
+@media(max-width:620px){.guide{--section-gap:calc(var(--spacing-12) + var(--spacing-6))}.guide dl{display:block}.guide dt{border-bottom:0;padding:16px 0 2px}}
+@media(max-width:520px){
+  .top{padding:10px 16px 4px}
+  .brand{font-size:20px}.brand::before{width:38px;height:38px;font-size:17px}
+  .top nav{gap:0;margin:0 -10px;font-size:14px}.top nav a{padding:8px 12px;font-size:14px}
+  /* 言語と円換算を一行に：左に言語、右に換算。language.css が後から縦積みにするので .top を付けて優先 */
+  .top .header-tools{width:100%;max-width:none;margin:0;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;border-left:0;padding:4px 0 8px}
+  .top .header-tools .fx{justify-items:end;text-align:right;min-width:0}
+  .language-switch select{min-height:44px}
+  .intro{min-height:340px;margin:12px 12px 0;padding:0 20px 72px;background-position:center,center,38% 60%}
+  .intro>div:first-child{margin-right:0}
+  .intro h1{font-size:clamp(32px,9vw,40px)}
+  /* 狭い画面では縦書きが見出しとぶつかるため隠す（飾りの文言、aria-hidden） */
+  .tate{display:none}
+  .intro-credit{left:12px;right:12px;max-width:none}
+  .list{grid-template-columns:1fr}
+  .listing-body{padding:var(--spacing-4) var(--spacing-4) var(--spacing-5)}
+}
+
+/* ── 2次改善：同じ配色のまま、整列・余白・コントラスト・階層を一段ずつはっきりさせる（韓国語版 style.css と同じ方針）──
+   language.css・ja-gallery.css がこのファイルの後に読まれるため、上書きは header.top などで一段強くする */
+/* 上部：高さをそろえ、ロゴ・メニュー・道具を一行の中央に。現在のメニューの下線は上部の線に重ねてタブのように */
+@media(min-width:701px){
+  header.top{min-height:76px;padding-block:0;gap:0 clamp(20px,3vw,48px)}
+  header.top nav{align-self:stretch;align-items:stretch;justify-content:center;scrollbar-width:none}
+  header.top nav a,header.top nav button{min-height:76px;padding-inline:14px}
+  header.top nav a[aria-current]::after{bottom:0;height:3px}
+  header.top .header-tools{flex-direction:row;align-items:center;gap:16px;padding-left:20px}
+}
+@media(min-width:701px) and (max-width:1250px){header.top nav a,header.top nav button{padding-inline:8px}header.top .brand small{display:none}}
+/* 導入：写真の切り替え（ja.js・en.js が背景を直接書く）とは別の層で、文字側だけを確実に沈める */
+.intro::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgb(44 42 41 / .62) 0%,rgb(44 42 41 / .38) 42%,rgb(44 42 41 / 0) 72%)}
+@media(prefers-reduced-motion:no-preference){
+  .intro::after{content:"";position:absolute;inset:-12%;z-index:0;pointer-events:none;background:radial-gradient(ellipse 48% 44% at 5% 90%,rgb(247 245 240 / .45),transparent 75%),radial-gradient(ellipse 40% 50% at 98% 30%,rgb(234 229 220 / .38),transparent 76%),radial-gradient(ellipse 18% 9% at 75% 38%,transparent 91%,rgb(247 245 240 / .42) 94%,transparent 97%),radial-gradient(ellipse 11% 5.5% at 75% 38%,transparent 90%,rgb(247 245 240 / .35) 94%,transparent 98%);transform-origin:75% 38%;opacity:0;animation:onsen-reflection 4.8s ease-out 1}
+  @keyframes onsen-reflection{0%{opacity:.9;transform:scale(1.15) translateY(3%)}35%{opacity:.75}100%{opacity:0;transform:scale(1) translateY(-3%)}}
+  .intro:focus-within::after{animation-name:onsen-reflection-focus}
+  @keyframes onsen-reflection-focus{0%{opacity:.65;transform:scale(1.08) translateY(2%)}100%{opacity:0;transform:scale(1) translateY(-3%)}}
+  .intro-controls button:active,.en-hero-controls button:active{transform:scale(.95)}
+  .listing>.ja-gallery>img,.listing>img{transition:filter 700ms var(--ease-out)}
+  .listing:focus-within>.ja-gallery>img,.listing:focus-within>img{filter:brightness(1.05)}
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.listing:hover>.ja-gallery>img,.listing:hover>img{filter:brightness(1.05)}}
+.intro>div:first-child{position:relative;z-index:1;text-shadow:0 1px 12px rgb(0 0 0 / .35)}
+.intro p{color:rgb(255 255 255 / .94)}
+.intro h1{font-size:clamp(40px,4.8vw,64px)}
+/* 検索欄と一覧：間を広げ、件数見出しを一段大きく */
+.layout{gap:clamp(24px,3vw,44px);padding-top:var(--spacing-12)}
+.result-head{margin-bottom:var(--spacing-6);padding-bottom:var(--spacing-4)}
+.result-head h2{font-size:clamp(23px,2vw,29px)}
+/* 宿カード：本文の余白を広げ、名前 → 料金 → 操作の順に強弱 */
+.list{gap:var(--spacing-6)}
+.listing-body{padding:var(--spacing-5) var(--spacing-6) var(--spacing-6)}
+.listing h3{font-size:22px}
+.price span{font-size:24px}
+/* 写真なし：灰色の帯ではなく和紙色に細い線一本 */
+.listing .no-image{height:64px;background:var(--paper);border-bottom:1px solid var(--line-soft);color:var(--muted)}
+/* 押せるものは 44px 以上（ja-gallery.css より一段強く） */
+.check,.listing-body>button[data-fav],.source summary,.en-detail details>summary{min-height:44px}
+.intro .intro-controls button,.intro .en-hero-controls button,.listing .gallery-controls button{min-height:44px;min-width:44px}
+@media(max-width:520px){
+  .layout{padding-top:var(--spacing-6)}
+  .intro h1{font-size:clamp(32px,9vw,40px)}
+  .intro::before{background:linear-gradient(0deg,rgb(44 42 41 / .5) 0%,rgb(44 42 41 / 0) 70%)}
+  .listing-body{padding:var(--spacing-4) var(--spacing-4) var(--spacing-5)}
+  .result-head select{width:100%}
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+  .top nav a:not([aria-current])::after,.top nav button::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:2px;background:var(--ai-700);transform:scaleX(0);transition:transform var(--duration-medium) var(--ease-out)}
+  .top nav a:not([aria-current]):hover::after,.top nav button:hover::after{transform:scaleX(1)}
+  .top nav a:not([aria-current]):hover,.top nav button:hover{text-decoration:none}
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference) and (min-width:701px){header.top nav a:not([aria-current])::after,header.top nav button::after{bottom:0;height:3px}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference) and (min-width:701px) and (max-width:1250px){header.top nav a:not([aria-current])::after,header.top nav button::after{left:8px;right:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.top{background:#f1eee6}
+.intro .onsen-transition-veil{background:radial-gradient(ellipse 75% 55% at 50% 100%,rgb(247 245 240 / .42),transparent 78%)}
+.intro .onsen-entry-mist{position:absolute;inset:-18%;z-index:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse 38% 35% at 28% 85%,rgb(247 245 240 / .5),transparent 75%),radial-gradient(ellipse 32% 38% at 77% 100%,rgb(234 229 220 / .5),transparent 74%)}
+@media(prefers-reduced-motion:no-preference){
+  .intro::after,.intro:focus-within::after{background:radial-gradient(ellipse 65% 40% at 50% 105%,rgb(247 245 240 / .68),transparent 80%),radial-gradient(ellipse 40% 36% at 8% 80%,rgb(234 229 220 / .48),transparent 78%);animation:onsen-steam-dissolve 4s ease-out both}
+  .intro .onsen-entry-mist{animation:onsen-steam-drift 3.8s cubic-bezier(.22,1,.36,1) both}
+  @keyframes onsen-steam-dissolve{0%{opacity:.85;transform:translateY(7%) scale(1.08)}40%{opacity:.5}100%{opacity:0;transform:translateY(-8%) scale(1.02)}}
+  @keyframes onsen-steam-drift{0%{opacity:.85;transform:translateY(12%) scale(1)}35%{opacity:.6}100%{opacity:0;transform:translateY(-14%) scale(1.12)}}
+}
+html,body{background:#f7f5f0}
+:root{--paper:#f7f5f0;--card-bg:#fffdfa;--hinoki:#eae5dc}
+.top{background:#eae5dc;border-color:#d8d1c4}
+.filters details>summary{background:#3e4a3d;color:#fffdf8;padding:12px 14px}
+.filters details>summary::after{border-color:#fffdf8}
+.intro>div:first-child{text-shadow:0 2px 5px #1e1b18,0 1px 16px #1e1b18}
+#count{display:inline-block}
+.intro .onsen-transition-veil{inset:-10%;background:radial-gradient(ellipse 65% 38% at 58% 76%,rgb(247 245 240 / .52),transparent 78%)}
+.intro .onsen-entry-mist{inset:-8%;background:radial-gradient(ellipse 30% 31% at 18% 70%,rgb(250 248 241 / .68),transparent 76%),radial-gradient(ellipse 26% 37% at 78% 72%,rgb(241 236 226 / .72),transparent 77%),radial-gradient(ellipse 19% 25% at 53% 87%,rgb(250 248 241 / .52),transparent 76%)}
+@media(prefers-reduced-motion:no-preference){
+  .intro::after,.intro:focus-within::after{inset:-8%;background:radial-gradient(ellipse 42% 25% at 36% 85%,rgb(247 245 240 / .7),transparent 76%),radial-gradient(ellipse 25% 32% at 90% 62%,rgb(247 245 240 / .62),transparent 76%);animation:onsen-steam-rich 5.2s ease-out both}
+  .intro .onsen-entry-mist{animation:onsen-mist-rich 4.6s ease-out both}
+  @keyframes onsen-steam-rich{0%{opacity:.2;transform:translate(-3%,11%) scale(1.04)}18%{opacity:.9}35%{opacity:.78}70%{opacity:.38}100%{opacity:0;transform:translate(3%,-12%) scale(1.12)}}
+  @keyframes onsen-mist-rich{0%{opacity:.15;transform:translate(3%,14%) scale(1)}22%{opacity:.9}38%{opacity:.75}70%{opacity:.32}100%{opacity:0;transform:translate(-4%,-17%) scale(1.1)}}
+}
+/* Editorial photography, Swiss alignment: images lead and rules organize the results. */
+.intro{min-height:clamp(360px,47vh,500px);border-radius:2px}
+.intro h1{font-size:clamp(42px,5.8vw,72px);line-height:1.15}
+.layout{padding-top:clamp(42px,5vw,68px)}
+.result-head{border-bottom:2px solid var(--ink)}
+.listing{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+@media(max-width:700px){.intro{min-height:400px}.intro h1{font-size:clamp(36px,9vw,50px)}.layout{padding-top:36px}}
+@media(prefers-reduced-motion:no-preference){.intro h1{animation:editorial-title .86s cubic-bezier(.22,1,.36,1) both}@keyframes editorial-title{from{opacity:.65;transform:translateY(.22em);clip-path:inset(0 0 18% 0)}to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0 0)}}}
+@media(min-width:901px){
+  .intro>div:first-child{position:absolute;left:0;top:0;bottom:0;width:38%;max-width:none;margin:0;padding:clamp(24px,3.2vw,48px);display:flex;flex-direction:column;justify-content:center;background:#3e4a3d;text-shadow:none}
+  .intro h1{font-size:clamp(36px,4vw,58px)}
+}
+@media(max-width:700px){
+  .intro{display:block;height:auto;min-height:0;padding:0}
+  .intro>div:first-child{position:relative;max-width:none;margin:260px 0 0;padding:24px 20px 26px;background:#3e4a3d;text-shadow:none}
+  .intro-credit{top:205px;bottom:auto}
+}
+
+/* Mineral paper and deep water tones, shared by Japanese and English pages. */
+:root{--paper:#f2f2f0;--hinoki:#e4e8e5;--card-bg:#fafbf9;--ai-900:#1f302f;--ai-800:#294a47;--ai-700:#376b67;--ai-100:#dcebe6;--shu:#477e78;--shu-ink:#315d59;--line:#c6d0cc;--line-soft:#dce3df}
+html,body{background:var(--paper)}
+.top{background:#f8faf8;border-color:#cbd6d1}
+.filters details>summary{background:#294a47}
+.intro>div:first-child{background:#f2f2f0;color:#203330;text-shadow:none}
+.intro>div:first-child p{color:#405953}
+.intro>div:first-child h1{color:#1c3430;text-shadow:none}
+.result-head{border-color:#294a47}
+@media(min-width:901px){.intro{min-height:clamp(420px,53vh,560px)}.intro>div:first-child{width:42%;background:#f2f2f0}}
+@media(max-width:700px){.intro>div:first-child{background:#f2f2f0;border-bottom:1px solid #c6d0cc}}
+@media(min-width:701px){
+  .intro{display:block;min-height:0;height:auto;padding:0}
+  .intro>div:first-child{position:relative;inset:auto;width:100%;max-width:none;margin:clamp(300px,38vw,440px) 0 0;padding:32px clamp(30px,4vw,58px) 38px;display:block}
+  .intro h1{font-size:clamp(38px,4vw,58px)}
+  .intro-credit{top:calc(clamp(300px,38vw,440px) - 52px);bottom:auto}
+}
+.intro>div:first-child{border-bottom:1px solid #c6d0cc}
+.result-head{padding-bottom:18px}
+.listing{background:#f8faf8;transition:background-color .2s ease}
+.listing:focus-within{outline:2px solid #376b67;outline-offset:-2px}
+@media(prefers-reduced-motion:reduce){.listing{transition:none}}
+
+/* 제목과 넓은 사진이 이어지는 표지. */
+.intro{display:block;margin:0;padding:0 0 clamp(360px,55vw,720px);min-height:0;height:auto;border-radius:0;background-position:center bottom}
+.intro>div:first-child{position:relative;inset:auto;width:100%;max-width:none;margin:0;padding:clamp(55px,7vw,100px) clamp(28px,10vw,150px) clamp(48px,6vw,80px);background:#f4f5f2;border:0}
+.intro>div:first-child .eyebrow{display:none}
+.intro>div:first-child h1{font-size:clamp(46px,7vw,88px);line-height:1.16;margin:0 0 22px;color:#233d37}
+.intro>div:first-child p{font-size:clamp(15px,1.3vw,18px);line-height:1.8}
+.cover-cta{display:inline-flex;align-items:center;gap:36px;margin-top:26px;padding:8px 0;color:#294a47;border-bottom:1px solid #66827a;text-decoration:none;font-weight:700}
+.cover-cta:hover{color:#315e55;border-color:#315e55}
+.cover-cta:focus-visible{outline:2px solid #376b67;outline-offset:4px}
+.intro .intro-controls,.intro .en-hero-controls{top:auto!important;bottom:76px}
+.intro-credit{top:auto;bottom:16px}
+.intro .tate{top:auto;bottom:clamp(150px,18vw,280px)}
+@media(max-width:700px){.intro{padding-bottom:340px}.intro>div:first-child{margin:0;padding:48px 24px 42px}.intro>div:first-child h1{font-size:clamp(40px,11vw,58px)}.intro-credit{top:auto;bottom:12px}.intro .intro-controls,.intro .en-hero-controls{top:auto!important;bottom:75px}.intro .tate{display:none}}
+html[lang="ja"] .intro>div:first-child h1 { font-family:"Yuji Syuku","Yu Mincho",serif; font-weight:400; letter-spacing:.02em; }
+html[lang="en"] .intro>div:first-child h1 { font-family:"Allura",cursive; font-weight:400; letter-spacing:0; font-size:clamp(58px,8vw,110px); }
+@media(max-width:700px){html[lang="en"] .intro>div:first-child h1{font-size:clamp(53px,13vw,76px)}}
+@media (prefers-reduced-motion: no-preference) {
+  .intro { animation: intro-landscape-drift 24s ease-in-out infinite alternate; }
+  @keyframes intro-landscape-drift {
+    from { background-position: center, center, 48% 52%; }
+    to { background-position: center, center, 53% 48%; }
+  }
+}
+
+.intro-credit[hidden],.listing .credit[hidden],figcaption[hidden]{display:none!important}

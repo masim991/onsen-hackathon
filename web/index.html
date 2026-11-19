@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온천 한눈에 | 일본 온천 숙소·당일 온천 찾기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Shippori+Mincho:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="map.css">
+<link rel="stylesheet" href="language.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap">
+<link rel="stylesheet" href="cover-upgrade.css">
+</head>
+<body>
+<a class="skip" href="#results">검색 결과로 건너뛰기</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-onsen" viewBox="0 0 24 24"><path d="M4 15a8 4.5 0 0 0 16 0M8.5 11c-1.4-2 1.4-3 0-5M12 11c-1.4-2 1.4-3 0-5M15.5 11c-1.4-2 1.4-3 0-5"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6.5-5.6 6.5-10.5a6.5 6.5 0 0 0-13 0C5.5 15.4 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="1.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.3 6 10.5a6 6 0 0 1-12 0c0-4.2 6-10.5 6-10.5z"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3.5 18.5v-11M3.5 15.5h17v3M20.5 15.5v-3a2.5 2.5 0 0 0-2.5-2.5h-7v5.5"/><circle cx="7.3" cy="11.7" r="1.7"/></symbol>
+    <symbol id="i-yen" viewBox="0 0 24 24"><path d="M7 4.5l5 7.5 5-7.5M12 12v7.5M8 13h8M8 16.2h8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M13.5 4.5h6v6M19.5 4.5l-8.5 8.5M17.5 13.5v5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="1.5"/><path d="M3.5 10h17M7 14.5h3.5"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.5c-2-1.300-4.700-1.500-7.500-1v13c2.800-.5 5.500-.3 7.500 1 2-1.300 4.700-1.500 7.500-1v-13c-2.800-.5-5.500-.3-7.500 1zM12 6.500v13"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 5.500L8 12l6.500 6.500"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.500 5.500L16 12l-6.500 6.500"/></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3.500" y="5.500" width="17" height="13" rx="1.500"/><circle cx="9" cy="10.500" r="1.600"/><path d="M4 17l5-4.500 3.500 3 3-2.500 5 4"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <a class="brand" href="#" aria-label="온천 한눈에 홈">
+    <svg class="ic mark" aria-hidden="true"><use href="#i-onsen"/></svg>
+    <span class="brand-txt"><strong>온천 한눈에</strong><small>일본 온천 숙소·당일 온천 한곳에서 찾기</small></span>
+  </a>
+  <nav aria-label="주요 메뉴">
+    <a href="#results" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-onsen"/></svg>온천 찾기</a>
+    <a href="water.html">온천수 안내</a>
+    <a href="guide.html#ryokan">료칸 숙박 안내</a>
+    <a href="guide.html#guide"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg>가기 전 확인할 것</a>
+    <a href="#pay"><svg class="ic" aria-hidden="true"><use href="#i-card"/></svg>결제 방법 안내</a>
+    <button type="button" id="favToggle" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg>찜한 시설 <span id="favCount">0</span></button>
+  </nav>
+  <p id="fx" class="fx" aria-live="polite"></p>
+</header>
+
+    <section class="hero" aria-label="소개">
+      <img id="heroImg" src="images/gunma.jpg" alt="" width="960" height="540">
+      <div class="hero-txt">
+        <p class="eyebrow">일본의 온천, 한눈에 비교하고 찾으세요</p>
+        <h1>온천 한눈에</h1>
+        <p class="sub">지역, 탕, 온천수, 숙소 조건, 예산까지.<br>마음에 드는 일본의 온천을 천천히 만나보세요.</p>
+        <a class="cover-cta" href="#filters">온천 찾아보기 <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="hero-tate" lang="ja" aria-hidden="true">湯けむりの宿へ</p>
+      <div class="hero-controls" role="group" aria-label="온천 사진 넘기기"><button type="button" id="heroPrev" aria-label="이전 사진">‹</button><button type="button" id="heroPause">일시정지</button><button type="button" id="heroNext" aria-label="다음 사진">›</button></div>
+      <small id="heroCredit" class="credit" hidden></small>
+    </section>
+
+
+<div class="shell">
+  <form id="filters" class="rail" aria-label="조건으로 온천 찾기">
+    <details open>
+      <summary><svg class="ic" aria-hidden="true"><use href="#i-filter"/></svg>조건으로 온천 찾기<span id="activeCount" class="badge"></span></summary>
+
+      <div class="rail-top">
+        <p id="railHint"></p>
+        <button type="reset" class="link">모두 지우기</button>
+      </div>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>지역 지도</h3><p class="map-help">지도에서 도도부현을 선택하세요. 아래 목록으로도 선택할 수 있습니다.</p><div class="map-panel"><div id="prefMap" aria-label="일본 도도부현 선택 지도"></div><p id="mapStatus" class="map-help" role="status">지도를 불러오는 중입니다.</p></div>
+        <!-- 기존 지역 버튼은 지도 선택으로 대체했습니다. <div id="regionChips" class="region-map" role="group" aria-label="일본 지역 지도"></div> -->
+        <select name="pref" aria-label="도도부현" id="prefSel"></select>
+        <select name="region" aria-label="온천지" id="regionSel"></select>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>숙소 유형</h3><label for="kindSel">종류</label><select id="kindSel" name="kind"><option value="ryokan">료칸</option><option value="hotel">호텔</option><option value="all">전체 시설 (유형 미확인 포함)</option></select><p class="map-help">공식 자료에서 유형을 확인한 시설만 료칸·호텔로 표시합니다. 숙박 조건을 해제하면 전체 시설로 전환됩니다.</p><h3>이용 방식</h3>
+        <div class="tog2">
+          <label class="tog"><input type="checkbox" name="f" value="day"><span><b>당일 이용</b><small><i data-n="day"></i>곳</small></span></label>
+          <label class="tog"><input type="checkbox" name="f" value="stay" checked><span><b>숙박</b><small><i data-n="stay"></i>곳</small></span></label>
+        </div>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-onsen"/></svg>탕의 형태</h3>
+        <div class="pills">
+          <label class="pill"><input type="checkbox" name="f" value="open"><span>노천탕 <i data-n="open"></i></span></label>
+          <label class="pill"><input type="checkbox" name="f" value="priv"><span>대절탕 <i data-n="priv"></i></span></label>
+          <label class="pill"><input type="checkbox" name="f" value="room"><span>객실 노천탕 <i data-n="room"></i></span></label>
+        </div>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg>온천수</h3>
+        <label class="rowopt lead"><input type="checkbox" name="f" value="flow"><span class="t">원천 방류</span><span class="n" data-n="flow"></span></label>
+        <p class="sub-h">성분</p>
+        <div id="qualityBox"></div>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-bed"/></svg>숙소 조건</h3>
+        <label class="rowopt"><input type="checkbox" name="f" value="solo"><span class="t">1인 숙박 가능</span><span class="n" data-n="solo"></span></label>
+        <label class="rowopt"><input type="checkbox" name="f" value="sudo"><span class="t">식사 없이 숙박 가능</span><span class="n" data-n="sudo"></span></label>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>편의</h3>
+        <label class="rowopt"><input type="checkbox" name="f" value="card"><span class="t">카드 결제</span><span class="n" data-n="card"></span></label>
+        <label class="rowopt"><input type="checkbox" name="f" value="shuttle"><span class="t">송영</span><span class="n" data-n="shuttle"></span></label>
+        <label class="rowopt"><input type="checkbox" name="f" value="park"><span class="t">주차장</span><span class="n" data-n="park"></span></label>
+      </section>
+
+      <section class="fbox">
+        <h3><svg class="ic" aria-hidden="true"><use href="#i-yen"/></svg>예산 <small>1박 · 어른 1인</small></h3>
+        <output id="budgetOut" for="dayMax">제한 없음</output>
+        <input type="range" id="dayMax" name="dayMax" min="5000" max="101000" step="1000" value="101000" aria-label="1박 1인 숙박료 상한">
+        <div class="ends"><span>낮게</span><span>제한 없음</span></div><p class="map-help">확인 당시 기준가입니다. 예산을 선택하면 가격이 확인된 시설만 표시합니다.</p>
+      </section>
+    </details>
+  </form>
+
+  <main>
+
+    <section id="results" class="results" aria-labelledby="results-h" tabindex="-1">
+      <div class="bar">
+        <h2 id="results-h">검색 결과 <span id="count">…</span>건</h2>
+        <ul id="chips" class="chips" aria-label="적용한 조건"></ul>
+        <label class="sort"><span class="vh">정렬</span>
+          <select id="sort">
+            <option value="">등록 순</option>
+            <option value="price">숙박 요금 낮은 순</option>
+            <option value="open">노천탕 많은 순</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="cols">
+        <div id="list" class="list"></div>
+        <aside id="detail" class="detail" aria-label="시설 상세"></aside>
+      </div>
+    </section>
+
+    <section id="pay" class="guide" data-no="其の三" aria-labelledby="pay-h">
+      <h2 id="pay-h">결제 방법 안내</h2>
+      <p class="lead">온천 한눈에는 결제를 받지 않습니다. 시설 공식 사이트나 예약처로 이동해 예약하고 결제합니다.</p>
+      <ul class="plain">
+        <li>사전 카드 결제와 현장 결제 가능 여부는 예약처와 상품마다 다릅니다.</li>
+        <li>결제 시점과 취소 조건은 예약 직전 화면에서 다시 확인합니다.</li>
+        <li>당일 입욕은 현장에서 엔화 현금으로 내는 곳이 많습니다.</li>
+        <li>화면의 원화 금액은 그날 고시 환율로 환산한 참고 값입니다. 실제 결제 금액은 카드사와 환전 시점에 따라 달라집니다.</li>
+      </ul>
+    </section>
+
+
+  </main>
+</div>
+
+<footer class="bottom">온천 한눈에, 해커톤 기획 초안 (2026년 11월) · <a href="sources.html?lang=ko">자료 출처와 이용 조건</a></footer>
+
+<script src="data.js"></script>
+<script src="photo-assets.js"></script>
+<script src="extra.js"></script>
+<script src="additional.js"></script>
+<script src="survey.js"></script>
+<script src="prefectures.js"></script>
+<script src="ryokan-research.js"></script>
+<script src="ryokan-types.js"></script>
+<script src="vendor/leaflet.js"></script>
+<script src="vendor/japan-prefectures.js"></script>
+<script src="db-loader.js"></script>
+</body>
+</html>
