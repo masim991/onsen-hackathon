@@ -66,3 +66,8 @@
 - 이 PC에 남은 모니터 테스트 데이터(monitor_* 대상 90개, 공지 19건, 사진 해시 90건)는 일부러 남겨 두었습니다. 지우려면 `delete from public.monitor_targets;`(자식 행 자동 삭제) 후 `facility_notices`/`photo_assets`/`facility_changes`/`monitor_logs` 를 비우세요.
 - 숨긴 시설 2,243건(unlisted)은 삭제하지 않았습니다. 일부를 다시 보이게 하면(`update onsen_facilities set unlisted=false where id in (...)`, 전체 되돌리기는 `tools/cleanup/unhide.sql`) `web/listed-ids.js` 를 다시 만드세요(`web/README.md` 숨김 절). 안 만들어도 사이트는 정상이고 DB 장애 폴백에서만 빠집니다.
 - 하지 않은 것(요청이 있을 때만): 공지 자동 공개(현재 전부 `published=false`), 사진 공개(`license_status='verified'` 승인 필요), 관리자 화면 실시간 반영(Realtime은 CSP에 wss 호스트 추가 필요).
+
+## 3-2. 이 PC 작업 스케줄러(GitHub 스케줄 대체)
+- 작업 `OnsenMonitor`가 30분마다 `tools/monitor/run-local.ps1`을 실행합니다(PC가 켜져 있고 로그인된 때만). 로그: `tools/monitor/out/local-run.log`.
+- 키 등록(한 번, 새 PowerShell 창에서): `[Environment]::SetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY","키","User")` — 키가 없으면 실행은 SKIP만 기록합니다.
+- 해제: `schtasks /Delete /TN "OnsenMonitor" /F`
