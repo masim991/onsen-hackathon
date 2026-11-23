@@ -26,7 +26,7 @@
 - B. Windows 작업 스케줄러(이 PC가 켜져 있을 때만 동작). PowerShell(관리자 아님)에서 한 번 실행:
   ```powershell
   [Environment]::SetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY","키","User")
-  schtasks /Create /SC MINUTE /MO 30 /TN "OnsenMonitor" /TR "node \"C:\Users\PC\Desktop\온천 해커톤\tools\monitor\worker.mjs\" --run --sink rest"
+  schtasks /Create /SC MINUTE /MO 30 /TN "OnsenMonitor" /TR "node \"<프로젝트 폴더 경로>\tools\monitor\worker.mjs\" --run --sink rest"
   ```
   환경변수는 설정 후 새로 연 창/로그인부터 적용됩니다. `node`가 PATH에 있어야 합니다(`node -v` 확인). 삭제: `schtasks /Delete /TN "OnsenMonitor" /F`
 

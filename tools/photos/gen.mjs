@@ -1,7 +1,8 @@
 // plan.json -> photo-assets 추가분 + DB insert SQL (다운로드가 끝난 항목만)
 import fs from 'fs';
 import crypto from 'crypto';
-const IMG = 'C:/Users/PC/Desktop/온천 해커톤/web/';
+import { fileURLToPath } from 'url';
+const IMG = fileURLToPath(new URL('../../web/', import.meta.url));
 const plan = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
 const today = '2026-11-23';
 const artistFix = { 'photo: Qurren (talk) Taken with Canon PowerShot G9 X': 'Qurren', 'User: (WT-shared) Jpatokal at wts wikivoyage': 'Jpatokal', 'Fumiaki Yoshimatsu from Tokyo, Japan': 'Fumiaki Yoshimatsu' };

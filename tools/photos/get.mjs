@@ -2,7 +2,8 @@
 import fs from 'fs';
 import crypto from 'crypto';
 const UA = 'onsen-photo-import/1.0 (static-site photo import; polite, 1 req/2s)';
-const OUT = 'C:/Users/PC/Desktop/온천 해커톤/web/images/';
+import { fileURLToPath } from 'url';
+const OUT = fileURLToPath(new URL('../../web/images/', import.meta.url));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const plan = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
 const W = 1280;

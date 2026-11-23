@@ -15,3 +15,13 @@ tools/**/backup/
 _removed/
 node_modules/
 *.bak
+
+# internal working data (kept locally, not published)
+tools/tracker/review-queue.*
+tools/tracker/state.json
+tools/tracker/summary.txt
+tools/cleanup/
+tools/prices/candidates.json
+tools/prices/cache.json
+tools/prices/kinds.json
+tools/names/audit-result.json
