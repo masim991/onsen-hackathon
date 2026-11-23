@@ -21,7 +21,7 @@ jobs:
         if: env.HAS_KEY != 'true'
         run: echo "::notice::SUPABASE_SERVICE_ROLE_KEY secret is not set - skipping (see tools/monitor/USER-TODO.md)"
       - if: env.HAS_KEY == 'true'
-        run: node tools/monitor/worker.mjs --run --sink rest
+        run: node tools/monitor/worker.mjs --run --sink rest --limit 120
         env:
           SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

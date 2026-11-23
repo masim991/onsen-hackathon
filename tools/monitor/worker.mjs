@@ -568,7 +568,7 @@ function parseArgs(argv) {
     else if (k === '--changes') a.changes = v();
     else if (k === '--recheck') { a.mode = 'recheck'; a.recheck = v(); }
     else if (k === '--sink') a.sink = v(); else if (k === '--n') a.n = +v() || 30; else if (k === '--ids') a.ids = v().split(',').filter(Boolean);
-    else if (k === '--kind') a.kind = v(); else if (k === '--backoff-min') a.backoffMin = Math.max(0, +v()); else if (k === '--days') a.days = +v() || 90;
+    else if (k === '--limit') a.limit = Math.max(1, +v() || 60); else if (k === '--kind') a.kind = v(); else if (k === '--backoff-min') a.backoffMin = Math.max(0, +v()); else if (k === '--days') a.days = +v() || 90;
     else { console.error('Unknown option ' + k); process.exit(2); }
   }
   if (a.kind && !INTERVAL[a.kind]) { console.error('--kind must be notice|price_hours|photo'); process.exit(2); }
