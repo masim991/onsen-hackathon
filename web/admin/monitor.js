@@ -214,6 +214,21 @@
     return i < 0 ? el('div', {class: 'meta'}, `흐름: ${ST_KO[s] || s} (이 상태에서는 더 진행하지 않습니다)`)
       : el('div', {class: 'meta'}, '흐름: ', FLOW.map(([, t], n) => el('span', {}, n ? ' → ' : '', n === i ? el('b', {}, `[${t}]`) : t)));
   };
+  // 최근 7일 자동 반영 목록(맨 위): 승인 없이 이미 반영된 값을 훑어보고 틀린 것만 되돌리기 요청. textContent만 사용(el 헬퍼).
+  function recentAuto(rerun) {
+    const box = el('div', {}), list = el('div', {}), msg = msgBox();
+    box.append(el('h3', {}, '최근 7일 자동 반영'), el('p', {class: 'meta'}, '워커가 확신해서 이미 반영한 값입니다. 틀린 값만 되돌리기를 요청하세요(다음 워커 실행 때 복원, 이력은 남음).'), msg, list);
+    (async () => {
+      try {
+        const {data} = await api(`facility_changes?select=*&status=eq.auto_applied&created_at=gte.${encodeURIComponent(new Date(Date.now() - 7 * 864e5).toISOString())}&order=created_at.desc&limit=100`);
+        if (!data.length) return list.append(el('p', {class: 'meta'}, '없음'));
+        for (const c of data) list.append(el('div', {class: 'item'}, el('div', {}, tag('자동 반영', 'good'), ` #${c.id} · ${c.facility_id} · ${c.field} · ${when(c.created_at)}`),
+          el('div', {class: 'meta'}, '새 값'), el('pre', {}, pretty(c.new_value)), el('div', {class: 'meta'}, '근거 인용'), el('pre', {}, c.evidence || '-'), el('div', {class: 'meta'}, '출처: ', link(c.source_url)),
+          el('div', {class: 'acts'}, el('button', {type: 'button', class: 'btn danger', on: {click: async () => { const r = await patch(`facility_changes?id=eq.${c.id}`, {status: 'revert_requested', reviewed_by: session.user.id}, msg); if (r) { rerun(); list.replaceChildren(); } }}}, '되돌리기 요청'))));
+      } catch (e) { say(msg, e.message, 'err'); }
+    })();
+    return box;
+  }
   function viewChanges() {
     const v = listView({
       filters: [['st', '상태', sel('st', [['pending_review', '검토 대기'], ['', '전체'], ['approved', '승인(반영 대기)'], ['applied', '반영됨'], ['revert_requested', '되돌리기 요청'], ['reverted', '되돌림'], ['auto_applied', '자동 반영'], ['rejected', '반려']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
@@ -233,11 +248,11 @@
           c.status === 'pending_review' ? el('p', {class: 'meta'}, '승인하면 다음 워커 실행 때 시설 데이터에 반영됩니다. 반려하면 반영되지 않습니다.') : null,
           c.status === 'approved' ? el('div', {class: 'acts'}, review('승인 취소(반려)', 'rejected', 'danger')) : null,
           c.status === 'approved' ? el('p', {class: 'meta'}, '워커가 곧 반영합니다. 그 전이면 취소할 수 있습니다.') : null,
-          c.status === 'applied' ? el('div', {class: 'acts'}, review('되돌리기 요청', 'revert_requested', 'danger')) : null,
-          c.status === 'applied' ? el('p', {class: 'meta'}, '되돌리기를 요청하면 다음 워커 실행 때 이전 값으로 복원됩니다(이력은 남습니다).') : null,
+          ['applied', 'auto_applied'].includes(c.status) ? el('div', {class: 'acts'}, review('되돌리기 요청', 'revert_requested', 'danger')) : null,
+          ['applied', 'auto_applied'].includes(c.status) ? el('p', {class: 'meta'}, '되돌리기를 요청하면 다음 워커 실행 때 이전 값으로 복원됩니다(이력은 남습니다).') : null,
           c.status === 'revert_requested' ? el('p', {class: 'meta'}, '워커가 다음 실행 때 되돌립니다.') : null, box);
       }});
-    return {node: el('div', {}, el('p', {class: 'msg'}, '흐름: 대기 → 승인 → 반영됨(워커) → 되돌림. 승인하면 다음 워커 실행 때 시설 데이터(record.monitor)에 반영됩니다. 원본 필드는 바뀌지 않습니다.'), v.node), run: v.run};
+    return {node: el('div', {}, recentAuto(v.run), el('p', {class: 'msg'}, '흐름: 대기 → 승인 → 반영됨(워커) → 되돌림. 승인하면 다음 워커 실행 때 시설 데이터(record.monitor)에 반영됩니다. 원본 필드는 바뀌지 않습니다.'), v.node), run: v.run};
   }
 
   // ---- 탭: 이미지 ----

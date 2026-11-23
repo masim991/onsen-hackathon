@@ -18,16 +18,22 @@
 | `--apply [--changes rows.json]` | 승인(approved)된 변경을 다시 검증해 `record.monitor`에 반영하고 `applied`로 표시, `revert_requested`는 되돌림. `--run`/`--recheck` 끝에서도 자동 실행. `--changes`는 sql 싱크용(`facility_changes` 행 JSON) |
 | `--revert <change_id>` | 그 변경이 쓴 `record.monitor.<field>`를 이전 값으로 복원(없었으면 키 삭제), status `reverted` |
 | `--recheck <id> [--kind k]` | 그 시설을 즉시 기한 도래로 만들고 `--run` |
-| `--prune [--days 90]` | `monitor_prune` (오래된 로그/스냅샷/작업 삭제) |
+| `--prune [--days 30]` | `monitor_prune`: 로그/실패 작업 `days`일 초과 삭제, 스냅샷은 대상당 최신 3개 유지(나머지는 `days`일 초과 시 삭제), 끝난 ok/skipped 작업 14일 초과 삭제. `facility_notices`/`photo_assets`/`facility_changes`는 검토 대상이라 지우지 않음. `--run`이 UTC 03:00~03:29에 하루 한 번 자동 실행 |
 | `--sink rest\|sql` | rest = PostgREST(`SUPABASE_SERVICE_ROLE_KEY`), sql = `out/NNN-*.sql` 로 SQL만 생성 |
 
 ## 동작 규칙
 - 변경 감지: 페이지 해시(notice) / 추출 결과 해시(price_hours, photo). 같으면 `unchanged`(job은 ok, 새 행 없음).
 - 공지: 날짜+お知らせ/休業/臨時 등 휴리스틱. 해시로 중복 제거. `summary_ko`는 `ANTHROPIC_API_KEY`가 있을 때만(claude-haiku-5-5, 출력 200토큰, `ai_usage`에 기록). 항상 `published=false`(관리자 승인 전 비공개).
 - 가격: price-finder 엄격 패턴, 1박2식 우선·최저가. 시간: `日帰り入浴 HH:MM～HH:MM`만 high, 영업시간만이거나 값이 여러 개면 medium.
-- 반영 정책: high + 인용문(quote) + 기존값의 0.2~5배 이내 -> `facility_changes(auto_applied)` + `record.monitor.price|hours`(새 키만, `monitor_apply_record` 함수). 그 외 -> `pending_review`만.
+- 가격 추출: price-finder 패턴 + 문장 단위 필터(캠페인/조건 단어 `ご宿泊のすべて|以上であること|対象|キャンペーン|割引|クーポン|ポイント|助成|補助|旅行代金が|適用|条件`, 금액 뒤 `以上|以下|未満|超|まで` 문장은 버림). `に限り|限定` 가격은 medium(=검토 대기).
+- 반영 정책 `AUTO_APPLY` = `off | strict(기본) | on` (환경변수; Actions에서는 저장소 Variable `AUTO_APPLY`, Settings > Secrets and variables > Actions > Variables):
+  - off: 전부 `pending_review`.
+  - strict: 아래를 모두 만족할 때만 `auto_applied`(+ `record.monitor.price|hours`, `monitor_apply_record`). 가격 = 시설 자기 공식 도메인(협회/공유 도메인 `assoc` 제외), 위 엄격 패턴 high + 인용문, https 출처, 이전 공식가(`record.monitor.price` 또는 `prices.json`)의 0.5~2배 이내(이전가가 없으면 서로 다른 두 실행에서 같은 값이 연속 확인되어야 함). 시간 = 日帰り入浴/入浴時間 라벨 high 값이 연속 두 번 확인될 때만. 그 외는 `pending_review`.
+  - on: `validateChange`를 통과하고 high+인용문(가격은 0.2~5배 이내)이면 즉시 반영(예전 동작, 비권장).
+  - 자동 반영도 old/new/evidence/source가 남고 되돌릴 수 있다(`--revert <id>` 또는 관리 화면 '최근 7일 자동 반영' 목록의 되돌리기 요청).
+- 공지 자동 공개 `AUTO_PUBLISH_NOTICES` = `off(기본) | on`: on 이면 한국어 요약(`ANTHROPIC_API_KEY` 필요)이 있고, 날짜가 최근 30일 이내이거나 休業/臨時/営業時間/料金 등 키워드가 있으며, 레스토랑/메뉴/이벤트/求人/ブログ 등 잡음 단어가 없을 때만 `published=true`. 나머지는 비공개로 남는다. 키가 없으면 요약이 없어 아무것도 자동 공개되지 않는다.
 - 사진: og:image / 본문 img 최대 4장, 5MB 한도, sha256만 저장(`license_status='unverified'`, `published=false`). 이미지 파일은 저장·핫링크 안 함.
-- 로그: JSON 한 줄(ts, level, facility_id, job_id, job_kind, result, error_cause) -> stdout + `out/monitor.log`(2MB 넘으면 `.1`로 회전) + `monitor_logs`. key/token/secret/password/authorization/JWT 패턴은 `[REDACTED]`.
+- 로그: warn/error와 요약(run_summary/apply_summary/enqueued/seeded/prune)만 `monitor_logs`에 저장하고, 작업별 info는 stdout/`out/monitor.log`에만 남긴다. JSON 한 줄(ts, level, facility_id, job_id, job_kind, result, error_cause) -> stdout + `out/monitor.log`(2MB 넘으면 `.1`로 회전) + `monitor_logs`. key/token/secret/password/authorization/JWT 패턴은 `[REDACTED]`.
 - blocked(robots/403/SSRF)는 재시도 없이 `skipped`, 일시 오류(timeout/dns/5xx)는 재시도 후 `failed`.
 
 ## 알려진 한계

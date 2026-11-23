@@ -30,6 +30,12 @@
   ```
   환경변수는 설정 후 새로 연 창/로그인부터 적용됩니다. `node`가 PATH에 있어야 합니다(`node -v` 확인). 삭제: `schtasks /Delete /TN "OnsenMonitor" /F`
 
+## 3-1. 자동 반영 설정 (선택, 코드 변경 없음)
+- GitHub 저장소 Settings > Secrets and variables > Actions > Variables 탭 > New repository variable.
+- `AUTO_APPLY` = `off`(전부 검토 대기) / `strict`(기본: 공식 도메인·엄격 패턴·이전값 0.5~2배 또는 연속 2회 확인만 자동 반영) / `on`(비권장). 값이 없으면 strict.
+- `AUTO_PUBLISH_NOTICES` = `on` 이면 한국어 요약이 있고 최근/중요하며 잡음이 아닌 공지만 자동 공개(`ANTHROPIC_API_KEY` 필수). 기본 off.
+- 자동 반영된 값은 관리 화면 > 변경 이력 맨 위 '최근 7일 자동 반영'에서 훑어보고 틀린 것만 되돌리기 요청.
+
 ## 4. 첫 실제 실행 (rest 싱크는 실서버로 돌려본 적이 없습니다)
 - 키를 설정한 PowerShell 에서, 프로젝트 폴더로 이동 후:
   - (선택) 대상 넓히기: `node tools/monitor/worker.mjs --seed --sink rest --n 1246` (테스트 대상 30개는 이미 DB에 있음)

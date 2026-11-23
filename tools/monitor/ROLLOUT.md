@@ -13,7 +13,7 @@
 - 실패율: 오류 로그 탭 + SQL 1. failed 비율 5% 미만, 원인이 특정 도메인 한두 곳이면 그 시설만 비활성화.
 - blocked(robots/403/SSRF) 비율: 20% 넘으면 그 시설은 비활성화. 정상 동작(재시도 없이 skipped)이다.
 - 공지 오탐률: 새 공지를 20건 이상 직접 열어 보고 오래된 글/무관한 글 비율이 30% 넘으면 중단하고 휴리스틱 수정.
-- 변경(가격/시간) 오탐률: pending_review를 검토해 반려 비율 확인. auto_applied 가 잘못된 값이면 즉시 `--revert <id>`.
+- 변경(가격/시간) 오탐률: pending_review를 검토해 반려 비율 확인. `AUTO_APPLY`(저장소 Variable, off|strict|on, 기본 strict)로 자동 반영 범위를 조절한다. 오탐이 보이면 `off`로 내리고, 관리 화면 변경 이력 맨 위 '최근 7일 자동 반영'에서 틀린 값을 되돌리기 요청(또는 `--revert <id>`). 공지 자동 공개는 `AUTO_PUBLISH_NOTICES=on`(요약용 `ANTHROPIC_API_KEY` 필요)일 때만, 오탐이 확인된 뒤에 켠다.
 - 처리량: 실행 1회에 due가 limit 이상 쌓이면(SQL 2의 due 수) limit 상향 또는 cron 단축.
 - 실행 소요 시간이 15분을 넘으면 단계 확대 금지.
 

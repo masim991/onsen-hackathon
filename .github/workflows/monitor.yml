@@ -26,3 +26,5 @@ jobs:
           SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AUTO_APPLY: ${{ vars.AUTO_APPLY || 'strict' }}
+          AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'off' }}

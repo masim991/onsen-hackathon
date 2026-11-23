@@ -9,7 +9,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { fetchSafe, decodeBody, LIM, watchUrl, htmlToLines, hashContent, extractNotices, metaOf, cleanText } from '../tracker/source-tracker.mjs';
-import { htmlToRows, linksOf, pickLinks, extractPrices } from '../prices/price-finder.mjs';
+import { htmlToRows, linksOf, pickLinks, extractPrices as extractPricesLoose } from '../prices/price-finder.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -138,6 +138,39 @@ export function pickHours(cands) {
   const any = day[0] || cands[0];
   return any ? { ...any, confidence: 'medium' } : null;
 }
+// Stricter than price-finder alone (first real run auto-applied campaign conditions like '宿泊料金が6,000円以上で…' as prices):
+// work per sentence; drop sentences with campaign/eligibility words or an amount followed by a threshold word; 'に限り' limited-condition prices are medium (=> pending_review).
+// shortcut: '円から' ("from" price) is NOT rejected (common legit form); it only matters when followed by a threshold, which THRESHOLD catches.
+const CAMPAIGN = /ご宿泊のすべて|以上であること|対象|キャンペーン|割引|クーポン|ポイント|助成|補助|旅行代金が|適用|条件/;
+const THRESHOLD = /[\d,]{4,}\s*円?\s*(?:[(（][^)）]{0,15}[)）])?\s*(?:以上|以下|未満|超|まで)/;
+const LIMITED = /に限り|限定|特別価格/;
+export function extractPrices(rows) {
+  const sentences = rows.flatMap((r) => r.split(/[。！？]/)).filter((x) => x.length >= 3 && !CAMPAIGN.test(x) && !THRESHOLD.test(x.normalize('NFKC')));
+  return extractPricesLoose(sentences).map((c) => (LIMITED.test(c.quote) ? { ...c, confidence: 'medium' } : c));
+}
+// AUTO_APPLY = off | strict (default) | on. off: everything pending_review. on: previous behaviour (high confidence + quote + 0.2-5x). strict: see decideApply.
+export const autoLevel = () => { const v = String(process.env.AUTO_APPLY || '').trim().toLowerCase(); return v === 'off' || v === 'on' ? v : 'strict'; };
+const bare = (u) => { try { return new URL(u).hostname.replace(/^www./, ''); } catch { return null; } };
+// -> 'now' (auto_applied immediately) | 'confirm' (pending now, auto_applied when the next check, in a later run, finds the same value) | 'review' (pending_review only)
+export function decideApply({ level, field, cand, jobUrl, assoc, known, wild, valid }) {
+  if (level === 'off' || !valid || cand.confidence !== 'high' || !cand.quote) return 'review';
+  if (level === 'on') return field === 'price' && wild ? 'review' : 'now';
+  if (assoc || !bare(jobUrl) || bare(jobUrl) !== bare(cand.sourceUrl)) return 'review'; // own official domain only
+  if (field === 'hours') return cand.kind === 'dayuse' ? 'confirm' : 'review';
+  if (!known) return 'confirm';
+  const r = cand.minYen / known;
+  return r >= 0.5 && r <= 2 ? 'now' : 'review';
+}
+// AUTO_PUBLISH_NOTICES = off (default) | on (needs ANTHROPIC_API_KEY for summary_ko). On: publish only a summarised, recent-or-important, non-junk notice.
+const NOTICE_JUNK = /レストラン|メニュー|ランチ|ディナー|ブッフェ|ビュッフェ|フェア|会席|コース料理|イベント|開催|限定|求人|採用|ブログ|YouTube|動画|マガジン|撮影|リニューアル|新商品/;
+const NOTICE_KEY = /休業|休館|臨時|営業時間|料金|値上|改定|メンテナンス|営業再開/;
+export function shouldPublish(n, now = Date.now()) {
+  if (process.env.AUTO_PUBLISH_NOTICES !== 'on' || !n.summary_ko) return false;
+  const txt = n.title + ' ' + n.original_excerpt;
+  if (NOTICE_JUNK.test(txt) && !/休業|休館|臨時休/.test(txt)) return false;
+  const t = n.notice_date ? Date.parse(n.notice_date) : NaN;
+  return NOTICE_KEY.test(txt) || (Number.isFinite(t) && t >= now - 30 * DAY && t <= now + 30 * DAY);
+}
 const PRICE_ORDER = ['per-person-2meals', 'per-person-1meal', 'per-person-room-only', 'per-person', 'room'];
 export function bestPrice(cands) {
   for (const k of PRICE_ORDER) {
@@ -198,7 +231,8 @@ async function jobNotice(job, sink) {
   for (const it of extractNoticeItems(p.html, lines, p.finalUrl)) {
     if (known.notices.has(it.hash)) continue;
     const summary_ko = await summarize(it.excerpt, job.facility_id, sink);
-    await sink.addNotice({ facility_id: job.facility_id, source_url: it.url, content_hash: it.hash, title: it.title, notice_date: it.date, original_excerpt: it.excerpt, summary_ko, published: false, detected_at: nowIso() });
+    const row = { facility_id: job.facility_id, source_url: it.url, content_hash: it.hash, title: it.title, notice_date: it.date, original_excerpt: it.excerpt, summary_ko, detected_at: nowIso() };
+    await sink.addNotice({ ...row, published: shouldPublish(row) });
     known.notices.add(it.hash); added++;
   }
   const m = metaOf(p.html);
@@ -207,6 +241,7 @@ async function jobNotice(job, sink) {
 }
 
 let priceJson = null;
+const jsonFrom = (fid) => { priceJson ??= readJson(path.join(ROOT, 'web', 'data', 'prices.json'), { items: {} }); return priceJson.items?.[fid]?.from ?? null; };
 const jsonPrice = (fid) => { priceJson ??= readJson(path.join(ROOT, 'web', 'data', 'prices.json'), { items: {} }); const x = priceJson.items?.[fid]; return x && /2食/.test(x.basis || '') ? x.from : null; };
 
 export async function jobPriceHours(job, sink) {
@@ -223,29 +258,32 @@ export async function jobPriceHours(job, sink) {
   const price = bestPrice(prices), hr = pickHours(hours);
   const hash = sha(JSON.stringify([price && [price.kind, price.minYen, price.maxYen], hr && [hr.kind, hr.open, hr.close, hr.confidence]]), 20);
   const prev = await sink.snapshot(job.target_id);
-  if (prev === hash) return { result: 'unchanged' };
-  const st = await sink.stored(job.facility_id), fid = job.facility_id, today = nowIso().slice(0, 10);
+  const level = autoLevel(), repeat = prev === hash; // repeat = the previous check (an earlier run) found exactly the same values
+  if (repeat && level !== 'strict') return { result: 'unchanged' };
+  const st = await sink.stored(job.facility_id), fid = job.facility_id, today = nowIso().slice(0, 10), assoc = (jsonFrom(fid), !!priceJson.items?.[fid]?.assoc);
   let applied = 0, pending = 0;
-  const change = async (field, oldV, newV, evidence, url, apply) => {
-    const dedupe_key = sha([fid, field, JSON.stringify(newV)].join('|'), 32);
-    if (await sink.hasChange(dedupe_key)) return;
-    await sink.addChange({ facility_id: fid, field, old_value: oldV, new_value: newV, evidence, source_url: url, status: apply ? 'auto_applied' : 'pending_review', dedupe_key, created_at: nowIso() });
-    if (apply) { await sink.applyRecord(fid, field, { ...newV, source_url: url, checked: today, quote: evidence }); applied++; } else pending++;
+  const change = async (field, oldV, newV, cand, mode) => {
+    const evidence = cand.quote, url = cand.sourceUrl, dedupe_key = sha([fid, field, JSON.stringify(newV)].join('|'), 32);
+    const rec = { ...newV, source_url: url, checked: today, quote: evidence };
+    if (await sink.hasChange(dedupe_key)) { if (mode === 'confirm' && repeat && await sink.promote(dedupe_key)) { await sink.applyRecord(fid, field, rec); applied++; } return; }
+    await sink.addChange({ facility_id: fid, field, old_value: oldV, new_value: newV, evidence, source_url: url, status: mode === 'now' ? 'auto_applied' : 'pending_review', dedupe_key, created_at: nowIso() });
+    if (mode === 'now') { await sink.applyRecord(fid, field, rec); applied++; } else pending++;
   };
+  const ok = (field, nv, cand) => !!cand.quote && validateChange({ field, facility_id: fid, new_value: nv, source_url: cand.sourceUrl, evidence: cand.quote, created_at: nowIso() }).ok;
   if (price) {
     const nv = { kind: price.kind, minYen: price.minYen, ...(price.maxYen ? { maxYen: price.maxYen } : {}), unit: price.unit };
     const old = st.monitor?.price?.minYen ?? jsonPrice(fid);
     if (old !== price.minYen) {
       const wild = old && (price.minYen / old > 5 || price.minYen / old < 0.2); // SECURITY.md 5.6: 0.2x-5x needs a second look
-      await change('price', old ? { minYen: old } : null, nv, price.quote, price.sourceUrl, price.confidence === 'high' && !!price.quote && !wild);
+      await change('price', old ? { minYen: old } : null, nv, price, decideApply({ level, field: 'price', cand: price, jobUrl: job.url, assoc, known: st.monitor?.price?.minYen ?? jsonFrom(fid), wild, valid: ok('price', nv, price) }));
     }
   }
   if (hr) {
     const nv = { open: hr.open, close: hr.close, label: hr.kind }, ref = st.monitor?.hours || dayHOf(st.dayH);
-    if (!ref || ref.open !== hr.open || ref.close !== hr.close) await change('hours', ref ? { open: ref.open, close: ref.close } : null, nv, hr.quote, hr.sourceUrl, hr.confidence === 'high' && !!hr.quote);
+    if (!ref || ref.open !== hr.open || ref.close !== hr.close) await change('hours', ref ? { open: ref.open, close: ref.close } : null, nv, hr, decideApply({ level, field: 'hours', cand: hr, jobUrl: job.url, assoc, valid: ok('hours', nv, hr) }));
   }
   await sink.saveSnapshot(job.target_id, hash, cleanText(`price ${price ? price.minYen : '-'} hours ${hr ? hr.open + '-' + hr.close : '-'}`));
-  return { result: prev ? 'changed' : 'new', meta: { price_found: !!price, hours_found: !!hr, hours_conf: hr?.confidence, applied, pending } };
+  return { result: repeat ? 'unchanged' : prev ? 'changed' : 'new', meta: { price_found: !!price, hours_found: !!hr, hours_conf: hr?.confidence, applied, pending } };
 }
 
 async function jobPhoto(job, sink) {
@@ -437,6 +475,8 @@ function sqlSink(opts = {}) {
     async stored(fid) { return S.facilities[fid] || { monitor: {} }; },
     async known(fid) { return { notices: new Set(S.notices[fid] || []), photoSha: new Set(ph(fid).sha), photoUrls: new Set(ph(fid).urls) }; },
     async hasChange(k) { return S.changes.includes(k); },
+    // shortcut: the local sql sink cannot see the DB row status; the emitted UPDATE is guarded (only pending_review rows flip) but the record write is not
+    async promote(k) { q.calls.push(`update public.facility_changes set status='auto_applied' where dedupe_key=${lit(k)} and status='pending_review';`); return true; },
     async addNotice(n) { (S.notices[n.facility_id] ??= []).push(n.content_hash); q.notices.push(n); },
     async addPhoto(p) { ph(p.facility_id).sha.push(p.sha256); ph(p.facility_id).urls.push(p.image_url); q.photos.push(p); },
     async addChange(c) { S.changes.push(c.dedupe_key); q.changes.push(c); },
@@ -470,7 +510,7 @@ function sqlSink(opts = {}) {
       st.push(insertSql('photo_assets', q.photos, 'on conflict (facility_id, sha256) do nothing', ['facility_id', 'image_url', 'sha256', 'license_status', 'published']));
       for (const r of q.records) st.push(r[0] === '__prune' ? `select public.monitor_prune(${+r[1]});` : `select public.monitor_apply_record(${lit(r[0])}, ${lit(r[1])}, ${lit(JSON.stringify(r[2]))}::jsonb);`);
       st.push(...q.calls);
-      st.push(insertSql('monitor_logs', q.logs.filter((l) => l.level !== 'info' || /summary|seeded|prune/.test(l.result || '')), 'on conflict do nothing', ['level', 'facility_id', 'job_id', 'job_kind', 'result', 'error_cause', 'meta']), insertSql('ai_usage', q.ai));
+      st.push(insertSql('monitor_logs', q.logs.filter((l) => l.level !== 'info' || /summary|seeded|prune|enqueued/.test(l.result || '')), 'on conflict do nothing', ['level', 'facility_id', 'job_id', 'job_kind', 'result', 'error_cause', 'meta']), insertSql('ai_usage', q.ai));
       if (S.targets.length) st.push(`select setval(pg_get_serial_sequence('public.monitor_targets','id'), (select max(id) from public.monitor_targets)), setval(pg_get_serial_sequence('public.monitor_jobs','id'), greatest((select coalesce(max(id),1) from public.monitor_jobs),1));`);
       fs.mkdirSync(OUT, { recursive: true });
       const files = []; let cur = [], size = 0, n = 0;
@@ -511,6 +551,7 @@ function restSink() {
       return { notices: new Set(n.map((x) => x.content_hash)), photoSha: new Set(p.map((x) => x.sha256)), photoUrls: new Set(p.map((x) => x.image_url)) };
     },
     async hasChange(k) { return (await rq('GET', `facility_changes?dedupe_key=eq.${e(k)}&select=id`)).length > 0; },
+    async promote(k) { return (await rq('PATCH', `facility_changes?dedupe_key=eq.${e(k)}&status=eq.pending_review`, { status: 'auto_applied' }, 'return=representation')).length > 0; },
     addNotice: (n) => rq('POST', 'facility_notices?on_conflict=facility_id,content_hash', n, ign),
     addPhoto: (p) => rq('POST', 'photo_assets?on_conflict=facility_id,sha256', p, ign),
     addChange: (c) => rq('POST', 'facility_changes?on_conflict=dedupe_key', c, ign),
@@ -525,7 +566,8 @@ function restSink() {
       if (tpatch) await rq('PATCH', `monitor_targets?id=eq.${+job.target_id}`, tpatch, 'return=minimal');
     },
     markDue: (fid, kind) => rq('PATCH', `monitor_targets?facility_id=eq.${e(fid)}${kind ? '&kind=eq.' + e(kind) : ''}`, { next_check_at: nowIso() }, 'return=minimal'),
-    log(x) { buf.push({ ts: x.ts, level: x.level, facility_id: x.facility_id, job_id: x.job_id, job_kind: x.job_kind, result: x.result, error_cause: x.error_cause, meta: x.meta ?? null }); },
+    log(x) { if (x.level === 'info' && !/summary|seeded|prune|enqueued/.test(x.result || '')) return; buf.push({ // per-job info rows stay on stdout only
+ ts: x.ts, level: x.level, facility_id: x.facility_id, job_id: x.job_id, job_kind: x.job_kind, result: x.result, error_cause: x.error_cause, meta: x.meta ?? null }); },
     aiUsage: (r) => rq('POST', 'ai_usage', r, 'return=minimal'),
     prune: (days) => rq('POST', 'rpc/monitor_prune', { days }),
     async flush() { if (buf.length) await rq('POST', 'monitor_logs', buf.splice(0), 'return=minimal'); return []; },
@@ -560,7 +602,7 @@ function seedRows(ids) {
 
 // ---------- main ----------
 function parseArgs(argv) {
-  const a = { mode: null, sink: 'rest', n: 30, ids: null, kind: null, backoffMin: 5, conc: 6, limit: 60, days: 90, recheck: null, revert: null, changes: null };
+  const a = { mode: null, sink: 'rest', n: 30, ids: null, kind: null, backoffMin: 5, conc: 6, limit: 60, days: 30, recheck: null, revert: null, changes: null };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i], v = () => argv[++i];
     if (k === '--seed' || k === '--run' || k === '--selftest' || k === '--prune' || k === '--apply') a.mode = k.slice(2);
@@ -568,7 +610,7 @@ function parseArgs(argv) {
     else if (k === '--changes') a.changes = v();
     else if (k === '--recheck') { a.mode = 'recheck'; a.recheck = v(); }
     else if (k === '--sink') a.sink = v(); else if (k === '--n') a.n = +v() || 30; else if (k === '--ids') a.ids = v().split(',').filter(Boolean);
-    else if (k === '--limit') a.limit = Math.max(1, +v() || 60); else if (k === '--kind') a.kind = v(); else if (k === '--backoff-min') a.backoffMin = Math.max(0, +v()); else if (k === '--days') a.days = +v() || 90;
+    else if (k === '--limit') a.limit = Math.max(1, +v() || 60); else if (k === '--kind') a.kind = v(); else if (k === '--backoff-min') a.backoffMin = Math.max(0, +v()); else if (k === '--days') a.days = +v() || 30;
     else { console.error('Unknown option ' + k); process.exit(2); }
   }
   if (a.kind && !INTERVAL[a.kind]) { console.error('--kind must be notice|price_hours|photo'); process.exit(2); }
@@ -589,7 +631,11 @@ async function main() {
     const { rows, facs } = seedRows(ids);
     await sink.seed(rows, facs);
     log('info', { result: 'seeded', meta: { facilities: ids.length, targets: rows.length } });
-  } else if (a.mode === 'run') { await run(sink, a); await applyApproved(sink); }
+  } else if (a.mode === 'run') {
+    await run(sink, a); await applyApproved(sink);
+    const d = new Date(); // daily retention: the 30-min cron hits this window once a day
+    if (d.getUTCHours() === 3 && d.getUTCMinutes() < 30) { await sink.prune(a.days); log('info', { result: 'prune_requested', meta: { days: a.days } }); }
+  }
   else if (a.mode === 'recheck') { await sink.markDue(a.recheck, a.kind); label = 'recheck'; await run(sink, a); await applyApproved(sink); }
   else if (a.mode === 'apply') await applyApproved(sink);
   else if (a.mode === 'revert') { label = 'revert'; await revertOne(sink, a.revert); }
@@ -617,27 +663,58 @@ async function selftest() {
   t('redact', !JSON.stringify(redact({ apiKey: 'x', a: 'Bearer abcdefghijkl eyJhbGciOi.abcdefghij.sig sb_secret_abc123' })).match(/abcdefghijkl|sb_secret_abc|"x"/));
   t('sql literal escapes quotes', insertSql('ai_usage', [{ ts: '2026-01-01T00:00:00Z', model: "a'b$$", input_tokens: 1, output_tokens: 1, est_cost_usd: 0, facility_id: null }]).includes("a''b$$"));
   t('causeOf', causeOf(Object.assign(new Error('robots.txt'), { kind: 'blocked' })) === 'robots' && causeOf(Object.assign(new Error('timeout'), { kind: 'unreachable' })) === 'timeout' && causeOf(Object.assign(new Error('HTTP 404'), { kind: 'unreachable' })) === 'http_4xx');
+  // price extractor: real false positives of the first run must yield nothing; real true ones must yield the price
+  const px = (h) => extractPrices(rows(h));
+  for (const [n, h] of [['campaign eligibility', '<p>宿泊料金が6,000円(素泊まり・税抜き)以上でご宿泊のすべてのお客様に特典</p>'], ['travel-cost condition', '<p>1人1泊あたりの旅行代金が、平日5,000円、休日3,000円以上であること</p>'], ['threshold only', '<p>1泊 素泊まり 8,000円以上のプラン</p>'], ['coupon', '<p>1泊2食 お一人様 3,000円クーポンをプレゼント</p>']]) t('price reject: ' + n, px(h).length === 0);
+  for (const [n, h, y] of [['1名様1泊', '<p>1名様1泊¥6,300円~</p>', 6300], ['1泊1名様', '<p>1泊1名様 : 28,600円~</p>', 28600], ['single room-only', '<p>シングル 1泊 7,500円〜(税込・素泊まり・日程により変動)</p>', 7500]]) t('price accept: ' + n, px(h)[0]?.minYen === y && px(h)[0].confidence === 'high');
+  t('price limited-condition (に限り) => medium', px('<p>こじんまりとしたお部屋ですが平日(オフ期)に限り素泊まり8,800円のリーズナブルな料金で、1室お1人様からでも</p>')[0]?.confidence === 'medium');
   // change policy end-to-end with a stub sink and a pre-seeded page (no network)
   const mem = { changes: [], records: [], snaps: new Map() };
   const stub = (st) => ({ snapshot: async (id) => mem.snaps.get(id) ?? null, saveSnapshot: async (id, h) => void mem.snaps.set(id, h), stored: async () => st,
-    hasChange: async (k) => mem.changes.some((c) => c.dedupe_key === k), addChange: async (c) => void mem.changes.push(c), applyRecord: async (f, k, v) => void mem.records.push([f, k, v]) });
+    hasChange: async (k) => mem.changes.some((c) => c.dedupe_key === k), addChange: async (c) => void mem.changes.push(c), applyRecord: async (f, k, v) => void mem.records.push([f, k, v]),
+    promote: async (k) => { const c = mem.changes.find((x) => x.dedupe_key === k && x.status === 'pending_review'); if (c) c.status = 'auto_applied'; return !!c; } });
   const page = (h) => { pages.set('https://fake.example/', Promise.resolve({ html: h, finalUrl: 'https://fake.example/' })); };
   const job = { id: 1, target_id: 1, facility_id: 'f1', url: 'https://fake.example/' };
-  page('<p>1泊2食 お一人様 12,000円〜</p><p>日帰り入浴 10:00～15:00</p>');
+  const reset = () => { mem.changes.length = 0; mem.records.length = 0; mem.snaps.clear(); };
+  const st = (c) => (f) => mem.changes.find((x) => x.field === f)?.status;
+  delete process.env.AUTO_APPLY; priceJson = { items: {} };
+  const J1 = '<p>1泊2食 お一人様 12,000円〜</p><p>日帰り入浴 10:00～15:00</p>';
+  page(J1);
+  await jobPriceHours(job, stub({ dayH: '9:00～16:00', monitor: {} }));
+  t('strict: first-seen uncorroborated price and hours => pending_review, nothing applied', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'pending_review') && mem.records.length === 0);
   let r = await jobPriceHours(job, stub({ dayH: '9:00～16:00', monitor: {} }));
-  t('policy: new price+hours (high, quoted) => auto_applied + monitor keys', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'auto_applied') && mem.records.map((x) => x[1]).sort().join() === 'hours,price' && mem.records.every((x) => x[2].quote && x[2].source_url));
-  r = await jobPriceHours({ ...job, target_id: 2 }, stub({ dayH: '9:00～16:00', monitor: {} }));
-  t('policy: same findings again => no duplicate change rows or records', mem.changes.length === 2 && mem.records.length === 2);
-  r = await jobPriceHours(job, stub({ monitor: {} }));
-  t('policy: unchanged hash => unchanged', r.result === 'unchanged');
-  mem.changes.length = 0; mem.records.length = 0; mem.snaps.clear();
+  t('strict: same values on the next check => promoted to auto_applied + monitor keys (quote+source)', r.result === 'unchanged' && mem.changes.every((c) => c.status === 'auto_applied') && mem.records.map((x) => x[1]).sort().join() === 'hours,price' && mem.records.every((x) => x[2].quote && x[2].source_url));
+  await jobPriceHours(job, stub({ dayH: '9:00～16:00', monitor: {} }));
+  t('strict: third check => no duplicate rows or records', mem.changes.length === 2 && mem.records.length === 2);
+  reset(); priceJson = { items: { f1: { from: 12000 } } };
+  await jobPriceHours(job, stub({ monitor: {} }));
+  t('strict: price within 0.5-2x of the known official price => auto_applied at once; hours still wait', st()('price') === 'auto_applied' && st()('hours') === 'pending_review' && mem.records.length === 1);
+  reset(); priceJson = { items: { f1: { from: 12000, assoc: true } } };
+  await jobPriceHours(job, stub({ monitor: {} })); await jobPriceHours(job, stub({ monitor: {} }));
+  t('strict: association/shared domain => never auto', mem.changes.every((c) => c.status === 'pending_review') && mem.records.length === 0);
+  reset(); priceJson = { items: { f1: { from: 40000 } } };
+  await jobPriceHours(job, stub({ monitor: {} })); await jobPriceHours(job, stub({ monitor: {} }));
+  t('strict: price outside 0.5-2x of the known price => stays pending even when repeated', st()('price') === 'pending_review');
+  reset(); priceJson = { items: {} }; process.env.AUTO_APPLY = 'off'; priceJson = { items: { f1: { from: 12000 } } };
+  await jobPriceHours(job, stub({ monitor: {} })); await jobPriceHours(job, stub({ monitor: {} }));
+  t('AUTO_APPLY=off => everything pending_review', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'pending_review') && mem.records.length === 0);
+  reset(); process.env.AUTO_APPLY = 'on'; priceJson = { items: {} };
+  await jobPriceHours(job, stub({ monitor: {} }));
+  t('AUTO_APPLY=on => applied at once', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'auto_applied') && mem.records.length === 2);
+  reset(); delete process.env.AUTO_APPLY;
+  t('AUTO_APPLY default/unknown => strict', autoLevel() === 'strict' && (process.env.AUTO_APPLY = 'bogus', autoLevel() === 'strict') && (delete process.env.AUTO_APPLY, true));
   page('<p>1泊2食 お一人様 12,000円〜</p><p>営業時間 9:00～21:00</p>');
+  await jobPriceHours(job, stub({ dayH: '10:00～15:00', monitor: { price: { minYen: 1500 } } }));
   await jobPriceHours(job, stub({ dayH: '10:00～15:00', monitor: { price: { minYen: 1500 } } }));
   t('policy: 8x price jump and business-only hours => pending_review, nothing applied', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'pending_review') && mem.records.length === 0);
   mem.changes.length = 0; mem.snaps.clear();
   await jobPriceHours(job, stub({ dayH: '9:00～21:00', monitor: { price: { minYen: 12000 } } }));
   t('policy: equal to stored => no change rows', mem.changes.length === 0);
-  // apply / revert: validation + a memory sink that mimics monitor_apply_change / monitor_revert_change (the real functions are proven live via SQL)
+  const n0 = { title: '臨時休業のお知らせ', original_excerpt: '臨時休業', notice_date: null, summary_ko: '임시 휴업' };
+  process.env.AUTO_PUBLISH_NOTICES = 'on';
+  t('notice publish: closure + summary => yes; no summary / junk / old plain news => no', shouldPublish(n0) && !shouldPublish({ ...n0, summary_ko: null }) && !shouldPublish({ ...n0, title: '伊勢海老会席フェア', original_excerpt: 'ディナーメニュー', notice_date: '2026-11-20' }) && !shouldPublish({ title: 'お知らせ', original_excerpt: 'ホームページ公開', notice_date: '2026-01-01', summary_ko: 'x' }, Date.parse('2026-11-23')) && shouldPublish({ title: 'お知らせ', original_excerpt: '新しい貸切風呂', notice_date: '2026-11-20', summary_ko: 'x' }, Date.parse('2026-11-23')));
+  delete process.env.AUTO_PUBLISH_NOTICES;
+  t('notice publish: default off', !shouldPublish(n0));
   const ch = (o) => ({ id: 1, facility_id: 'f1', field: 'price', status: 'approved', source_url: 'https://e.com/p', evidence: '[테스트] 1泊2食 12,345円', created_at: '2026-11-20T00:00:00Z', new_value: { kind: 'per-person-2meals', minYen: 12345, unit: 'person/night' }, ...o });
   const why = (o) => validateChange(ch(o), Date.parse('2026-11-22')).cause;
   t('validate ok price', validateChange(ch({}), Date.parse('2026-11-22')).val?.checked === '2026-11-20');
