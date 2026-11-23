@@ -492,7 +492,7 @@ function restSink() {
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
   const buf = [];
   const rq = async (method, p, body, prefer) => {
-    const r = await fetch(`${base}/rest/v1/${p}`, { method, headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', ...(prefer ? { Prefer: prefer } : {}) }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(30000) });
+    const r = await fetch(`${base}/rest/v1/${p}`, { method, headers: { apikey: key, ...(key.startsWith('eyJ') ? { Authorization: `Bearer ${key}` } : {}), 'Content-Type': 'application/json', ...(prefer ? { Prefer: prefer } : {}) }, body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(30000) });
     const t = await r.text();
     if (!r.ok) throw new Error(`REST ${method} ${p.split('?')[0]} ${r.status} ${redact(t).slice(0, 160)}`);
     return t ? JSON.parse(t) : null;
