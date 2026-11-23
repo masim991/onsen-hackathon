@@ -28,3 +28,4 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AUTO_APPLY: ${{ vars.AUTO_APPLY || 'strict' }}
           AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'off' }}
+          AI_MAX_IMAGES: ${{ vars.AI_MAX_IMAGES || '20' }}

@@ -6,6 +6,8 @@
   const SKEY = 'onsen-admin-session';
   const KINDS = ['notice', 'price_hours', 'photo'];
   const KIND_KO = {notice: '공지', price_hours: '가격·시간', photo: '사진'};
+  const LABEL_KO = {onsen_bath: '온천탕', exterior: '외관·경관', room: '객실', food: '음식', logo: '로고', map_doc: '지도·문서', other: '기타'};
+  const STATE_KO = {unchecked: '미분류', publish_ok: '공개 가능', hold_license: '라이선스 보류', logo_review: '로고 검토', logo_approved: '로고 승인됨', approved: '승인(공개)', rejected: '반려', not_published: '비공개 대상', check_failed: '분류 실패'};
   const $ = (id) => document.getElementById(id);
 
   // ---- DOM helpers (textContent only) ----
@@ -280,8 +282,62 @@
         const saveLic = el('button', {type: 'button', class: 'btn', on: {click: async () => go(lic.value === 'verified' ? {license_status: 'verified'} : {license_status: lic.value, published: false})()}}, '라이선스 저장');
         return el('div', {class: 'item'}, el('div', {}, tag(p.published ? '공개' : '비공개', p.published ? 'good' : 'warn'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
           el('div', {class: 'meta'}, '이미지 주소(미리보기 없음): ', link(p.image_url)), el('div', {class: 'meta'}, `sha256 ${p.sha256}`),
+          p.ai_checked_at ? el('div', {class: 'meta'}, `AI 분류: ${LABEL_KO[p.ai_label] || p.ai_label || '-'} (${p.ai_confidence ?? '-'}) · 상태 ${STATE_KO[p.publish_state] || p.publish_state}`) : null,
           field('라이선스 상태', lic), el('div', {class: 'acts'}, saveLic,
             el('button', {type: 'button', class: 'btn primary', disabled: p.license_status !== 'verified', title: p.license_status !== 'verified' ? '라이선스 확인(verified) 후에만 공개할 수 있습니다' : '', on: {click: go({published: !p.published})}}, p.published ? '공개 해제' : '공개')), box);
+      }});
+  }
+
+  // ---- 탭: AI 로그 ----
+  const AI_KIND_KO = {notice_summary: '공지 요약', change_summary: '변경 요약', image_classify: '이미지 분류'};
+  const AI_REV_KO = {unreviewed: '미검토', accepted: '승인', rejected: '반려', edited: '수정'};
+  function viewAiLogs() {
+    return listView({
+      filters: [['kind', '종류', sel('kind', [['', '전체'], ...Object.entries(AI_KIND_KO)])], ['status', '상태', sel('status', [['', '전체'], ...['ok', 'error', 'skipped', 'mock'].map((s) => [s, s])])],
+        ['rev', '검토', sel('rev', [['unreviewed', '미검토'], ['', '전체'], ['accepted', '승인'], ['rejected', '반려'], ['edited', '수정']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
+      path: (v) => 'ai_logs?select=*&order=created_at.desc' + (v.kind ? '&kind=eq.' + v.kind : '') + (v.status ? '&status=eq.' + v.status : '') + (v.rev ? '&review_status=eq.' + v.rev : '') + (clean(v.fid) ? '&facility_id=ilike.*' + encodeURIComponent(clean(v.fid)) + '*' : ''),
+      empty: 'AI 로그가 없습니다. (ANTHROPIC_API_KEY 등록 후 워커가 호출하면 쌓입니다.)',
+      row: (l, rerun) => {
+        const box = msgBox(), o = l.output || {}, isSum = l.kind === 'notice_summary', reviewable = l.status === 'ok' || l.status === 'mock';
+        const ta = isSum ? el('textarea', {'aria-label': '한국어 요약 수정', maxlength: 600}) : null; if (ta) ta.value = l.reviewed_summary_ko || o.summary_ko || '';
+        const go = (status, cls, label) => el('button', {type: 'button', class: 'btn ' + cls, on: {click: async () => {
+          if (status === 'edited' && !ta.value.trim()) return say(box, '수정할 요약을 입력하세요.', 'err');
+          try { await api('rpc/ai_log_review', {method: 'POST', body: {p_id: l.id, p_status: status, p_summary: status === 'edited' ? ta.value.trim() : null}}); say(box, '저장했습니다.', 'ok'); rerun(); } catch (e) { say(box, e.message, 'err'); }
+        }}}, label);
+        const dg = l.input_digest || {};
+        return el('div', {class: 'item'}, el('div', {}, tag(l.status, l.status === 'error' ? 'bad' : l.status === 'ok' ? 'good' : l.status === 'skipped' ? '' : 'warn'), ' ', tag(AI_KIND_KO[l.kind] || l.kind), ' ', tag(AI_REV_KO[l.review_status] || l.review_status, l.review_status === 'unreviewed' ? 'warn' : 'good'), ` #${l.id} · ${l.facility_id || '-'} · ${when(l.created_at)}`),
+          el('div', {class: 'meta'}, `모델 ${l.model} · 토큰 입력 ${l.tokens_in} / 출력 ${l.tokens_out}${l.notice_id ? ` · 공지 #${l.notice_id}` : ''}${l.photo_id ? ` · 사진 #${l.photo_id}` : ''}${l.change_id ? ` · 변경 #${l.change_id}` : ''}`),
+          el('div', {class: 'meta'}, '입력(해시 + 발췌, 전체 원문 아님)'), el('pre', {}, `${dg.excerpt || '-'}\nsha256 ${String(dg.sha256 || '').slice(0, 16)}…`),
+          el('div', {class: 'meta'}, '출력'), el('pre', {}, isSum ? (o.summary_ko || '(요약 없음)') : `${(o.labels || []).map((x) => LABEL_KO[x] || x).join(', ') || '-'} · 신뢰도 ${o.confidence ?? '-'}${o.reason ? `\n${o.reason}` : ''}${o.publish_state ? `\n판정: ${STATE_KO[o.publish_state] || o.publish_state}` : ''}`),
+          l.error ? el('pre', {}, l.error) : null,
+          l.reviewed_at ? el('div', {class: 'meta'}, `검토 ${when(l.reviewed_at)}`) : null,
+          ta ? field('한국어 요약 (수정하면 공지 요약(summary_ko)도 바뀝니다)', ta) : null,
+          reviewable ? el('div', {class: 'acts'}, go('accepted', 'primary', '승인'), ta ? go('edited', '', '수정 저장') : null, go('rejected', 'danger', '반려')) : null,
+          reviewable && isSum ? el('p', {class: 'meta'}, '반려하면 이 AI 요약을 공지에서 지우고 비공개로 돌립니다(공지 본문은 그대로).') : null,
+          reviewable && !isSum ? el('p', {class: 'meta'}, '검토 표시만 남습니다. 사진 공개 여부는 "로고·사진 승인" 탭에서 정합니다.') : null, box);
+      }});
+  }
+
+  // ---- 탭: 로고·사진 승인 ----
+  // AI는 저작권을 판단하지 못한다. 라이선스 보류(hold_license)와 로고 검토(logo_review)만 모아 관리자가 승인/반려한다. 규칙은 DB 트리거(photo_assets_guard)가 한 번 더 막는다.
+  function viewApprovals() {
+    return listView({
+      filters: [['st', '상태', sel('st', [['hold_license,logo_review', '전체 대기'], ['hold_license', '라이선스 보류'], ['logo_review', '로고 검토']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
+      path: (v) => 'photo_assets?select=*&order=discovered_at.desc&publish_state=in.(' + v.st + ')' + (clean(v.fid) ? '&facility_id=ilike.*' + encodeURIComponent(clean(v.fid)) + '*' : ''),
+      empty: '승인 대기 중인 사진·로고가 없습니다.',
+      row: (p, rerun) => {
+        const box = msgBox(), logo = p.publish_state === 'logo_review';
+        const act = (label, cls, body, ask) => el('button', {type: 'button', class: 'btn ' + cls, on: {click: async () => {
+          if (ask && !window.confirm(ask)) return;
+          const r = await patch(`photo_assets?id=eq.${p.id}`, body, box); if (r) rerun();
+        }}}, label);
+        return el('div', {class: 'item'}, el('div', {}, tag(STATE_KO[p.publish_state] || p.publish_state, 'warn'), ' ', tag(LABEL_KO[p.ai_label] || p.ai_label || '-'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
+          el('div', {class: 'meta'}, `AI 신뢰도 ${p.ai_confidence ?? '-'} · ${p.ai_reason || '-'}`),
+          el('div', {class: 'meta'}, `라이선스 ${p.license_status} · 출처 ${p.license_source || '미기록'}${p.license_note ? ` · ${p.license_note}` : ''}`),
+          el('div', {class: 'meta'}, '이미지 주소(미리보기 없음, 열어서 확인): ', link(p.image_url)),
+          el('p', {class: 'meta'}, logo ? '로고는 시설 공식 사이트 링크 옆 작은 식별용으로만 쓸 후보입니다. 승인해도 사진으로 공개되지는 않습니다.' : '공식/출처 불명 사진은 공개하지 않고 공식 페이지 링크만 둡니다. 사용 허락·라이선스를 직접 확인한 경우에만 승인하세요(승인 = verified + 공개).'),
+          el('div', {class: 'acts'}, logo ? act('로고 사용 승인', 'primary', {publish_state: 'logo_approved'}, '이 로고를 식별용 후보로 승인합니다.') : act('라이선스 확인함 · 승인(공개)', 'primary', {license_status: 'verified', publish_state: 'approved', published: true}, '사용 허락/라이선스를 직접 확인했고 공개합니다. 계속할까요?'),
+            act('반려', 'danger', {publish_state: 'rejected', published: false})), box);
       }});
   }
 
@@ -310,7 +366,7 @@
   }
 
   // ---- 탭 틀 ----
-  const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi]];
+  const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi], ['ailogs', 'AI 로그', viewAiLogs], ['approvals', '로고·사진 승인', viewApprovals]];
   async function openTab(id) {
     const [, , view] = TABS.find((t) => t[0] === id);
     document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === id));

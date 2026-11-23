@@ -9,7 +9,7 @@
 
 ## 1. 서비스 키 준비
 - Supabase 대시보드 > 프로젝트 `frncsllpkxrsgxyqsfwd` > Project Settings > API Keys > secret 키(service role) 복사.
-- (선택) Anthropic Console > API Keys 에서 키 생성. 없으면 공지 한국어 요약 없이 원문만 저장되고, 요약이 빈 공지는 직접 적어야 공개할 수 있습니다.
+- (선택) Anthropic Console > API Keys 에서 키 생성. 없으면 공지 한국어 요약 없이 원문만 저장되고, 요약이 빈 공지는 직접 적어야 공개할 수 있습니다. 같은 키로 사진 AI 분류도 켜집니다(없으면 분류는 건너뛰고 AI 로그에 skipped 1건).
 - 이 PC에서만 시험할 때: `$env:SUPABASE_SERVICE_ROLE_KEY="..."; $env:ANTHROPIC_API_KEY="..."` (PowerShell 창을 닫으면 사라짐)
 
 ## 2. 관리자 계정 만들기
@@ -35,6 +35,13 @@
 - `AUTO_APPLY` = `off`(전부 검토 대기) / `strict`(기본: 공식 도메인·엄격 패턴·이전값 0.5~2배 또는 연속 2회 확인만 자동 반영) / `on`(비권장). 값이 없으면 strict.
 - `AUTO_PUBLISH_NOTICES` = `on` 이면 한국어 요약이 있고 최근/중요하며 잡음이 아닌 공지만 자동 공개(`ANTHROPIC_API_KEY` 필수). 기본 off.
 - 자동 반영된 값은 관리 화면 > 변경 이력 맨 위 '최근 7일 자동 반영'에서 훑어보고 틀린 것만 되돌리기 요청.
+
+## 3-2. AI 로그 / 사진 분류 (선택)
+- 저장소 Settings > Secrets and variables > Actions > Secrets 에 `ANTHROPIC_API_KEY` 등록(채팅/커밋에 붙여넣지 마세요). 등록하면 다음 실행부터 공지 요약이 `ai_logs`에 쌓이고, 미분류 사진을 실행당 최대 20장 분류합니다. 장수는 Variables 의 `AI_MAX_IMAGES`(선택, 기본 20)로 조절.
+- 관리 화면 'AI 로그' 탭에서 요약을 승인/반려/수정(수정하면 공지의 한국어 요약도 바뀜). 반려한 공지 요약은 공지에서 지워지고 비공개로 돌아갑니다.
+- 공개 규칙: AI는 저작권을 판단하지 못합니다. 풍경/온천탕/객실/음식 사진은 신뢰도 0.8 이상이고 라이선스가 확인(verified, 또는 owned, 또는 Commons+라이선스 기록)된 것만 공개 대상이며, 공식 사이트/출처 불명 사진은 '라이선스 보류'로 남고 공식 페이지 링크만 둡니다. 로고는 자동 공개 없이 '로고 검토'로 남습니다. '로고·사진 승인' 탭에서 직접 확인한 것만 승인하세요(사진 승인 = verified + 공개).
+- 공개 사이트는 바뀌지 않습니다. 승인된 로고를 시설 카드의 공식 링크 옆에 작게 보이려면 후속 작업(anon 읽기 정책 + 로더)이 필요합니다(README 'AI 로그 + 사진 분류' 마지막 항목).
+- 테스트용 가짜 모드: `AI_MOCK=1 node tools/monitor/worker.mjs --classify --sink rest` (서비스 키 필요, AI 호출 없이 mock 로그만 쌓고 사진/공지는 바꾸지 않음).
 
 ## 4. 첫 실제 실행 (rest 싱크는 실서버로 돌려본 적이 없습니다)
 - 키를 설정한 PowerShell 에서, 프로젝트 폴더로 이동 후:

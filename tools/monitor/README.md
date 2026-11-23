@@ -19,6 +19,7 @@
 | `--revert <change_id>` | 그 변경이 쓴 `record.monitor.<field>`를 이전 값으로 복원(없었으면 키 삭제), status `reverted` |
 | `--recheck <id> [--kind k]` | 그 시설을 즉시 기한 도래로 만들고 `--run` |
 | `--prune [--days 30]` | `monitor_prune`: 로그/실패 작업 `days`일 초과 삭제, 스냅샷은 대상당 최신 3개 유지(나머지는 `days`일 초과 시 삭제), 끝난 ok/skipped 작업 14일 초과 삭제. `facility_notices`/`photo_assets`/`facility_changes`는 검토 대상이라 지우지 않음. `--run`이 UTC 03:00~03:29에 하루 한 번 자동 실행 |
+| `--classify` | 사진 분류 단계만 실행(`--run`도 끝에서 자동 실행). `ANTHROPIC_API_KEY` 없으면 `skipped` 로그 1건만 남기고 종료. `AI_MOCK=1`이면 가짜 응답(DB의 사진/공지는 바뀌지 않음). rest 싱크 전용 |
 | `--sink rest\|sql` | rest = PostgREST(`SUPABASE_SERVICE_ROLE_KEY`), sql = `out/NNN-*.sql` 로 SQL만 생성 |
 
 ## 동작 규칙
@@ -54,3 +55,20 @@
 
 ## unlisted(숨김) 시설
 `onsen_facilities.unlisted=true` 행은 공개(anon) 읽기에서 빠진다. 워커는 service role이라 전부 보지만, 숨긴 시설에 모니터 대상을 만들 필요는 없다(현재 대상 시설은 모두 공개 상태). 자세한 내용은 `web/README.md`.
+
+## AI 로그 + 사진 분류 (migration 007)
+- `ai_logs`: AI 호출 1건 = 1행(kind `notice_summary|change_summary|image_classify`, 시설/공지/사진/변경 참조, model, `input_digest`(sha256 + 200자 발췌, 전체 원문/이미지 아님), `output`(summary_ko, confidence, labels, reason), status `ok|error|skipped|mock`, tokens, error(비밀 제거·300자), 검토 상태 `unreviewed|accepted|rejected|edited`). 읽기/검토는 관리자만(RLS `is_admin()`), 쓰기는 서비스 롤만(anon/authenticated insert 권한 없음). 검토는 `ai_log_review(id, status, summary)` (security invoker, 한 트랜잭션): edited 공지 요약은 `facility_notices.summary_ko`도 갱신, rejected 공지 요약은 그 요약이 그대로면 지우고 비공개로 되돌림. 기존 `ai_usage`(비용 집계)는 그대로 계속 기록.
+- 공지 요약 호출마다 `ai_logs` 기록. 키가 없으면 실행당 종류별 `skipped` 1건만. `change_summary`는 스키마에만 있고 아직 호출하지 않음(가격/시간 변경은 구조화 값이라 AI 요약이 필요 없음).
+- 사진 분류(`classifyPhotos`): `published=false`, `ai_checked_at is null`, 라이선스 rejected 아님인 `photo_assets`를 실행당 최대 `AI_MAX_IMAGES`(기본 20)장, 8분 이내, 연속 API 오류 3회면 중단. 이미지는 https + 공개 호스트만(`watchUrl` + `fetchSafe`: 사설/루프백/메타데이터 IP, 계정정보, 특수 포트, 리다이렉트 매 홉 재검증), 5MB 상한, content-type `image/*` + 매직 바이트 확인 후 base64로 Claude(claude-haiku-5-5)에 전달. 이미지/페이지 속 글자는 데이터일 뿐이며 응답은 엄격히 파싱(알 수 없는 라벨은 `other`, 신뢰도 0~1 클램프). 가져오기 실패/비이미지/파싱 불가는 `check_failed`로 표시해 매 실행 재시도하지 않고, API 일시 오류는 미분류로 남겨 다음 실행에서 재시도.
+- 라벨: `onsen_bath|exterior|room|food|logo|map_doc|other`. 컬럼: `ai_label, ai_confidence, ai_reason, ai_checked_at, publish_state, license_source(official|unknown|commons|owned), license_note`.
+- 공개 규칙(`decidePublish`, AI는 저작권을 판단하지 못함): 
+  | 라벨 | 조건 | publish_state |
+  |---|---|---|
+  | onsen_bath / exterior / room / food | 신뢰도 >= 0.8 **그리고** 라이선스 OK | `publish_ok` (+ `license_status='verified'`일 때만 `published=true`) |
+  | 위와 같지만 | 신뢰도 < 0.8 또는 라이선스 OK 아님(공식/출처 불명) | `hold_license` (공개 안 함, 공식 페이지 링크만) |
+  | logo | 항상 | `logo_review` (자동 공개 없음, 관리자 승인) |
+  | map_doc / other | 항상 | `not_published` |
+  라이선스 OK = `license_status='verified'` 또는 `license_source='owned'` 또는 `license_source='commons'` + `license_note`(라이선스 기록) 있음. `license_source`/`license_note`는 사람/가져오기 도구만 쓴다(워커가 채우지 않음). 이미 공개된 행은 워커가 건드리지 않는다. 공개 사이트 조건(anon: `published and license_status='verified'`)은 그대로라서 표시되는 것은 바뀌지 않는다.
+- 관리자 승인(탭 '로고·사진 승인'): hold_license -> `approved`(라이선스 직접 확인, 한 번에 verified + published), logo_review -> `logo_approved`(공개 아님), 둘 다 반려 가능(`rejected`). 트리거 `photo_assets_guard`가 관리자의 전이(위 3가지만)와 'published는 verified일 때만'을 DB에서 강제한다. 서비스 롤은 제한 없음.
+- 테스트: `--selftest`가 규칙 표(라벨 x 라이선스 x 신뢰도), SSRF URL 거부, 키 없음 skip, ai_logs 행 모양, 가져오기 안전성, 건수 상한, mock 모드를 오프라인(가짜 클라이언트)으로 검사. 실제 Anthropic API는 호출해 본 적 없다.
+- 후속(미구현, 공개 페이지 변경 없음): 승인된 로고(`publish_state='logo_approved'`)를 공개 시설 카드의 공식 사이트 링크 옆에 작게 보여 주려면 anon이 그 행을 읽을 수 있어야 한다(현재 anon 정책은 published+verified만). 읽기 전용 view/정책(logo_approved의 image_url, facility_id만)을 추가한 뒤 `db-loader.js`에서 가져오는 작업이 필요하다.
