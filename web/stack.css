@@ -39,9 +39,10 @@
 .pager { margin: 44px 0 12px; padding-top: 28px; border-top: 1px solid var(--rule); gap: 8px; }
 .pager button { min-width: 44px; height: 44px; font-size: 15px; }
 .pager button[data-p]:first-child, .pager button[data-p]:last-of-type { padding: 0 18px; }
-/* 스크롤바 유무로 목록 폭(=열 수)이 흔들리지 않게 하고, 다시 그릴 때 브라우저가 스크롤을 임의로 옮기지 않게 한다 */
-html { overflow-y: scroll; }
+/* 다시 그릴 때 브라우저가 스크롤을 임의로 옮기지 않게 한다. (html{overflow-y:scroll}은 두지 않는다: 내용이 짧은 로딩 중에 오른쪽 15px이 빈 칸으로 남는다. 열 수는 stack-list.js의 ResizeObserver가 다시 맞춘다) */
 #list, .stack-row { overflow-anchor: none; }
+/* 카드 가격 칸: 숙박 줄 아래에 당일 입욕 줄을 따로 쌓는다 */
+.card .prices { display: grid; gap: 8px; justify-items: end; }
 
 /* 사진 칸: 사진 비율에 맞춰 높이를 정하고 남는 부분은 같은 사진을 흐리게 깐다 */
 .stack-row .ph { position: relative; height: var(--ph-h, 190px); overflow: hidden; background: var(--hinoki); display: block; }

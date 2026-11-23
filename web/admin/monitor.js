@@ -22,7 +22,10 @@
   }
   const safeHref = (v) => { try { const u = new URL(v); return /^https?:$/.test(u.protocol) ? u.href : ''; } catch { return ''; } };
   const link = (url, text) => { const h = safeHref(url); return h ? el('a', {href: h, target: '_blank', rel: 'noopener noreferrer'}, text || url) : el('span', {}, text || url || '-'); };
-  const when = (v) => v ? new Date(v).toLocaleString('ko-KR', {hour12: false}) : '-';
+  // DB 시각은 timestamptz(UTC). 브라우저 시간대와 무관하게 한국 시간으로 고정해 보여 준다.
+  const KST = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'});
+  const when = (v) => { const d = v ? new Date(v) : null; return d && !isNaN(d) ? `${KST.format(d)} KST` : '-'; };
+  const rel = (v) => { const s = Math.round((Date.parse(v) - Date.now()) / 1000), a = Math.abs(s); if (a < 60) return '방금'; const [n, u] = a < 3600 ? [a / 60, '분'] : a < 86400 ? [a / 3600, '시간'] : [a / 86400, '일']; return `${Math.floor(n)}${u} ${s > 0 ? '뒤' : '전'}`; };
   const tag = (text, cls) => el('span', {class: 'tag ' + (cls || '')}, text);
   const msgBox = () => el('p', {class: 'msg', role: 'status'});
   const say = (box, text, cls) => { box.textContent = text; box.className = 'msg ' + (cls || ''); };
@@ -135,18 +138,28 @@
     const addStats = (title, items) => root.append(el('h3', {}, title), el('div', {class: 'grid'}, items.map(([n, t]) => el('div', {class: 'stat'}, el('b', {}, n), el('span', {}, t)))));
     try {
       const [fac, targets, jq, jr, jf, jd, running] = await Promise.all([
-        countOf('onsen_facilities'), all('monitor_targets?select=kind,last_status,last_checked_at,next_check_at,enabled'),
+        countOf('onsen_facilities'), all('monitor_targets?select=facility_id,kind,last_status,last_checked_at,next_check_at,enabled'),
         countOf('monitor_jobs?status=eq.queued'), countOf('monitor_jobs?status=eq.running'), countOf('monitor_jobs?status=eq.failed'), countOf('monitor_jobs?status=eq.ok'),
         api('monitor_jobs?select=worker,started_at&status=eq.running&order=started_at.desc&limit=5')]);
       const cls = (t) => !t.last_status ? 'wait' : t.last_status.startsWith('failed') ? 'failed' : t.last_status.startsWith('blocked') ? 'blocked' : 'ok';
       const c = {ok: 0, failed: 0, blocked: 0, wait: 0};
       targets.forEach((t) => c[cls(t)]++);
-      const last = targets.map((t) => t.last_checked_at).filter(Boolean).sort().pop(), next = targets.filter((t) => t.enabled).map((t) => t.next_check_at).filter(Boolean).sort()[0];
-      addStats('전체', [[fac, '등록 시설'], [targets.length, '감시 대상'], [when(last), '마지막 점검'], [when(next), '다음 점검']]);
+      // 시각은 문자열이 아닌 숫자로 비교한다(소수 자리 수가 달라 문자열 정렬이 틀릴 수 있음). 기한이 지난 대상(새로 등록되어 next=등록 시각인 것 포함)은 '다음'이 아니라 '대기'로 센다.
+      const now = Date.now(), ms = (v) => Date.parse(v), on = targets.filter((t) => t.enabled && t.next_check_at);
+      const overdue = on.filter((t) => ms(t.next_check_at) <= now), upcoming = on.filter((t) => ms(t.next_check_at) > now);
+      const pick = (a, f, v) => a.length ? a.reduce((m, t) => f(ms(t[v]), ms(m[v])) ? t : m)[v] : null;
+      const last = pick(targets.filter((t) => t.last_checked_at), (a, b) => a > b, 'last_checked_at'), next = pick(upcoming, (a, b) => a < b, 'next_check_at');
+      addStats('전체', [[fac, '등록 시설'], [targets.length, '감시 대상'], [last ? when(last) : '점검 전', last ? `마지막 점검 (${rel(last)})` : '마지막 점검'],
+        [next ? when(next) : '-', next ? `다음 점검 (${rel(next)})` : '다음 점검 예정 없음'], [`${overdue.length}건`, '점검 대기(기한 지남)']]);
       addStats('대상 종류', KINDS.map((k) => [targets.filter((t) => t.kind === k).length, KIND_KO[k]]));
       addStats('대상 상태', [[c.ok, '정상'], [c.failed, '실패'], [c.blocked, '차단(robots 등)'], [c.wait, '미점검']]);
       addStats('작업 큐', [[jq, '대기'], [jr, '실행 중'], [jf, '실패'], [jd, '완료']]);
       const w = [...new Set(running.data.map((r) => r.worker).filter(Boolean))];
+      // 기한 지난 대상(오래된 순) → 앞으로 예정(빠른 순) → 중지됨. 실패·차단 대상의 다음 시각은 재시도 예정 시각이다.
+      const nx = (t) => `${when(t.next_check_at)} (${ms(t.next_check_at) <= now ? '점검 대기(기한 지남) ' : ''}${rel(t.next_check_at)})`;
+      const rows = [...targets].sort((a, b) => (!a.enabled - !b.enabled) || (ms(a.next_check_at || 0) - ms(b.next_check_at || 0))).slice(0, 40);
+      root.append(el('h3', {}, `감시 대상 (다음 점검 순, 상위 ${rows.length}건)`), table(['시설 id', '종류', '상태', '마지막 점검', '다음 점검'],
+        rows.map((t) => [t.facility_id, KIND_KO[t.kind] || t.kind, t.enabled ? (t.last_status || '점검 전') : '중지됨', t.last_checked_at ? `${when(t.last_checked_at)} (${rel(t.last_checked_at)})` : '점검 전', t.enabled && t.next_check_at ? nx(t) : '-'])));
       root.append(el('p', {class: 'msg'}, `실행 중 워커: ${w.length ? w.join(', ') : '없음'}`));
     } catch (e) { say(status, e.message, 'err'); }
     root.append(el('h3', {}, '지금 다시 점검'), recheckForm());

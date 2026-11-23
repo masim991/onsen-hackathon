@@ -331,26 +331,26 @@ const JOBS = { notice: jobNotice, price_hours: jobPriceHours, photo: jobPhoto };
 // ---------- run loop ----------
 async function processJob(job, sink, opts, stats) {
   const base = { facility_id: job.facility_id, job_id: job.id, job_kind: job.kind };
-  const now = Date.now(), interval = (INTERVAL[job.kind] || 360) * 60000;
+  const interval = (INTERVAL[job.kind] || 360) * 60000, now = () => Date.now(); // next_check_at is measured from the finish time (same instant as last_checked_at), not from job start
   try {
     const r = await JOBS[job.kind](job, sink);
-    await sink.finish(job, { status: 'ok', error: null }, { last_checked_at: nowIso(), last_status: r.result, fail_count: 0, next_check_at: new Date(now + interval).toISOString() });
+    await sink.finish(job, { status: 'ok', error: null }, { last_checked_at: nowIso(), last_status: r.result, fail_count: 0, next_check_at: new Date(now() + interval).toISOString() });
     stats[r.result] = (stats[r.result] || 0) + 1;
     log('info', { ...base, result: r.result, meta: r.meta });
   } catch (e) {
     const cause = causeOf(e);
     stats['err:' + cause] = (stats['err:' + cause] || 0) + 1;
     if (e.kind === 'blocked') { // robots / forbidden / SSRF: not retried, not counted as failure
-      await sink.finish(job, { status: 'skipped', error: cause }, { last_checked_at: nowIso(), last_status: 'blocked:' + cause, next_check_at: new Date(now + interval).toISOString() });
+      await sink.finish(job, { status: 'skipped', error: cause }, { last_checked_at: nowIso(), last_status: 'blocked:' + cause, next_check_at: new Date(now() + interval).toISOString() });
       return log('warn', { ...base, result: 'skipped', error_cause: cause });
     }
     if (RETRYABLE.has(cause) && job.attempts < MAX_ATTEMPTS) {
       const wait = opts.backoffMin * 60000 * 2 ** (job.attempts - 1);
-      await sink.finish(job, { status: 'queued', error: cause, run_after: new Date(now + wait).toISOString() });
+      await sink.finish(job, { status: 'queued', error: cause, run_after: new Date(now() + wait).toISOString() });
       return log('warn', { ...base, result: 'retry', error_cause: cause, meta: { attempt: job.attempts } });
     }
     const fails = (await sink.failCount(job.target_id)) + 1;
-    await sink.finish(job, { status: 'failed', error: cause }, { last_checked_at: nowIso(), last_status: 'failed:' + cause, fail_count: fails, next_check_at: new Date(now + interval * Math.min(2 ** fails, 8)).toISOString() });
+    await sink.finish(job, { status: 'failed', error: cause }, { last_checked_at: nowIso(), last_status: 'failed:' + cause, fail_count: fails, next_check_at: new Date(now() + Math.max(interval, Math.min(interval * Math.min(2 ** fails, 8), 7 * 864e5))).toISOString() });
     log('error', { ...base, result: 'failed', error_cause: cause });
   }
 }

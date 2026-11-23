@@ -264,7 +264,9 @@ function judge(f, c) {
   return out;
 }
 const priceOk = (f, c) => !c.dayMax || (f.stay === 'n' ? false : f.stayPrice == null ? c.unp : f.stayPrice <= c.dayMax);
-const hasPrice = (f) => f.stayPrice != null || f.dayPrice != null;
+const hasPrice = (f) => f.stayPrice != null || f.dayPrice != null; // '가격 있는 곳만' 칩은 숙박·당일 중 하나라도 있으면 센다. 가격 슬라이더·정렬은 숙박 가격만 쓴다.
+const dayShown = (f) => f.day !== 'n' && f.dayPrice != null; // 당일 입욕 가격은 숙박 가격과 섞지 않고 따로 라벨을 붙여 보인다
+const stayNp = (f) => f.stay !== 'n' && f.stayPrice == null && dayShown(f); // 숙박 가격만 비고 당일 가격이 있으면 '가격 미공개' 대신 '숙박 요금 미공개'
 
 // 온천수 종류 이름 → 온천수 안내 페이지의 앵커(없는 종류는 글자만)
 const WATER_SLUG = { '単純温泉': 'w-simple', '二酸化炭素泉': 'w-co2', '塩化物泉': 'w-chloride', '炭酸水素塩泉': 'w-bicarbonate', '硫酸塩泉': 'w-sulfate', '含鉄泉': 'w-iron', '硫黄泉': 'w-sulfur', '酸性泉': 'w-acidic', '放射能泉': 'w-radioactive', '含よう素泉': 'w-iodine' };
@@ -303,7 +305,7 @@ const PREF_SHORT = (() => {
 const prefChip = (f) => escQ(PREF_SHORT[f.pref] || Array.from(unesc(f.prefName)).slice(0, 3).join(''));
 function compactCard(f) {
   const sel = state.sel === f.id;
-  const known = [f.day === 'y' && LABEL.day, hasPrice(f) && (f.stayPrice != null ? moneyText(f.stayPrice, f.off ? '〜' : '') + (f.off ? ` (${basisText(f)})` : '') : moneyText(f.dayPrice)), UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
+  const known = [f.day === 'y' && !dayShown(f) && LABEL.day, f.stayPrice != null && moneyText(f.stayPrice, f.off ? '〜' : '') + (f.off ? ` (${basisText(f)})` : ''), dayShown(f) && `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}`, stayNp(f) && UI.noStayPrice, UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
   return `
   <article class="card nophoto-card${sel ? ' sel' : ''}" data-id="${f.id}">
     <span class="np-chip" aria-hidden="true">${ic('onsen')}<b>${prefChip(f)}</b></span>
@@ -333,7 +335,7 @@ function card(f) {
     </div>
     <div class="side">
       ${heart(f)}
-      ${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${UI.noPrice}</small></p>` : ''}
+      <div class="prices">${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${stayNp(f) ? UI.noStayPrice : UI.noPrice}</small></p>` : ''}${dayShown(f) ? `<p class="price day"><small>${UI.dayPriceLabel}</small>${money(f.dayPrice)}</p>` : ''}</div>
     </div>
   </article>`;
 }
@@ -364,7 +366,7 @@ function cmpRender(focusId) {
   const priceRow = (k, none) => {
     // 최저 표시는 확인된 값끼리, 같은 기준(식사 조건)일 때만
     const pf = fs.filter((f) => price[k](f) != null), v = pf.map(price[k]), lo = new Set(pf.map((f) => f.off?.basis)).size < 2 && v.length > 1 && Math.min(...v) < Math.max(...v) ? Math.min(...v) : null;
-    return (f) => f[k] === 'n' ? none : (price[k](f) == null ? nc : (k === 'stay' ? stayMoney(f) : money(price[k](f))) + (price[k](f) === lo ? ` <em class="low">${C.low}</em>` : '') + (k === 'stay' && f.off ? `<small>${basisText(f)}</small><small>${f.off.assoc ? UI.px.srcAssocShort : f.off.mon ? UI.px.srcMonShort : UI.px.srcOfficial}</small>${f.off.old ? `<small class="old">${UI.px.old}</small>` : ''}` : '')) + (k === 'day' && f.day !== 'n' && f.dayHours ? `<small>${f.dayHours}</small>` : '');
+    return (f) => f[k] === 'n' ? none : (price[k](f) == null ? (k === 'stay' && stayNp(f) ? `<span class="nc">${TL.stayNp}</span>` : nc) : (k === 'stay' ? stayMoney(f) : money(price[k](f))) + (price[k](f) === lo ? ` <em class="low">${C.low}</em>` : '') + (k === 'stay' && f.off ? `<small>${basisText(f)}</small><small>${f.off.assoc ? UI.px.srcAssocShort : f.off.mon ? UI.px.srcMonShort : UI.px.srcOfficial}</small>${f.off.old ? `<small class="old">${UI.px.old}</small>` : ''}` : '')) + (k === 'day' && f.day !== 'n' && f.dayHours ? `<small>${f.dayHours}</small>` : '');
   };
   const source = (f) => /^https?:\/\//.test(f.srcUrl || '') ? (f.srcUrl === officialHref(f) ? C.same : `<a href="${f.srcUrl}" target="_blank" rel="noopener noreferrer">${T.sourcePage}<span class="vh">${UI.newWin}</span></a>`) : nc;
   const rows = [
@@ -452,7 +454,7 @@ function detailHtml(f) {
   // 핵심 4칸
   const bathLines = bathInfo(f);
   const tiles = [
-    [TL.stay, f.stay === 'n' ? `<span class="tv-t">${TL.noStay}</span>` : f.stayPrice != null ? stayMoney(f) : nc, f.stay !== 'n' && f.stayPrice != null ? (f.off ? basisText(f) : TL.stayUnit) : ''],
+    [TL.stay, f.stay === 'n' ? `<span class="tv-t">${TL.noStay}</span>` : f.stayPrice != null ? stayMoney(f) : stayNp(f) ? `<span class="nc">${TL.stayNp}</span>` : nc, f.stay !== 'n' && f.stayPrice != null ? (f.off ? basisText(f) : TL.stayUnit) : ''],
     [TL.day, f.day === 'n' ? `<span class="tv-t">${TL.noDay}</span>` : f.dayPrice != null ? money(f.dayPrice) : nc, f.day === 'n' ? '' : f.dayHours || ''],
     [TL.water, f.quality.length ? `<span class="tv-t">${qualityLinks(f, 99).join(' · ')}</span>` : nc, temp ? TL.temp(temp) : `${R.temp} ${T.nc}`],
     [TL.bath, bathLines.length ? `<span class="tv-t">${bathLines.map((l) => `<span>${l}</span>`).join('')}</span>` : nc, ''],

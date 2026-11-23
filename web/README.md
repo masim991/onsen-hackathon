@@ -29,7 +29,7 @@
 - 카드/상세/필터 동작: `site.js`. 목록 배치/페이지 넘김: `stack-list.js` + `stack.css`
 - 색, 글꼴, 크기: `theme.css`(최종 토큰), 레이아웃 기본은 `style.css`
 - 히어로/인트로: `cover*.css`, `intro.*`. 푸터: `footer.*`. 안내/온천수 페이지: `page.js` + `page.css`
-- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20270102, 사진·가격 없는 시설 2,243건 숨김 반영; 20270102: 공식 가격 64→50건 정정 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
+- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20270103: 점검 시각 KST·대기 표시, 언어 전환 빈 칸(html 스크롤 강제 제거), 당일 입욕 가격 분리 표시; 20270102: 공식 가격 64→50건 정정 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
 
 ## 공식 공지 표시와 변경 반영 (db-loader.js + site.js)
 - 승인된(`published`) `facility_notices`만 익명으로 읽힌다(RLS). 시설·사진과 병렬로 받고 실패해도 무시. 상세 서랍에만 '공식 공지' 구역이 그려지며(`noticeHtml`), 공지가 없으면 화면은 그대로다. 문구: `i18n.js`의 `offNotice`(ko/ja/en).
@@ -45,3 +45,7 @@
 - 목록 건수 참고: 도도부현을 주소로 열면 기본 조건 '숙박 가능'이 켜져 있어 전체 시설 수보다 적게 나온다(북해도 42곳 중 32). 조건을 해제하면 전체가 나온다(정상 동작).
 - 다크 모드 히어로: 사진 위 글자는 `cover-upgrade.css`(투명 바탕·흰 글자)가 정한다. `dark.css`에서 `.hero-txt`에 바탕/글자색을 주면 사진 위에 어두운 상자가 생기니 주지 말 것.
 - 되돌리기: `tools/cleanup/unhide.sql`(로컬 전용·저장소 미포함, 숨긴 id 목록으로 `unlisted=false`). 일부만: `update onsen_facilities set unlisted=false where id in (...)`. 백업: `tools/cleanup/backup/onsen_facilities-before-hide-20261123.json`.
+
+## 가격 표시 규칙 (숙박 vs 당일 입욕)
+- 숙박 가격(`stayPrice`)과 당일 입욕 가격(`dayPrice`)은 섞지 않는다. 카드·서랍·비교표 모두 당일 가격은 '당일 입욕 ¥N'(환율 규칙 동일)으로 따로 라벨을 붙이고, 숙박 가격만 없을 때는 일반 '가격 미공개' 대신 '숙박 요금 미공개'(`UI.noStayPrice`, 서랍·비교는 `tile.stayNp`)를 쓴다.
+- '가격 있는 곳만' 칩(`hasPrice`)은 숙박·당일 중 하나라도 있으면 센다. 가격 슬라이더·'가격 미확인 포함'·가격순 정렬은 숙박 가격만 쓴다.
