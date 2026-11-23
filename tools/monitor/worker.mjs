@@ -9,7 +9,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { fetchSafe, decodeBody, LIM, watchUrl, htmlToLines, hashContent, extractNotices, metaOf, cleanText } from '../tracker/source-tracker.mjs';
-import { htmlToRows, linksOf, pickLinks, extractPrices as extractPricesLoose } from '../prices/price-finder.mjs';
+import { htmlToRows, linksOf, pickLinks, extractPricesStrict } from '../prices/price-finder.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -108,7 +108,33 @@ export function extractNoticeItems(html, lines, base, now = Date.now()) {
   const dated = items.slice(0, 5);
   let n = 0;
   for (const s of extractNotices(lines).snippets) if (s.kind !== 'notice' && n++ < 3) push(s.text, null, s.text, base);
-  return [...dated, ...items.filter((x) => !x.date).slice(0, 3)].filter((x, i, a) => a.findIndex((y) => y.hash === x.hash) === i);
+  return filterNotices([...dated, ...items.filter((x) => !x.date).slice(0, 3)].filter((x, i, a) => a.findIndex((y) => y.hash === x.hash) === i), now);
+}
+
+// Relevance filter (first real run: ~42% of notices were nature walks, menus, YouTube intros, site renewals, and one closure appeared 3x as fragments).
+// Keep recall for 休業/休館/営業時間/料金改定. Junk words lose only when no key word is present; fragments and near-duplicates are dropped; otherwise a key word or a recent date is required.
+export const N_JUNK = /レストラン|メニュー|ランチ|ディナー|ブッフェ|ビュッフェ|会席|コース料理|YouTube|動画|マガジン|取材|掲載|ブログ|リニューアル|新しくなりました|採用|求人|イベント|開催|ウォーク|観察|フェア|キャンペーン|撮影|新商品|コンサート|祭|参加してきました|おすすめ|お料理|スポット|登場/;
+// generic standing disclaimers ('営業時間は予告なく変更になる場合があります') are not notices unless dated
+const N_BOILER = /場合がござい|することがあります|ことがあります|予告なく|年中無休/;
+export const N_KEY = /休業|休館|臨時|営業時間|料金|値上|改定|閉館|メンテナンス|メンテンナンス|工事|営業再開|休止|閉鎖/;
+// text reduced to its words (no digits/dates/punctuation) so a fragment and its full sentence compare equal
+const noticeNorm = (s) => String(s || '').normalize('NFKC').replace(/&hellip;|\.{2,}/g, '').replace(/[\d年月日火水木金土祝時分~〜～:：\/.\-()（）\[\]【】「」『』・、。!！\s]/g, '');
+export function filterNotices(items, now = Date.now()) {
+  const keep = items.filter((n) => {
+    const txt = n.title + ' ' + (n.excerpt || n.original_excerpt || ''), key = N_KEY.test(txt), t = n.date || n.notice_date ? Date.parse(n.date || n.notice_date) : NaN;
+    if (N_JUNK.test(txt) && !key) return false;
+    if (N_BOILER.test(txt) && !Number.isFinite(t)) return false;
+    if (cleanText(n.title).length < 8 || (!Number.isFinite(t) && !key)) return false;
+    return key || (t >= now - 90 * DAY && t <= now + 90 * DAY);
+  });
+  // near-duplicates: same words, or a fragment contained in a longer one; keep the dated, then the longer
+  const rank = (a, b) => (!!(b.date || b.notice_date) - !!(a.date || a.notice_date)) || noticeNorm(b.excerpt || b.original_excerpt).length - noticeNorm(a.excerpt || a.original_excerpt).length;
+  const nx = (n) => noticeNorm(n.excerpt || n.original_excerpt || n.title);
+  return keep.filter((a, i) => !keep.some((b, j) => j !== i && (b.facility_id ?? a.facility_id) === a.facility_id && (() => {
+    const x = nx(a), y = nx(b), f = noticeNorm(a.title);
+    const dup = x === y || (x.length >= 6 && y.includes(x)) || (f.length >= 6 && y.includes(f) && y.length > f.length);
+    return dup && (x !== y || y.length > x.length || rank(a, b) > 0 || (rank(a, b) === 0 && j < i));
+  })()));
 }
 
 const H_RE = /(\d{1,2}):(\d{2})\s*(?:[〜~～\-－ー–—]|から)\s*(\d{1,2}):(\d{2})/g;
@@ -138,16 +164,8 @@ export function pickHours(cands) {
   const any = day[0] || cands[0];
   return any ? { ...any, confidence: 'medium' } : null;
 }
-// Stricter than price-finder alone (first real run auto-applied campaign conditions like '宿泊料金が6,000円以上で…' as prices):
-// work per sentence; drop sentences with campaign/eligibility words or an amount followed by a threshold word; 'に限り' limited-condition prices are medium (=> pending_review).
-// shortcut: '円から' ("from" price) is NOT rejected (common legit form); it only matters when followed by a threshold, which THRESHOLD catches.
-const CAMPAIGN = /ご宿泊のすべて|以上であること|対象|キャンペーン|割引|クーポン|ポイント|助成|補助|旅行代金が|適用|条件/;
-const THRESHOLD = /[\d,]{4,}\s*円?\s*(?:[(（][^)）]{0,15}[)）])?\s*(?:以上|以下|未満|超|まで)/;
-const LIMITED = /に限り|限定|特別価格/;
-export function extractPrices(rows) {
-  const sentences = rows.flatMap((r) => r.split(/[。！？]/)).filter((x) => x.length >= 3 && !CAMPAIGN.test(x) && !THRESHOLD.test(x.normalize('NFKC')));
-  return extractPricesLoose(sentences).map((c) => (LIMITED.test(c.quote) ? { ...c, confidence: 'medium' } : c));
-}
+// Campaign/eligibility/limited-condition filtering lives in price-finder (extractPricesStrict), shared by both tools.
+export const extractPrices = extractPricesStrict;
 // AUTO_APPLY = off | strict (default) | on. off: everything pending_review. on: previous behaviour (high confidence + quote + 0.2-5x). strict: see decideApply.
 export const autoLevel = () => { const v = String(process.env.AUTO_APPLY || '').trim().toLowerCase(); return v === 'off' || v === 'on' ? v : 'strict'; };
 const bare = (u) => { try { return new URL(u).hostname.replace(/^www./, ''); } catch { return null; } };
@@ -657,6 +675,14 @@ async function selftest() {
   const html = '<h2>お知らせ</h2><ul><li><a href="/n/1">2026.11.05 年末年始の営業について</a></li><li>2026年11月01日 設備点検のため臨時休業します</li></ul><p>© 2026</p>';
   const items = extractNoticeItems(html, htmlToLines(html), 'https://e.com/', Date.parse('2026-11-20'));
   t('notice items dated + link', items.length >= 2 && items[0].date === '2026-11-05' && items[0].url === 'https://e.com/n/1');
+  const NF = (title, date, extra = {}) => ({ title, date, excerpt: title, ...extra }), nnow = Date.parse('2026-11-23');
+  const nk = (l) => filterNotices(l, nnow).length;
+  t('notice filter: junk dropped (walk, menu, YouTube, renewal, magazine, recruit)', nk([NF('開催 伊師浜国民休養地自然観察会', '2026-11-03'), NF('ふぐと宮崎牛会席', '2026-12-14'), NF('凌雲閣を撮影したYouTube「旅する時間」様の動画が公開されました。', '2026-11-10'), NF('公式ホームページをリニューアルいたしました。', '2026-11-01'), NF('秋の南房総へ。おすすめ取材記事', '2026-11-01')]) === 0);
+  t('notice filter: closure/hours/price kept even with junk words', nk([NF('レストラン休業とメニュー変更のお知らせ', null), NF('日帰り入浴 料金改定のお知らせ', null), NF('温泉大浴場 営業時間変更のお知らせ', '2026-10-01')]) === 3);
+  t('notice filter: fragments dropped (short title, no date and no key word)', nk([NF('休館のお知らせ', null), NF('/ お知らせ', '2026-11-21'), NF('ホームページ公開のご案内です', null)]) === 0);
+  t('notice filter: undated standing disclaimers dropped', nk([NF('※営業時間は予告なく変更になる場合がございます。', null), NF('年中無休(年末年始は営業時間の変更あり)', null)]) === 0);
+  t('notice filter: old dated non-key dropped, recent kept', nk([NF('新しい貸切風呂のご案内です', '2025-01-10')]) === 0 && nk([NF('新しい貸切風呂のご案内です', '2026-11-20')]) === 1);
+  t('notice filter: near-duplicates collapse to one (same words / fragment of a longer one)', nk([NF('法定電気点検に伴う休館のお知らせ(2027年2月21日~26日)', null), NF('法廷電気点検に伴う休館のお知らせ(2027年2月21日~26日)', null, { title: '電気点検に伴う休館のお知らせ' })]) === 1 && nk([NF('温泉大浴場・貸切風呂 営業時間変更のお知らせ(2026年10月1日~)', null), NF('温泉大浴場・貸切風呂 営業時間変更のお知らせ(2026年10月1日~)', '2026-10-01')]) === 1);
   t('notice hash stable', items[0].hash === extractNoticeItems(html, htmlToLines(html), 'https://e.com/', Date.parse('2026-11-20'))[0].hash);
   t('images: og first, junk dropped', JSON.stringify(imageCandidates('<meta property="og:image" content="/a.jpg"><img src="/logo.png"><img src="/b.jpg" width="50"><img src="/c.jpg">', 'https://e.com/')) === '["https://e.com/a.jpg","https://e.com/c.jpg"]');
   t('bestPrice prefers 2meals lowest', bestPrice([{ kind: 'per-person', minYen: 5000 }, { kind: 'per-person-2meals', minYen: 12000 }, { kind: 'per-person-2meals', minYen: 9000 }]).minYen === 9000);

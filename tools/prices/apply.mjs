@@ -29,10 +29,12 @@ const ASSOC_EXTRA = ['e-yuzawa.gr.jp'];
 const domainOf = (u) => { try { return new URL(u).hostname.replace(/^www./, ''); } catch { return ''; } };
 const median = (a) => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2); };
 
+const excluded = new Set(Object.keys(readJson(path.join(HERE, 'removed-prices.json'), {})));
 export function build(cand, catalog) {
   const meta = new Map(catalog.map((x) => [String(x.id), x]));
   const items = {}; let skippedAmbiguous = 0;
   for (const [id, list] of Object.entries(cand.items || {})) {
+    if (excluded.has(id)) continue; // manually reviewed and rejected (tools/prices/removed-prices.json, internal)
     const high = list.filter((c) => c.confidence === 'high' && Number.isFinite(c.minYen));
     for (const kind of ORDER) {
       const g = high.filter((c) => c.kind === kind);

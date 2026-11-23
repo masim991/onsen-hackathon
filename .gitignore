@@ -25,3 +25,6 @@ tools/prices/candidates.json
 tools/prices/cache.json
 tools/prices/kinds.json
 tools/names/audit-result.json
+
+# manual price review decisions (internal)
+tools/prices/removed-prices.*

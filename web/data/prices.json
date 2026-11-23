@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-21T13:05:30.230Z",
+ "generated": "2026-11-23T08:59:48.242Z",
  "tool": "price-finder v1",
  "note": "From-prices extracted from official facility sites; excl. tax/service unless stated. Each item has its source page.",
  "items": {
@@ -8,7 +8,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.crossroadfukuoka.jp/spot/10475",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-fukuoka-matsubara-ryokan": {
@@ -16,15 +16,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.crossroadfukuoka.jp/spot/16391",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-fukuoka-ogiya-ryokan": {
-   "from": 6450,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://www.crossroadfukuoka.jp/spot/10516",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-fukuoka-taikanso": {
@@ -32,7 +24,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.crossroadfukuoka.jp/spot/10577",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-fukushima-iizaka-izumiya": {
@@ -40,57 +32,42 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "http://anabaraonsen-idumiya.jp/index.html",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-fukushima-iizaka-yunoya": {
    "from": 12500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "http://www.yunoya.co.jp/room.php",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-gunma-ikaho-19": {
    "from": 16100,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.hotel-kimura.co.jp/group/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-hyogo-yumura-kotobuki": {
    "from": 27500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://oyadokotobuki.com/plan/plan007",
-   "checked": "2026-11-21"
-  },
-  "official-ishikawa-yamashiro-bansyokaku": {
-   "from": 28600,
-   "unit": "JPY/person/night",
-   "basis": "1名1泊(食事条件不明)",
-   "src": "https://www.bansyoukaku.co.jp/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-nagano-utsukushigahara-marunaka": {
    "from": 9900,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://marunakaryokan.com/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-nagasaki-fukutokuya-ryokan": {
    "from": 14300,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/fukutokuya-ryokan/",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-nagasaki-juraku": {
-   "from": 10000,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://obama.or.jp/hotel/juraku/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nagasaki-ryokan-fujiya": {
@@ -98,7 +75,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/ryokan-fujiya/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nagasaki-ryokan-kunisaki": {
@@ -106,15 +83,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/ryokan-kunisaki/",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-nagasaki-ryokan-wataya": {
-   "from": 8000,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://obama.or.jp/hotel/ryokan-wataya/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nagasaki-ryokan-yamadaya": {
@@ -122,7 +91,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/ryokan-yamadaya/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nagasaki-ryokan-yunoka": {
@@ -130,7 +99,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/ryokan-yunoka/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nagasaki-tsutaya-ryokan": {
@@ -138,7 +107,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://obama.or.jp/hotel/tsutaya-ryokan/",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-nara-nara-miyataki-matsuya": {
@@ -146,35 +115,35 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://matuya.yoshino.jp/shisetu.htm",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-niigata-senami-seiunsou": {
    "from": 18000,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "http://www.seiunsou.com/room.html",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-niigata-senami-taikanso": {
    "from": 12375,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.taikanso.senaminoyu.co.jp/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-niigata-yuzawa-urakonoyu-takanoya": {
    "from": 7200,
    "unit": "JPY/person/night",
    "basis": "1泊朝食/夕食付",
    "src": "https://takanoya.gr.jp/price.php",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-saga-banshokaku-shikishima": {
    "from": 34500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/06/org-entry-005.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-hisago-ryokan": {
@@ -182,7 +151,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/05/org-entry-024.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-ikkyu-so": {
@@ -190,7 +159,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/05/org-entry-035.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-kotan-ureshino": {
@@ -198,7 +167,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2026/01/-kotan-ureshino.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-kotobukiya": {
@@ -206,7 +175,7 @@
    "unit": "JPY/person/night",
    "basis": "素泊まり",
    "src": "https://spa-u.net/facility/2022/04/org-entry-027.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-onyado-takasago": {
@@ -214,7 +183,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/06/org-entry-023.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-oyado-kujaku": {
@@ -222,7 +191,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/05/org-entry-028.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-ryokan-irifuneso": {
@@ -230,7 +199,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊朝食/夕食付",
    "src": "https://spa-u.net/facility/2017/06/org-entry-009.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-sentoro": {
@@ -238,7 +207,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/05/org-entry-022.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-tiyonoya": {
@@ -246,7 +215,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊朝食/夕食付",
    "src": "https://spa-u.net/facility/2017/05/org-entry-037.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-saga-yuzennoyado-toukai": {
@@ -254,7 +223,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/06/org-entry-020.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-shizuoka-ito-kirano-sato": {
@@ -262,7 +231,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://itospa.com/stay/detail_24043.html",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-shizuoka-ito-umeya": {
@@ -270,7 +239,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊朝食/夕食付",
    "src": "https://itospa.com/stay/detail_24017.html",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-tochigi-hatashita-onsen-kokorozukushi-no-yado-nuriya": {
@@ -278,35 +247,35 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "http://www.naf.co.jp/nuriya/plan.stm",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-tochigi-kamishiobara-onsen-yama-no-yu-warakuyuen": {
    "from": 12500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.waraku32.com/plan/paln05/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-yamaguchi-yuno-shisuien": {
    "from": 14000,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.shisuien.com/rooms/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "ryokan-research-1": {
    "from": 29800,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.kinokuniya-bettei.com/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "ryokan-research-13": {
    "from": 8500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.wakayama-kanko.or.jp/spots/detail_4248.html",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-fukuoka-ivy-hotel-chikushino": {
@@ -314,7 +283,7 @@
    "unit": "JPY/person/night",
    "basis": "1泊朝食/夕食付",
    "src": "https://www.crossroadfukuoka.jp/spot/10468",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-hirayunomori": {
@@ -322,74 +291,28 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.hirayunomori.co.jp/stay/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-ibaraki-kitaibaraki-izura-kanko-hotel": {
    "from": 15400,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.izura.net/plan/group.php",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-kochi-kochi-seira-shimanto": {
    "from": 10200,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.seirashimanto.com/room.htm",
-   "checked": "2026-11-21"
-  },
-  "official-mie-kumano-hotel-tosoryuso": {
-   "from": 5000,
-   "unit": "JPY/person/night",
-   "basis": "1名1泊(食事条件不明)",
-   "src": "https://seiryusou.com/",
-   "checked": "2026-11-21"
-  },
-  "official-nagano-hirugami-hirugami-no-mori": {
-   "from": 6000,
-   "unit": "JPY/person/night",
-   "basis": "素泊まり",
-   "src": "https://hirumori.co.jp/",
-   "checked": "2026-11-21"
-  },
-  "official-nagasaki-hamakan-hotel": {
-   "from": 5500,
-   "unit": "JPY/person/night",
-   "basis": "1泊朝食/夕食付",
-   "src": "https://obama.or.jp/hotel/hamakan-hotel/",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-nagasaki-hotel-orange-bay": {
-   "from": 10000,
-   "unit": "JPY/person/night",
-   "basis": "1泊朝食/夕食付",
-   "src": "https://obama.or.jp/hotel/hotel-orange-bay/",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-nagasaki-jisco-hotel-obama-onsen": {
-   "from": 5500,
-   "unit": "JPY/person/night",
-   "basis": "1泊朝食/夕食付",
-   "src": "https://obama.or.jp/hotel/jisco-obama/",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-niigata-yuzawa-kashiwaya-annex": {
-   "from": 6600,
-   "unit": "JPY/person/night",
-   "basis": "1泊朝食/夕食付",
-   "src": "https://www.e-yuzawa.gr.jp/stay/motohashi-ryokan/",
-   "checked": "2026-11-21",
-   "assoc": true
+   "checked": "2026-11-23"
   },
   "official-saga-hotel-sakura-ureshino": {
    "from": 16500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://spa-u.net/facility/2017/06/org-entry-038.php",
-   "checked": "2026-11-21",
+   "checked": "2026-11-23",
    "assoc": true
   },
   "official-shinhotaka-yarimikan": {
@@ -397,92 +320,63 @@
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://yarimikan.com/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-tochigi-furumachi-onsen-hotel-ohruri": {
    "from": 6300,
    "unit": "JPY/person/night",
    "basis": "1名1泊(食事条件不明)",
    "src": "https://www.ohruri.com/shiobara_ohruri",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-tokushima-mannaka": {
    "from": 17000,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://mannaka.co.jp/hotel/",
-   "checked": "2026-11-21"
-  },
-  "official-toyama-garaku": {
-   "from": 20000,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://www.garaku.co.jp/rooms/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-yamaguchi-yuda-fujinoya": {
    "from": 10230,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://hotel-fujinoya.com/cms/page105.html",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-yamaguchi-yuda-kiraku": {
    "from": 7500,
    "unit": "JPY/person/night",
    "basis": "素泊まり",
    "src": "https://hotelkiraku.com/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-yamanashi-shimobe-fuji-hotel": {
    "from": 7260,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://fuji-hotel.com/plan/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "ryokan-research-5": {
    "from": 7500,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://kannonyu-yawaragi.com/business-plan/",
-   "checked": "2026-11-21"
-  },
-  "official-akita-AK": {
-   "from": 6000,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://www.yuwa-kousya.jp/yuasis/",
-   "checked": "2026-11-21"
-  },
-  "official-akita-yokote-sakuraso": {
-   "from": 9500,
-   "unit": "JPY/person/night",
-   "basis": "1泊2食",
-   "src": "https://www.city.yokote.lg.jp/shisetsu/1001528/1002620.html",
-   "checked": "2026-11-21",
-   "assoc": true
-  },
-  "official-ishikawa-wakura-hanagoyomi": {
-   "from": 8800,
-   "unit": "JPY/person/night",
-   "basis": "素泊まり",
-   "src": "http://wakura-hanagoyomi.com/package/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-kochi-kochi-konoka": {
    "from": 10520,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://konokaonsen.com/stay/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   },
   "official-oita-taketa-resonate-kuju": {
    "from": 15120,
    "unit": "JPY/person/night",
    "basis": "1泊2食",
    "src": "https://www.resonate.co.jp/",
-   "checked": "2026-11-21"
+   "checked": "2026-11-23"
   }
  }
 }

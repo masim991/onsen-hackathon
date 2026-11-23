@@ -29,7 +29,7 @@
 - 카드/상세/필터 동작: `site.js`. 목록 배치/페이지 넘김: `stack-list.js` + `stack.css`
 - 색, 글꼴, 크기: `theme.css`(최종 토큰), 레이아웃 기본은 `style.css`
 - 히어로/인트로: `cover*.css`, `intro.*`. 푸터: `footer.*`. 안내/온천수 페이지: `page.js` + `page.css`
-- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20261231, 사진·가격 없는 시설 2,243건 숨김 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
+- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20270102, 사진·가격 없는 시설 2,243건 숨김 반영; 20270102: 공식 가격 64→50건 정정 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
 
 ## 공식 공지 표시와 변경 반영 (db-loader.js + site.js)
 - 승인된(`published`) `facility_notices`만 익명으로 읽힌다(RLS). 시설·사진과 병렬로 받고 실패해도 무시. 상세 서랍에만 '공식 공지' 구역이 그려지며(`noticeHtml`), 공지가 없으면 화면은 그대로다. 문구: `i18n.js`의 `offNotice`(ko/ja/en).

@@ -177,7 +177,7 @@ const SUDO = /素泊まり|素泊り|素泊|食事なし|食事無し|泊のみ/
 const PERSON = /お一人様|おひとり様|1名|1人|一人|おひとり|ひとり|大人/;
 const ROOM = /1室|一室|1部屋|室料/;
 const STAYQ = /1泊|一泊|宿泊/;
-const NEG = /入湯税|宿泊税|消費税|税額|サービス料|子供|子ども|小学|幼児|未就学|添い寝|添寝|お子様|キッズ|こども|キャンセル|追加|オプション|延長|日帰り|日帰|休憩|デイ|入浴料|ペット|ご利用料|貸切|貸し切り|駐車|割引|値引|引き|OFF|off|クーポン|ポイント|還元|寄付|差額|加算|アップ|変更料|手数料|チャージ|飲み放題|宴会|会議|ランチ|昼食|ディナー|食事のみ|アレルギー|プレゼント|送迎|レンタル|貸出|布団代|寝具|エキストラ|コース料理|グランピング|キャンプ|テント|コテージ|ドッグ|ワンちゃん|犬/;
+const NEG = /中学|高校|学生|生徒|入湯税|宿泊税|消費税|税額|サービス料|子供|子ども|小学|幼児|未就学|添い寝|添寝|お子様|キッズ|こども|キャンセル|追加|オプション|延長|日帰り|日帰|休憩|デイ|入浴料|ペット|ご利用料|貸切|貸し切り|駐車|割引|値引|引き|OFF|off|クーポン|ポイント|還元|寄付|差額|加算|アップ|変更料|手数料|チャージ|飲み放題|宴会|会議|ランチ|昼食|ディナー|食事のみ|アレルギー|プレゼント|送迎|レンタル|貸出|布団代|寝具|エキストラ|コース料理|グランピング|キャンプ|テント|コテージ|ドッグ|ワンちゃん|犬/;
 const AGE_NEG = /\d+\s*歳|歳(?:以上|未満)|年齢/;
 const KW = /1泊\s*2食|一泊二食|1泊二食|2食付|二食付|夕朝食|1泊\s*朝食|一泊朝食|朝食付|1泊\s*夕食|夕食付|素泊|食事なし|食事無し|泊のみ|お一人様|おひとり様|1名|1人|一人|1室|一室|1部屋|室料|1泊|一泊/;
 const MIN = { 'per-person-2meals': 4000, 'per-person-1meal': 3000, 'per-person-room-only': 2500, 'per-person': 3000, room: 4000 };
@@ -198,7 +198,7 @@ export function extractPrices(rows) {
       const before = row.slice(lo0, s), after = row.slice(e, e + 22).split(/[\d,]{4,}\s*円/)[0];
       const ctx = before.slice(before.lastIndexOf('。') + 1) + ' ' + after.split('。')[0];
       if (NEG.test(ctx) || AGE_NEG.test(ctx)) continue;
-      if (/^s*(以上|以下|未満|超|まで|引|OFF|off)/.test(row.slice(e))) continue; // thresholds/discounts, not prices
+      if (/^\s*(以上|以下|未満|超|まで|引|OFF|off)/.test(row.slice(e))) continue; // thresholds/discounts, not prices
       if (!(STAYQ.test(ctx) || PERSON.test(ctx) || ROOM.test(ctx))) continue; // explicit stay/person/room qualifier required
       let kind = null;
       if (MEAL2.test(ctx)) kind = 'per-person-2meals';
@@ -217,6 +217,17 @@ export function extractPrices(rows) {
   }
   const seen = new Set();
   return out.filter((c) => { const k = c.kind + c.minYen + (c.maxYen || ''); if (seen.has(k)) return false; seen.add(k); return true; });
+}
+
+// Sentence-level campaign/eligibility filter (shared with tools/monitor/worker.mjs). Real false positives of the first run
+// ('宿泊料金が6,000円以上で…', '旅行代金が…3,000円以上であること', premium course plans) came from conditions, not prices.
+// shortcut: '円から' ("from" price) is NOT rejected (common legit form); only a threshold word right after the amount is.
+export const CAMPAIGN = /ご宿泊のすべて|以上であること|対象|キャンペーン|割引|クーポン|ポイント|助成|補助|旅行代金が|適用|条件|特典|プレゼント|会員|限定プラン|スイート|特別室|プレミアム|ご夕食(?:の)?グレード|目安/;
+export const THRESHOLD = /[\d,]{4,}\s*円?\s*(?:[(（][^)）]{0,15}[)）])?\s*(?:以上|以下|未満|超|まで)/;
+export const LIMITED = /に限り|限定|特別価格|平日のみ|期間中|オフ期/;
+export function extractPricesStrict(rows) {
+  const sentences = rows.flatMap((r) => r.split(/[。！？]/)).filter((x) => x.length >= 3 && !CAMPAIGN.test(x) && !THRESHOLD.test(x.normalize('NFKC')));
+  return extractPrices(sentences).map((c) => (LIMITED.test(c.quote) ? { ...c, confidence: 'medium' } : c));
 }
 
 // ---------- per-facility ----------
@@ -241,7 +252,7 @@ async function processFacility(f, cache, refetch) {
     for (const [i, u] of urls.entries()) {
       const p = i === 0 ? home : await fetchPage(u);
       if (!p.ok) { pages[u] = p.status; if (p.status === 'robots') robots = true; continue; }
-      const c = extractPrices(htmlToRows(p.html));
+      const c = extractPricesStrict(htmlToRows(p.html));
       pages[u] = 'ok:' + c.length;
       for (const x of c) cands.push({ ...x, sourceUrl: p.finalUrl, checkedAt: now });
     }
@@ -326,7 +337,13 @@ function selftest() {
   t('room', x('<p>1室 (1泊) 20,000円〜</p>')[0]?.kind === 'room');
   t('low price rejected', x('<p>1泊2食 お一人様 1,500円</p>').length === 0);
   t('no yen marker rejected', x('<p>1泊2食 お一人様 12000</p>').length === 0);
-  t('links', pickLinks('<a href="/ryokin/">宿泊料金</a><a href="/day/">日帰り料金</a><a href="https://x.com/a">料金</a>', 'https://e.com/').join() === 'https://e.com/ryokin/');
+  // known false positives of the published prices.json (regex typo made the threshold check dead): must yield nothing
+  const s = (h) => extractPricesStrict(htmlToRows(h));
+  t('typo fixed: threshold word after amount rejected even in loose extractor', x('<p>1泊 素泊まり 8,000円 以上のプラン</p>').length === 0);
+  for (const [n, h] of [['campaign eligibility', '<p>宿泊料金が6,000円(素泊まり・税抜き)以上でご宿泊のすべてのお客様に特典</p>'], ['travel-cost condition', '<p>1人1泊あたりの旅行代金が、平日5,000円、休日3,000円以上であること</p>'], ['premium course plan', '<p>1泊1名様 28,600円~ プレミアム特別室プラン</p>'], ['coupon', '<p>1泊2食 お一人様 3,000円クーポンをプレゼント</p>']]) t('strict reject: ' + n, s(h).length === 0);
+  t('strict: limited-condition => medium', s('<p>平日(オフ期)に限り素泊まり8,800円のリーズナブルな料金で、1室お1人様からでも</p>')[0]?.confidence === 'medium');
+  t('strict accept: normal from-price', s('<p>1泊2食付 お一人様 12,000円〜</p>')[0]?.confidence === 'high' && s('<p>1名様1泊¥6,300円~</p>')[0]?.minYen === 6300);
+  t('links',pickLinks('<a href="/ryokin/">宿泊料金</a><a href="/day/">日帰り料金</a><a href="https://x.com/a">料金</a>', 'https://e.com/').join() === 'https://e.com/ryokin/');
   console.log(bad ? 'SELFTEST FAILED' : 'SELFTEST PASSED'); process.exit(bad ? 1 : 0);
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((e) => { console.error(e); process.exit(1); });
