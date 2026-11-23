@@ -10,12 +10,18 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      HAS_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node tools/monitor/worker.mjs --run --sink rest
+      - name: Skip when the service key secret is not registered yet
+        if: env.HAS_KEY != 'true'
+        run: echo "::notice::SUPABASE_SERVICE_ROLE_KEY secret is not set - skipping (see tools/monitor/USER-TODO.md)"
+      - if: env.HAS_KEY == 'true'
+        run: node tools/monitor/worker.mjs --run --sink rest
         env:
           SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
