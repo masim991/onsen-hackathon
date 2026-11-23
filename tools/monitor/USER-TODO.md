@@ -9,8 +9,8 @@
 
 ## 1. 서비스 키 준비
 - Supabase 대시보드 > 프로젝트 `frncsllpkxrsgxyqsfwd` > Project Settings > API Keys > secret 키(service role) 복사.
-- (선택) Anthropic Console > API Keys 에서 키 생성. 없으면 공지 한국어 요약 없이 원문만 저장되고, 요약이 빈 공지는 직접 적어야 공개할 수 있습니다. 같은 키로 사진 AI 분류도 켜집니다(없으면 분류는 건너뛰고 AI 로그에 skipped 1건).
-- 이 PC에서만 시험할 때: `$env:SUPABASE_SERVICE_ROLE_KEY="..."; $env:ANTHROPIC_API_KEY="..."` (PowerShell 창을 닫으면 사라짐)
+- Anthropic API 키는 필요 없습니다(유료라서 쓰지 않기로 함). 등록하지 마세요. 공지 한국어 요약은 직접 쓰고, 사진 분류는 규칙으로 자동 처리됩니다(3-2 참고).
+- 이 PC에서만 시험할 때: `$env:SUPABASE_SERVICE_ROLE_KEY="..."` (PowerShell 창을 닫으면 사라짐)
 
 ## 2. 관리자 계정 만들기
 - Supabase 대시보드 > Authentication > Users > Add user > Create new user (이메일/비밀번호, Auto Confirm 체크).
@@ -22,7 +22,7 @@
   ```
 
 ## 3. 실행 위치 선택 (둘 중 하나)
-- A. GitHub Actions(권장, PC가 꺼져 있어도 동작): 저장소 Settings > Secrets and variables > Actions > New repository secret 로 `SUPABASE_SERVICE_ROLE_KEY`(필수), `ANTHROPIC_API_KEY`(선택, 없으면 빈 값으로 두어도 됨) 등록. `.github/workflows/monitor.yml` 이 준비돼 있으니 저장소에 push 하면 30분마다 `--run` 이 돕니다. Actions 탭 > `monitor` > Run workflow 로 수동 실행도 가능. 저장소 루트가 이 프로젝트 폴더여야 경로(`tools/monitor/worker.mjs`)가 맞습니다.
+- A. GitHub Actions(권장, PC가 꺼져 있어도 동작): 저장소 Settings > Secrets and variables > Actions > New repository secret 로 `SUPABASE_SERVICE_ROLE_KEY`(이것만 필수) 등록. `ANTHROPIC_API_KEY`는 만들지 않아도 됩니다. `.github/workflows/monitor.yml` 이 준비돼 있으니 저장소에 push 하면 30분마다 `--run` 이 돕니다. Actions 탭 > `monitor` > Run workflow 로 수동 실행도 가능. 저장소 루트가 이 프로젝트 폴더여야 경로(`tools/monitor/worker.mjs`)가 맞습니다.
 - B. Windows 작업 스케줄러(이 PC가 켜져 있을 때만 동작). PowerShell(관리자 아님)에서 한 번 실행:
   ```powershell
   [Environment]::SetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY","키","User")
@@ -33,15 +33,16 @@
 ## 3-1. 자동 반영 설정 (선택, 코드 변경 없음)
 - GitHub 저장소 Settings > Secrets and variables > Actions > Variables 탭 > New repository variable.
 - `AUTO_APPLY` = `off`(전부 검토 대기) / `strict`(기본: 공식 도메인·엄격 패턴·이전값 0.5~2배 또는 연속 2회 확인만 자동 반영) / `on`(비권장). 값이 없으면 strict.
-- `AUTO_PUBLISH_NOTICES` = `on` 이면 한국어 요약이 있고 최근/중요하며 잡음이 아닌 공지만 자동 공개(`ANTHROPIC_API_KEY` 필수). 기본 off.
+- `AUTO_PUBLISH_NOTICES` = `on` 이면 한국어 요약이 있고 최근/중요하며 잡음이 아닌 공지만 자동 공개(요약이 비어 있으면 공개되지 않으므로 키 없는 운영에서는 켜 봐야 효과가 거의 없음). 기본 off.
 - 자동 반영된 값은 관리 화면 > 변경 이력 맨 위 '최근 7일 자동 반영'에서 훑어보고 틀린 것만 되돌리기 요청.
 
-## 3-2. AI 로그 / 사진 분류 (선택)
-- 저장소 Settings > Secrets and variables > Actions > Secrets 에 `ANTHROPIC_API_KEY` 등록(채팅/커밋에 붙여넣지 마세요). 등록하면 다음 실행부터 공지 요약이 `ai_logs`에 쌓이고, 미분류 사진을 실행당 최대 20장 분류합니다. 장수는 Variables 의 `AI_MAX_IMAGES`(선택, 기본 20)로 조절.
-- 관리 화면 'AI 로그' 탭에서 요약을 승인/반려/수정(수정하면 공지의 한국어 요약도 바뀜). 반려한 공지 요약은 공지에서 지워지고 비공개로 돌아갑니다.
-- 공개 규칙: AI는 저작권을 판단하지 못합니다. 풍경/온천탕/객실/음식 사진은 신뢰도 0.8 이상이고 라이선스가 확인(verified, 또는 owned, 또는 Commons+라이선스 기록)된 것만 공개 대상이며, 공식 사이트/출처 불명 사진은 '라이선스 보류'로 남고 공식 페이지 링크만 둡니다. 로고는 자동 공개 없이 '로고 검토'로 남습니다. '로고·사진 승인' 탭에서 직접 확인한 것만 승인하세요(사진 승인 = verified + 공개).
+## 3-2. 공지 요약(수동) / 사진 분류(규칙) - 키 없음, 추가 설정 없음
+- 공지 한국어 요약은 직접 씁니다(5~10분이면 충분). `/admin/monitor` 로그인 > '공지' 탭 > 공지 카드에서 '원문' 링크로 내용을 확인 > '한국어 요약' 칸에 1~2문장 입력(원문에 없는 날짜/금액은 쓰지 마세요) > '승인하고 공개'(공개 안 할 거면 '요약 저장'만, 필요 없는 공지는 그대로 비공개). 요약이 비어 있으면 공개 버튼이 막힙니다. 'AI 로그' 탭의 공지 요약 칸은 비어 있는 게 정상입니다.
+- 사진 분류는 워커가 규칙(파일명·경로 키워드 + 크기·비율·형식·색 수)으로 자동 처리하고, 결과는 'AI 로그' 탭에 `rules-v1`(이유가 `rule:`로 시작)로 쌓입니다. 장수는 Variables 의 `AI_MAX_IMAGES`(선택, 기본 20)로 조절. 규칙 분류는 신뢰도 0.8에 거의 닿지 않으므로 대부분 '라이선스 보류', 로고는 항상 '로고 검토'로 남습니다(정상).
+- 공개 규칙(그대로): 풍경/온천탕/객실/음식 사진은 신뢰도 0.8 이상이고 라이선스가 확인(verified, 또는 owned, 또는 Commons+라이선스 기록)된 것만 공개 대상이며, 공식 사이트/출처 불명 사진은 '라이선스 보류'로 남고 공식 페이지 링크만 둡니다. '로고·사진 승인' 탭에서 직접 확인한 것만 승인하세요(사진 승인 = verified + 공개). 규칙이 라벨을 틀려도 라이선스 확인은 사람이 하므로 자동으로 공개되는 일은 없습니다.
 - 공개 사이트는 바뀌지 않습니다. 승인된 로고를 시설 카드의 공식 링크 옆에 작게 보이려면 후속 작업(anon 읽기 정책 + 로더)이 필요합니다(README 'AI 로그 + 사진 분류' 마지막 항목).
-- 테스트용 가짜 모드: `AI_MOCK=1 node tools/monitor/worker.mjs --classify --sink rest` (서비스 키 필요, AI 호출 없이 mock 로그만 쌓고 사진/공지는 바꾸지 않음).
+- 테스트용 가짜 모드(선택): `AI_MOCK=1 node tools/monitor/worker.mjs --classify --sink rest` (서비스 키 필요, 가짜 응답으로 mock 로그만 쌓고 사진/공지는 바꾸지 않음).
+- 나중 옵션(지금은 안 해도 됨): 무료 로컬 CLIP 모델로 키워드 없는 사진도 분류. 모델이 수백 MB라 Actions에서 캐시 설정이 필요하고 실행이 느려집니다. 규칙 분류가 너무 많이 '기타'로 남을 때만 검토하세요.
 
 ## 4. 첫 실제 실행 (rest 싱크는 실서버로 돌려본 적이 없습니다)
 - 키를 설정한 PowerShell 에서, 프로젝트 폴더로 이동 후:
@@ -50,7 +51,7 @@
   - 확인(SQL Editor): `select result, count(*) from monitor_logs group by 1;`
 
 ## 5. 관리 화면 확인 (사이트 배포 후)
-- `https://<사이트>/admin/monitor` > 로그인 > 7개 탭이 보이는지, '공지' 탭에서 승인/비공개가 되는지 확인. 요약(summary_ko)이 비어 있으면 공개할 수 없으니 직접 한국어 요약을 적고 승인.
+- `https://<사이트>/admin/monitor` > 로그인 > 7개 탭이 보이는지, '공지' 탭에서 승인/비공개가 되는지 확인. 요약(summary_ko)이 비어 있으면 공개할 수 없으니(키 없는 운영이라 항상 비어 있음) 직접 한국어 요약을 적고 승인(3-2 참고).
 - 개발자도구 > Network 에서 `/admin/monitor` 응답 헤더에 `X-Robots-Tag: noindex, nofollow`, `Cache-Control: no-store` 확인.
 - 변경 이력에서 승인 -> 워커 실행(`node tools/monitor/worker.mjs --apply --sink rest` 또는 `--run`) -> '반영됨' 확인 -> '되돌리기 요청' -> 워커 실행 -> '되돌림' 확인을 한 번 해보세요. 키가 없으면 승인해도 '승인' 상태로 대기합니다.
 - 직접 되돌림: `node tools/monitor/worker.mjs --revert <변경 id> --sink rest`. 나중에 반영된 변경이 있으면 `superseded`로 거부되니 새 것부터 되돌리세요.

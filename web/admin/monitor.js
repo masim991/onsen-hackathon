@@ -296,7 +296,7 @@
       filters: [['kind', '종류', sel('kind', [['', '전체'], ...Object.entries(AI_KIND_KO)])], ['status', '상태', sel('status', [['', '전체'], ...['ok', 'error', 'skipped', 'mock'].map((s) => [s, s])])],
         ['rev', '검토', sel('rev', [['unreviewed', '미검토'], ['', '전체'], ['accepted', '승인'], ['rejected', '반려'], ['edited', '수정']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
       path: (v) => 'ai_logs?select=*&order=created_at.desc' + (v.kind ? '&kind=eq.' + v.kind : '') + (v.status ? '&status=eq.' + v.status : '') + (v.rev ? '&review_status=eq.' + v.rev : '') + (clean(v.fid) ? '&facility_id=ilike.*' + encodeURIComponent(clean(v.fid)) + '*' : ''),
-      empty: 'AI 로그가 없습니다. (ANTHROPIC_API_KEY 등록 후 워커가 호출하면 쌓입니다.)',
+      empty: 'AI 로그가 없습니다. (키 없이도 사진 분류 결과는 규칙 분류(rules-v1)로 여기에 쌓입니다.)',
       row: (l, rerun) => {
         const box = msgBox(), o = l.output || {}, isSum = l.kind === 'notice_summary', reviewable = l.status === 'ok' || l.status === 'mock';
         const ta = isSum ? el('textarea', {'aria-label': '한국어 요약 수정', maxlength: 600}) : null; if (ta) ta.value = l.reviewed_summary_ko || o.summary_ko || '';
