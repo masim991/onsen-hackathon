@@ -1,0 +1,186 @@
+{
+ "human": [
+  {
+   "id": "official-gunma-kusatsu-k0011",
+   "name": "益成屋旅館",
+   "page": "https://commons.wikimedia.org/wiki/File:Ekinariya_Ryokan.JPG",
+   "reason": "파일명 Ekinariya를 益成屋 읽기로 추정한 매칭(시트 기재)"
+  },
+  {
+   "id": "official-aomori-tsuta",
+   "name": "蔦温泉旅館",
+   "page": "https://commons.wikimedia.org/wiki/File:Tsuta_Onsen_spa_,_%E8%94%A6%E6%B8%A9%E6%B3%89_-_panoramio_(1).jpg",
+   "reason": "6080x1600 파노라마라 카드 비율에 안 맞음"
+  },
+  {
+   "id": "o2",
+   "name": "西の河原露天風呂",
+   "page": "https://commons.wikimedia.org/wiki/Category:Sainokawara_Park",
+   "reason": "분류가 공원(Sainokawara Park)이라 노천탕 사진이 아님"
+  },
+  {
+   "id": "official-kanagawa-hakone-hakone-kowakien-tenyu",
+   "name": "箱根小涌園 天悠",
+   "page": "https://commons.wikimedia.org/wiki/Category:Hakone_Kowakien_Ten-yu",
+   "reason": "시트 애매함 + 분류에 내부 사진 1장뿐"
+  },
+  {
+   "id": "official-kanagawa-hakone-kin-no-take",
+   "name": "金乃竹",
+   "page": "https://commons.wikimedia.org/wiki/Category:Kinnotake_Resorts",
+   "reason": "분류에 파일 0장"
+  },
+  {
+   "id": "official-gunma-ikaho-12",
+   "name": "雨情の湯 森秋旅館",
+   "page": "https://commons.wikimedia.org/wiki/Category:Ikaho_Onsen",
+   "reason": "분류가 이카호 온천 전체(森秋旅館 전용 아님)"
+  },
+  {
+   "id": "official-hyogo-kinosaki-sotoyu-satonoyu",
+   "name": "さとの湯",
+   "page": "https://commons.wikimedia.org/wiki/Category:Onsen_in_Kinosaki",
+   "reason": "분류에 さとの湯 사진 없음(고노유 사진 1장)"
+  },
+  {
+   "id": "official-tottori-misasa-ohashi",
+   "name": "旅館大橋",
+   "page": "https://bunka.nii.ac.jp/heritages/detail/185040",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-shizuoka-shuzenji-kikuya",
+   "name": "湯回廊 菊屋",
+   "page": "https://commons.wikimedia.org/wiki/File:Kikuya_Ryokan_-Shuzenji_Onsen.jpg",
+   "reason": "폭 640px(800 미만) + 외관 아닌 복도 사진"
+  },
+  {
+   "id": "official-tochigi-kinugawa-kinugawa-onsen-asaya",
+   "name": "鬼怒川温泉 あさや",
+   "page": "https://commons.wikimedia.org/wiki/Category:Asaya_Hotel",
+   "reason": "시트 특이사항 애매함(호텔)"
+  },
+  {
+   "id": "official-shimane-tamatsukuri-hoseikan",
+   "name": "保性館",
+   "page": "https://bunka.nii.ac.jp/heritages/detail/610693",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-wakayama-katsuura-nakanoshima",
+   "name": "碧き島の宿 熊野別邸 中の島",
+   "page": "https://commons.wikimedia.org/wiki/Category:Hotel_Nakanoshima",
+   "reason": "시트 특이사항 애매함(옛 이름 호텔)"
+  },
+  {
+   "id": "manus-yamamizuki",
+   "name": "山みず木",
+   "page": "https://commons.wikimedia.org/wiki/File:Kurokawa_Onsen_Yamamizuki_Banner.jpg",
+   "reason": "2100x300 가로 배너 사진, 카드에 부적합"
+  },
+  {
+   "id": "official-yamagata-ginzan-showakan",
+   "name": "味とまごころの宿 昭和館",
+   "page": "https://commons.wikimedia.org/wiki/Category:Showakan",
+   "reason": "분류 사진이 긴잔 온천 전경뿐(昭和館 특정 불가)"
+  },
+  {
+   "id": "official-n-hanaya",
+   "name": "旅館 花屋",
+   "page": "https://commons.wikimedia.org/wiki/Category:Hanaya_Hotel",
+   "reason": "시트 특이사항 애매함(분류명 Hanaya Hotel)"
+  },
+  {
+   "id": "official-kumamoto-yamaga-sakurayu",
+   "name": "山鹿温泉元湯 さくら湯",
+   "page": "https://commons.wikimedia.org/wiki/File:Yamaga_sakurayu.jpg",
+   "reason": "2012년 재건 전 옛 건물일 수 있음(시트 기재)"
+  },
+  {
+   "id": "official-20261119-wataya-ureshino",
+   "name": "和多屋別荘",
+   "page": "https://commons.wikimedia.org/wiki/Hotels_in_Japan",
+   "reason": "Commons 파일/분류 페이지가 아님(갤러리 등)"
+  },
+  {
+   "id": "official-wakayama-kumano-kawayu-kosetsu",
+   "name": "川湯温泉 公衆浴場",
+   "page": "https://commons.wikimedia.org/wiki/Category:Kawayu_Onsen_Public_Bath",
+   "reason": "분류 사진이 川湯 일반 풍경, 공중욕장 특정 불가"
+  },
+  {
+   "id": "official-kochi-kochi-sansuien",
+   "name": "高知三翠園温泉 湯殿 水哉閣",
+   "page": "https://commons.wikimedia.org/wiki/Category:Sansuien_(Kochi)",
+   "reason": "시트 특이사항 애매함(호텔식)"
+  },
+  {
+   "id": "official-kumamoto-aso-seifuso",
+   "name": "地獄温泉 青風荘",
+   "page": "https://commons.wikimedia.org/wiki/File:地獄温泉「清風荘」2.JPG",
+   "reason": "출처 불명(Yahoo 블로그 사진을 업로더가 CC로 올림, 기계판독 출처 없음) + 青風荘/清風荘 표기 차이"
+  },
+  {
+   "id": "official-miyagi-ac36fa67",
+   "name": "鎌先温泉 湯主一條",
+   "page": "https://bunka.nii.ac.jp/heritages/detail/284063",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-tochigi-yunishigawa-kamiyashiki-taira-no-takafusa",
+   "name": "上屋敷 平の高房",
+   "page": "https://commons.wikimedia.org/wiki/File:Takafusa_Hotel.JPG",
+   "reason": "시트 특이사항 애매함(파일명 Takafusa Hotel)"
+  },
+  {
+   "id": "official-kagoshima-kuei-unagi-onsen",
+   "name": "区営鰻温泉",
+   "page": "https://commons.wikimedia.org/wiki/File:Unagi_Onsen_Ibusuki,_Kagoshima.JPG",
+   "reason": "시트 특이사항 애매함(鰻温泉 전체 사진)"
+  },
+  {
+   "id": "official-hokkaido-HK12976",
+   "name": "平磯温泉 料亭湯宿銀鱗荘",
+   "page": "https://commons.wikimedia.org/wiki/Category:Ginrinsou",
+   "reason": "시트 특이사항 애매함(건물 사진 없음)"
+  },
+  {
+   "id": "official-nara-nara-dorogawa-center",
+   "name": "洞川温泉センター",
+   "page": "https://commons.wikimedia.org/wiki/File:Dorokawa.onsen.jpg",
+   "reason": "시트 특이사항 애매함(센터 건물인지 불명)"
+  },
+  {
+   "id": "official-kumamoto-hitoyoshi-yoshino",
+   "name": "芳野旅館",
+   "page": "https://bunka.nii.ac.jp/heritages/detail/229138",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-miyagi-yusaya",
+   "name": "ゆさや旅館",
+   "page": "https://bunka.nii.ac.jp/heritages/detail/114734",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-okayama-okutsuso",
+   "name": "奥津荘",
+   "page": "https://bunka.nii.ac.jp/heritages/search?freetext=%E5%A5%A5%E6%B4%A5%E8%8D%98%E6%9C%AC%E9%A4%A8",
+   "reason": "Commons 파일/분류 페이지가 아님(문화유산온라인)"
+  },
+  {
+   "id": "official-oita-kokonoe-hokkein",
+   "name": "法華院温泉 高原テラス",
+   "page": "https://commons.wikimedia.org/wiki/Category:Hokkein_Onsen",
+   "reason": "시트 특이사항 애매함(山荘 vs 高原テラス)"
+  },
+  {
+   "id": "official-miyazaki-hinokage-hinokage-onsen-eki",
+   "name": "日之影温泉駅",
+   "page": "https://commons.wikimedia.org/wiki/Category:Hinokage-Onsen_Station",
+   "reason": "시트 특이사항 애매함(옛 역 건물)"
+  }
+ ],
+ "rejLic": [],
+ "rejSize": []
+}

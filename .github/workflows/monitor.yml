@@ -1,0 +1,22 @@
+name: monitor
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {}
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node tools/monitor/worker.mjs --run --sink rest
+        env:
+          SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

@@ -1,0 +1,8 @@
+#prefMap{height:330px;min-height:240px;border-radius:8px;border:1px solid #dcd2bf;background:#ebe5da;z-index:0}.map-panel{margin:12px 0}.map-panel .map-help{margin:6px 0;font-size:.75rem}.leaflet-container{font-family:inherit}.leaflet-control-attribution{font-size:9px!important}.guide-page{max-width:1080px;margin:0 auto;padding:64px 28px}.guide-page-intro{padding:24px 0 8px}.guide-page-intro h1{font-size:clamp(2rem,5vw,3.4rem)}.guide-page .guide{margin:0;--guide-x:0px}@media(max-width:600px){.guide-page{padding:28px 18px}#prefMap{height:280px}}
+/* 지도 위 HTML 조작부만 료칸 톤으로 맞춥니다. 도도부현 svg/path 크기·색은 map.js, map-ja.js가 정합니다. */
+.leaflet-tooltip{padding:4px 9px;border:1px solid #dcd2bf;border-radius:6px;background:#fbf8f2;color:#1f2622;font-size:12.5px;font-weight:600;box-shadow:0 4px 14px rgb(20 31 39 / .12)}
+.leaflet-tooltip-top:before{border-top-color:#fbf8f2}.leaflet-tooltip-bottom:before{border-bottom-color:#fbf8f2}.leaflet-tooltip-left:before{border-left-color:#fbf8f2}.leaflet-tooltip-right:before{border-right-color:#fbf8f2}
+/* 지도 조작과 집계는 실제 등록 자료를 기준으로 표시합니다. */
+.map-panel .map-reset{display:inline-flex;align-items:center;justify-content:center;min-height:38px;margin:4px 0 8px;padding:0 12px;border:1px solid #c8c3b8;border-radius:6px;background:#f7f5f0;color:#3e4a3d;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
+.map-panel .map-reset:hover{background:#eae5dc}
+.map-panel .map-reset:focus-visible{outline:3px solid #c86d51;outline-offset:2px}

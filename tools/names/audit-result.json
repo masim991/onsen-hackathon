@@ -1,0 +1,5776 @@
+{
+ "counts": {
+  "onsen-reading": 130,
+  "suffix_onsen_missing": 26,
+  "n_equals_jp": 139,
+  "cjk_in_n": 139,
+  "en_missing": 2675,
+  "dup_jp": 24,
+  "dup_n_diff_jp": 35,
+  "style_onsen_spaced_total": 170,
+  "style_onsen_attached_total": 85,
+  "style_onsen_spacing": 85
+ },
+ "rows": [
+  {
+   "id": "official-nagano-nozawa-sotoyu-11",
+   "n": "滝の湯",
+   "jp": "滝の湯",
+   "score": 17,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n",
+    "dup_jp"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 滝の湯",
+    "같은 jp(滝の湯) 다른 id: add-takinoyu, official-nagano-nozawa-sotoyu-11"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-01",
+   "n": "景風流の宿 かのうや",
+   "jp": "景風流の宿 かのうや",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 景風流の宿 かのうや"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-02",
+   "n": "福一",
+   "jp": "福一",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 福一"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-03",
+   "n": "奥伊香保 旅邸 諧暢楼",
+   "jp": "奥伊香保 旅邸 諧暢楼",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 奥伊香保 旅邸 諧暢楼"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-04",
+   "n": "横手館",
+   "jp": "横手館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 横手館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-05",
+   "n": "金太夫",
+   "jp": "金太夫",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 金太夫"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-06",
+   "n": "岸権旅館",
+   "jp": "岸権旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 岸権旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-07",
+   "n": "丸本館",
+   "jp": "丸本館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 丸本館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-08",
+   "n": "千明仁泉亭",
+   "jp": "千明仁泉亭",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 千明仁泉亭"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-09",
+   "n": "大江戸温泉物語Premium 伊香保",
+   "jp": "大江戸温泉物語Premium 伊香保",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 大江戸温泉物語Premium 伊香保"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-10",
+   "n": "石坂旅館",
+   "jp": "石坂旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 石坂旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-11",
+   "n": "古久家",
+   "jp": "古久家",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 古久家"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-12",
+   "n": "雨情の湯 森秋旅館",
+   "jp": "雨情の湯 森秋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 雨情の湯 森秋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-15",
+   "n": "美松館",
+   "jp": "美松館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 美松館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-16",
+   "n": "お宿 玉樹",
+   "jp": "お宿 玉樹",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: お宿 玉樹"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-17",
+   "n": "ステイビューいかほ",
+   "jp": "ステイビューいかほ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ステイビューいかほ"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-18",
+   "n": "伊香保温泉とどろき",
+   "jp": "伊香保温泉とどろき",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 伊香保温泉とどろき"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-19",
+   "n": "ホテルきむら",
+   "jp": "ホテルきむら",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテルきむら"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-20",
+   "n": "しん喜",
+   "jp": "しん喜",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: しん喜"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-21",
+   "n": "いかほ秀水園",
+   "jp": "いかほ秀水園",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: いかほ秀水園"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-22",
+   "n": "山陽ホテル",
+   "jp": "山陽ホテル",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 山陽ホテル"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-23",
+   "n": "ホテルいかほ銀水",
+   "jp": "ホテルいかほ銀水",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテルいかほ銀水"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-24",
+   "n": "市川別館 晴観荘",
+   "jp": "市川別館 晴観荘",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 市川別館 晴観荘"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-25",
+   "n": "伊香保グランドホテル",
+   "jp": "伊香保グランドホテル",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 伊香保グランドホテル"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-26",
+   "n": "ホテル松本楼",
+   "jp": "ホテル松本楼",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテル松本楼"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-27",
+   "n": "洋風旅館ぴのん",
+   "jp": "洋風旅館ぴのん",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 洋風旅館ぴのん"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-28",
+   "n": "旅館ふくぜん",
+   "jp": "旅館ふくぜん",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 旅館ふくぜん"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-29",
+   "n": "ホテル天坊",
+   "jp": "ホテル天坊",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテル天坊"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-30",
+   "n": "如心の里 ひびき野",
+   "jp": "如心の里 ひびき野",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 如心の里 ひびき野"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-31",
+   "n": "徳田屋旅館",
+   "jp": "徳田屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 徳田屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-32",
+   "n": "塚越屋七兵衛",
+   "jp": "塚越屋七兵衛",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 塚越屋七兵衛"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-33",
+   "n": "香雲館",
+   "jp": "香雲館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 香雲館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-34",
+   "n": "あかりの宿 おかべ",
+   "jp": "あかりの宿 おかべ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: あかりの宿 おかべ"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-35",
+   "n": "さくらい旅館",
+   "jp": "さくらい旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: さくらい旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-36",
+   "n": "ホテルニュー伊香保",
+   "jp": "ホテルニュー伊香保",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテルニュー伊香保"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-37",
+   "n": "割烹旅館 春日楼",
+   "jp": "割烹旅館 春日楼",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 割烹旅館 春日楼"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-38",
+   "n": "お宿かつほ",
+   "jp": "お宿かつほ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: お宿かつほ"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-39",
+   "n": "Doggy スイート ペロ",
+   "jp": "Doggy スイート ペロ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: Doggy スイート ペロ"
+   ]
+  },
+  {
+   "id": "official-gunma-ikaho-40",
+   "n": "楓と樹",
+   "jp": "楓と樹",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 楓と樹"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0006",
+   "n": "飯島館",
+   "jp": "飯島館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 飯島館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0007",
+   "n": "飯島館別館 こしゆり",
+   "jp": "飯島館別館 こしゆり",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 飯島館別館 こしゆり"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0008",
+   "n": "一川旅館",
+   "jp": "一川旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 一川旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0010",
+   "n": "いで湯荘",
+   "jp": "いで湯荘",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: いで湯荘"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0011",
+   "n": "益成屋旅館",
+   "jp": "益成屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 益成屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0012",
+   "n": "大阪屋旅館",
+   "jp": "大阪屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 大阪屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0013",
+   "n": "音雅",
+   "jp": "音雅",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 音雅"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0017",
+   "n": "上村屋旅館",
+   "jp": "上村屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 上村屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0018",
+   "n": "菊水荘",
+   "jp": "菊水荘",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 菊水荘"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0020",
+   "n": "清重館",
+   "jp": "清重館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 清重館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0021",
+   "n": "喜和旅館",
+   "jp": "喜和旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 喜和旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0023",
+   "n": "草津温泉 望雲",
+   "jp": "草津温泉 望雲",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津温泉 望雲"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0024",
+   "n": "草津舘",
+   "jp": "草津舘",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津舘"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0027",
+   "n": "草津温泉 大東舘",
+   "jp": "草津温泉 大東舘",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津温泉 大東舘"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0028",
+   "n": "草津ナウリゾートホテル",
+   "jp": "草津ナウリゾートホテル",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津ナウリゾートホテル"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0030",
+   "n": "草津ホテル",
+   "jp": "草津ホテル",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津ホテル"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0032",
+   "n": "亀の井ホテル草津リゾート",
+   "jp": "亀の井ホテル草津リゾート",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 亀の井ホテル草津リゾート"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0033",
+   "n": "群龍館",
+   "jp": "群龍館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 群龍館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0034",
+   "n": "小泉館",
+   "jp": "小泉館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 小泉館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0036",
+   "n": "香旬の宿 長楽",
+   "jp": "香旬の宿 長楽",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 香旬の宿 長楽"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0037",
+   "n": "古久長旅館",
+   "jp": "古久長旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 古久長旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0038",
+   "n": "小島屋旅館",
+   "jp": "小島屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 小島屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0039",
+   "n": "極楽館",
+   "jp": "極楽館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 極楽館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0040",
+   "n": "草津温泉VAN",
+   "jp": "草津温泉VAN",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津温泉VAN"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0041",
+   "n": "十二屋旅館",
+   "jp": "十二屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 十二屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0042",
+   "n": "末広屋旅館",
+   "jp": "末広屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 末広屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0046",
+   "n": "田島屋",
+   "jp": "田島屋",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 田島屋"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0051",
+   "n": "中村屋",
+   "jp": "中村屋",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 中村屋"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0052",
+   "n": "奈良屋",
+   "jp": "奈良屋",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 奈良屋"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0055",
+   "n": "ニューいずみ",
+   "jp": "ニューいずみ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ニューいずみ"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0057",
+   "n": "ぬ志勇旅館",
+   "jp": "ぬ志勇旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ぬ志勇旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0061",
+   "n": "ひのき亭牧水",
+   "jp": "ひのき亭牧水",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ひのき亭牧水"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0064",
+   "n": "不二旅館",
+   "jp": "不二旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 不二旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0065",
+   "n": "ペンション 五郎次",
+   "jp": "ペンション 五郎次",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ペンション 五郎次"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0067",
+   "n": "ホテル一井",
+   "jp": "ホテル一井",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテル一井"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0068",
+   "n": "ホテルヴィレッジ",
+   "jp": "ホテルヴィレッジ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテルヴィレッジ"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0070",
+   "n": "ホテル櫻井",
+   "jp": "ホテル櫻井",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテル櫻井"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0071",
+   "n": "ホテルスパックス草津",
+   "jp": "ホテルスパックス草津",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテルスパックス草津"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0072",
+   "n": "喜びの宿 高松",
+   "jp": "喜びの宿 高松",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 喜びの宿 高松"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0075",
+   "n": "ホテル松巳",
+   "jp": "ホテル松巳",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ホテル松巳"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0076",
+   "n": "湯宿みゆき本館",
+   "jp": "湯宿みゆき本館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯宿みゆき本館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0078",
+   "n": "前橋館",
+   "jp": "前橋館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 前橋館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0079",
+   "n": "松坂屋旅館",
+   "jp": "松坂屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 松坂屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0081",
+   "n": "松村屋旅館",
+   "jp": "松村屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 松村屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0082",
+   "n": "湯の宿 みさご",
+   "jp": "湯の宿 みさご",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯の宿 みさご"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0083",
+   "n": "三関屋旅館",
+   "jp": "三関屋旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 三関屋旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0084",
+   "n": "宮崎館",
+   "jp": "宮崎館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 宮崎館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0085",
+   "n": "昔心の宿 金みどり",
+   "jp": "昔心の宿 金みどり",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 昔心の宿 金みどり"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0086",
+   "n": "薬師の湯・湯元館",
+   "jp": "薬師の湯・湯元館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 薬師の湯・湯元館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0087",
+   "n": "草津 山本館",
+   "jp": "草津 山本館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津 山本館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0088",
+   "n": "ゆ宿大蔵",
+   "jp": "ゆ宿大蔵",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ゆ宿大蔵"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0089",
+   "n": "湯宿 季の庭",
+   "jp": "湯宿 季の庭",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯宿 季の庭"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0090",
+   "n": "たびやど喜平",
+   "jp": "たびやど喜平",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: たびやど喜平"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0091",
+   "n": "旅館たむら",
+   "jp": "旅館たむら",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 旅館たむら"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0093",
+   "n": "旅館美津木",
+   "jp": "旅館美津木",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 旅館美津木"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0094",
+   "n": "旅館八雲",
+   "jp": "旅館八雲",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 旅館八雲"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0096",
+   "n": "ルーバン山田",
+   "jp": "ルーバン山田",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ルーバン山田"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0099",
+   "n": "きんだいペンション",
+   "jp": "きんだいペンション",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: きんだいペンション"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0101",
+   "n": "瀬川ペンション",
+   "jp": "瀬川ペンション",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 瀬川ペンション"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0102",
+   "n": "草津温泉 ヴァン・ベール",
+   "jp": "草津温泉 ヴァン・ベール",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津温泉 ヴァン・ベール"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0108",
+   "n": "ペンション 陽のあたる場所",
+   "jp": "ペンション 陽のあたる場所",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ペンション 陽のあたる場所"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0109",
+   "n": "ペンション ベルクラント",
+   "jp": "ペンション ベルクラント",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ペンション ベルクラント"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0111",
+   "n": "ペンション 霊泉平右",
+   "jp": "ペンション 霊泉平右",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ペンション 霊泉平右"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0112",
+   "n": "ペンション レザン",
+   "jp": "ペンション レザン",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ペンション レザン"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0115",
+   "n": "綿貫ペンション",
+   "jp": "綿貫ペンション",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 綿貫ペンション"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0116",
+   "n": "米山館",
+   "jp": "米山館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 米山館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0122",
+   "n": "湯畑草菴",
+   "jp": "湯畑草菴",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯畑草菴"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0125",
+   "n": "草津温泉 ほしかわ",
+   "jp": "草津温泉 ほしかわ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 草津温泉 ほしかわ"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0128",
+   "n": "お宿 ゆきずみ",
+   "jp": "お宿 ゆきずみ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: お宿 ゆきずみ"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0130",
+   "n": "うり房旅館",
+   "jp": "うり房旅館",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: うり房旅館"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0132",
+   "n": "源泉一乃湯",
+   "jp": "源泉一乃湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 源泉一乃湯"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0133",
+   "n": "炯 -kei-",
+   "jp": "炯 -kei-",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 炯 -kei-"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0134",
+   "n": "湯川テラス",
+   "jp": "湯川テラス",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯川テラス"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0137",
+   "n": "ラビスタ草津ヒルズ",
+   "jp": "ラビスタ草津ヒルズ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: ラビスタ草津ヒルズ"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0138",
+   "n": "うり房旅館仲通り うら房",
+   "jp": "うり房旅館仲通り うら房",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: うり房旅館仲通り うら房"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0139",
+   "n": "裏草津 蕩 TOU",
+   "jp": "裏草津 蕩 TOU",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 裏草津 蕩 TOU"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0140",
+   "n": "亀の井ホテル草津湯畑",
+   "jp": "亀の井ホテル草津湯畑",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 亀の井ホテル草津湯畑"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0141",
+   "n": "湯畑泉水",
+   "jp": "湯畑泉水",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯畑泉水"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0142",
+   "n": "湯音の森",
+   "jp": "湯音の森",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 湯音の森"
+   ]
+  },
+  {
+   "id": "official-gunma-kusatsu-k0143",
+   "n": "Rakuten STAY VILLA 草津温泉",
+   "jp": "Rakuten STAY VILLA 草津温泉",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: Rakuten STAY VILLA 草津温泉"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-1",
+   "n": "伊香保露天風呂",
+   "jp": "伊香保露天風呂",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 伊香保露天風呂"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-2",
+   "n": "伊香保温泉石段の湯",
+   "jp": "伊香保温泉石段の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 伊香保温泉石段の湯"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-3",
+   "n": "金島温泉 富貴の湯",
+   "jp": "金島温泉 富貴の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 金島温泉 富貴の湯"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-4",
+   "n": "小野上温泉 ハタの湯",
+   "jp": "小野上温泉 ハタの湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 小野上温泉 ハタの湯"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-5",
+   "n": "北橘温泉 ばんどうのゆ",
+   "jp": "北橘温泉 ばんどうのゆ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 北橘温泉 ばんどうのゆ"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-6",
+   "n": "渋川温泉 花湯スカイテルメリゾート",
+   "jp": "渋川温泉 花湯スカイテルメリゾート",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 渋川温泉 花湯スカイテルメリゾート"
+   ]
+  },
+  {
+   "id": "official-gunma-shibukawa-bath-7",
+   "n": "敷島温泉 ユートピア赤城",
+   "jp": "敷島温泉 ユートピア赤城",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 敷島温泉 ユートピア赤城"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-1",
+   "n": "大湯",
+   "jp": "大湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 大湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-10",
+   "n": "真湯",
+   "jp": "真湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 真湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-12",
+   "n": "横落の湯",
+   "jp": "横落の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 横落の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-13",
+   "n": "十王堂の湯",
+   "jp": "十王堂の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 十王堂の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-2",
+   "n": "河原湯",
+   "jp": "河原湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 河原湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-3",
+   "n": "秋葉の湯",
+   "jp": "秋葉の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 秋葉の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-4",
+   "n": "麻釜の湯",
+   "jp": "麻釜の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 麻釜の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-5",
+   "n": "上寺湯",
+   "jp": "上寺湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 上寺湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-6",
+   "n": "熊の手洗湯",
+   "jp": "熊の手洗湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 熊の手洗湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-7",
+   "n": "松葉の湯",
+   "jp": "松葉の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 松葉の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-8",
+   "n": "中尾の湯",
+   "jp": "中尾の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 中尾の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-sotoyu-9",
+   "n": "新田の湯",
+   "jp": "新田の湯",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 新田の湯"
+   ]
+  },
+  {
+   "id": "official-nagano-nozawa-spalina",
+   "n": "野沢温泉スパリーナ",
+   "jp": "野沢温泉スパリーナ",
+   "score": 13,
+   "flags": [
+    "n_equals_jp",
+    "cjk_in_n"
+   ],
+   "msgs": [
+    "한국어 이름이 일본어 원문과 같음",
+    "n에 한자/가나 남음: 野沢温泉スパリーナ"
+   ]
+  },
+  {
+   "id": "official-wakayama-arida-tsurunoyu",
+   "n": "쓰루노유온센",
+   "jp": "鶴の湯温泉",
+   "score": 13,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing",
+    "dup_jp"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 쓰루노유온센",
+    "같은 jp(鶴の湯温泉) 다른 id: 110, official-wakayama-arida-tsurunoyu"
+   ],
+   "fix": {
+    "n": "쓰루노유온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-marronnier-gero",
+   "n": "오텔 드 마로니에 게로온센",
+   "jp": "オテル・ド・マロニエ下呂温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 오텔 드 마로니에 게로온센"
+   ],
+   "fix": {
+    "n": "오텔 드 마로니에 게로온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-daigo-daigo-onsen-hoyo-center-shinrin-no-onsen",
+   "n": "다이고온센 호요센터 신린노온센",
+   "jp": "大子温泉保養センター 森林の温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 다이고온센 호요센터 신린노온센"
+   ],
+   "fix": {
+    "n": "다이고온천 호요센터 신린노온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ishikawa-yamanaka-andanomori-yamanaka",
+   "n": "안다노모리 가가야마나카온센",
+   "jp": "アンダの森 加賀山中温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 안다노모리 가가야마나카온센"
+   ],
+   "fix": {
+    "n": "안다노모리 가가야마나카온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kumamoto-kumamoto-super-hotel-lohas",
+   "n": "슈퍼호텔 로하스 구마모토 덴넨온센",
+   "jp": "スーパーホテルLohas熊本天然温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 슈퍼호텔 로하스 구마모토 덴넨온센"
+   ],
+   "fix": {
+    "n": "슈퍼호텔 로하스 구마모토 덴넨온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-livemax-kizu",
+   "n": "리브맥스 리조트 유히가우라 기즈온센",
+   "jp": "リブマックスリゾート夕日ヶ浦木津温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 리브맥스 리조트 유히가우라 기즈온센"
+   ],
+   "fix": {
+    "n": "리브맥스 리조트 유히가우라 기즈온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-onono-komachi",
+   "n": "오노노 고마치온센",
+   "jp": "小野小町温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 오노노 고마치온센"
+   ],
+   "fix": {
+    "n": "오노노 고마치온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-yasaka-ashiginu",
+   "n": "야사카 아시기누온센",
+   "jp": "弥栄あしぎぬ温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 야사카 아시기누온센"
+   ],
+   "fix": {
+    "n": "야사카 아시기누온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saga-fairfield-by-marriott-saga-ureshino-onsen",
+   "n": "페어필드 바이 메리어트 사가 우레시노온센",
+   "jp": "フェアフィールド･バイ･マリオット･佐賀嬉野温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 페어필드 바이 메리어트 사가 우레시노온센"
+   ],
+   "fix": {
+    "n": "페어필드 바이 메리어트 사가 우레시노온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-chichibu-yumoto-bukou-onsen",
+   "n": "지치부유모토 부코온센",
+   "jp": "秩父湯元 武甲温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 지치부유모토 부코온센"
+   ],
+   "fix": {
+    "n": "지치부유모토 부코온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-michi-no-eki-otaki-onsen",
+   "n": "미치노에키 오타키온센",
+   "jp": "道の駅 大滝温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 미치노에키 오타키온센"
+   ],
+   "fix": {
+    "n": "미치노에키 오타키온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-ashino-onsen-ashino-onsen",
+   "n": "아시노온센",
+   "jp": "芦野温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 아시노온센"
+   ],
+   "fix": {
+    "n": "아시노온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-nikko-nikko-sawa-onsen",
+   "n": "닛코사와온센",
+   "jp": "日光沢温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 닛코사와온센"
+   ],
+   "fix": {
+    "n": "닛코사와온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-nikko-tosho-onsen",
+   "n": "도쇼온센",
+   "jp": "東照温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 도쇼온센"
+   ],
+   "fix": {
+    "n": "도쇼온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-okukinu-teshirosawa-onsen",
+   "n": "데시로사와온센",
+   "jp": "手白澤温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 데시로사와온센"
+   ],
+   "fix": {
+    "n": "데시로사와온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-toyama-unazuki-grandvrio-unazuki",
+   "n": "그랑비리오 호텔 우나즈키온센",
+   "jp": "グランヴィリオホテル宇奈月温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 그랑비리오 호텔 우나즈키온센"
+   ],
+   "fix": {
+    "n": "그랑비리오 호텔 우나즈키온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-arida-kanaya-mekeikyo",
+   "n": "가나야 묘케이쿄온센",
+   "jp": "かなや明恵峡温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 가나야 묘케이쿄온센"
+   ],
+   "fix": {
+    "n": "가나야 묘케이쿄온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-katsuura-shikinosato",
+   "n": "시키노사토온센",
+   "jp": "四季の郷温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 시키노사토온센"
+   ],
+   "fix": {
+    "n": "시키노사토온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-katsuura-yurinoyama",
+   "n": "유리노야마온센",
+   "jp": "ゆりの山温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 유리노야마온센"
+   ],
+   "fix": {
+    "n": "유리노야마온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-ryujin-kamanosaki",
+   "n": "가마노사키온센",
+   "jp": "釜ノ崎温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 가마노사키온센"
+   ],
+   "fix": {
+    "n": "가마노사키온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-ryujin-komatagawa",
+   "n": "류진 고마타가와온센",
+   "jp": "龍神小又川温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 류진 고마타가와온센"
+   ],
+   "fix": {
+    "n": "류진 고마타가와온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-ryujin-nyunokawa",
+   "n": "니우노카와온센",
+   "jp": "丹生ノ川温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 니우노카와온센"
+   ],
+   "fix": {
+    "n": "니우노카와온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-hanayama",
+   "n": "하나야마온센",
+   "jp": "花山温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 하나야마온센"
+   ],
+   "fix": {
+    "n": "하나야마온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-jintsu",
+   "n": "진쓰온센",
+   "jp": "神通温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 진쓰온센"
+   ],
+   "fix": {
+    "n": "진쓰온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-kishu-kuroshio",
+   "n": "기슈 구로시오온센",
+   "jp": "紀州黒潮温泉",
+   "score": 9,
+   "flags": [
+    "onsen-reading",
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'",
+    "jp ...温泉 인데 n에 '온천' 없음: 기슈 구로시오온센"
+   ],
+   "fix": {
+    "n": "기슈 구로시오온천",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "110",
+   "n": "쓰루노유 온천",
+   "jp": "鶴の湯温泉",
+   "score": 9,
+   "flags": [
+    "dup_jp",
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 jp(鶴の湯温泉) 다른 id: 110, official-wakayama-arida-tsurunoyu",
+    "같은 n(쓰루노유온천)인데 jp 다름: 110, official-hiroshima-hiroshima-other-tsurunoyu"
+   ]
+  },
+  {
+   "id": "official-aichi-mitani-higaki",
+   "n": "미타니온센 히가키 호텔",
+   "jp": "三谷温泉 ひがきホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "미타니온천 히가키 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-chiba-kamogawa-boso-kamogawa-onsen-zekuu",
+   "n": "보소가모가와온센 제쿠",
+   "jp": "房総鴨川温泉 是空",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "보소가모가와온천 제쿠",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-fukuoka-kitakyushu-corona-kokura",
+   "n": "덴넨온센 코로나노유 고쿠라점",
+   "jp": "天然温泉コロナの湯 小倉店",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 코로나노유 고쿠라점",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-fukuoka-kitakyushu-otogi-no-yashiro",
+   "n": "혼조 덴넨온센 오토기노야시로",
+   "jp": "本城天然温泉 おとぎの社",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "혼조 덴넨온천 오토기노야시로",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-armeria",
+   "n": "게로온센 호텔 구사카베 아르메리아",
+   "jp": "下呂温泉ホテルくさかべアルメリア",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "게로온천 호텔 구사카베 아르메리아",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-diamond-gero",
+   "n": "다이아몬드 게로온센 소사이어티",
+   "jp": "ダイヤモンド下呂温泉ソサエティー",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "다이아몬드 게로온천 소사이어티",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-fukiya",
+   "n": "온센 비즈니스호텔 후키야",
+   "jp": "温泉ビジネスホテル 富喜屋",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 비즈니스호텔 후키야",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-hiroshi",
+   "n": "온센야도 히로시",
+   "jp": "温泉宿 廣司",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천야도 히로시",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-shinmei-sanso",
+   "n": "토론온센 신메이산소",
+   "jp": "トロン温泉 神明山荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "토론온천 신메이산소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-gifu-gero-yamagataya",
+   "n": "게로온센 야마가타야",
+   "jp": "下呂温泉山形屋",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "게로온천 야마가타야",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hokkaido-noboribetsu-takinoya",
+   "n": "노보리베쓰 온센쿄 다키노야",
+   "jp": "登別温泉郷 滝乃家",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "노보리베쓰 온천쿄 다키노야",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hyogo-arima-kinnoyu",
+   "n": "아리마 혼온센 킨노유",
+   "jp": "有馬本温泉 金の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아리마 혼온천 킨노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hyogo-awaji-goshiki-yuyufive",
+   "n": "고시키온센 유유 파이브",
+   "jp": "五色温泉ゆーゆーファイブ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "고시키온천 유유 파이브",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hyogo-awaji-hananoyu",
+   "n": "히가시우라 선파크 덴넨온센 하나노유",
+   "jp": "東浦サンパーク・天然温泉 花の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "히가시우라 선파크 덴넨온천 하나노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hyogo-takedao-azare",
+   "n": "다케다오온센 모미지칸 벳테이 아자레",
+   "jp": "武田尾温泉 紅葉舘別邸 あざれ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "다케다오온천 모미지칸 벳테이 아자레",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hyogo-yumura-yuamu",
+   "n": "산인유무라온센 와쿠이즈미노야도 유아무",
+   "jp": "山陰湯村温泉 湧泉の宿 ゆあむ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "산인유무라온천 와쿠이즈미노야도 유아무",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-daigo-daigo-onsen-yamizo",
+   "n": "다이고온센 야미조",
+   "jp": "大子温泉 やみぞ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "다이고온천 야미조",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-daigo-tsukiore-onsen-takimi-no-yu",
+   "n": "쓰키오레온센 다키미노유",
+   "jp": "月居温泉 滝見の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "쓰키오레온천 다키미노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-hitachinaka-ajigaura-onsen-nozomi",
+   "n": "아지가우라온센 노조미",
+   "jp": "阿字ヶ浦温泉 のぞみ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아지가우라온천 노조미",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-hitachinaka-hitachinaka-onsen-kirari-bettei",
+   "n": "히타치나카온센 기라리 벳테이",
+   "jp": "ひたちなか温泉 喜楽里別邸",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "히타치나카온천 기라리 벳테이",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-ishioka-yasato-onsen-yurinosato",
+   "n": "야사토온센 유리노사토",
+   "jp": "やさと温泉 ゆりの郷",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "야사토온천 유리노사토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-joso-kinu-no-yu",
+   "n": "덴넨온센 기누노유",
+   "jp": "天然温泉 きぬの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 기누노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-namegata-aso-onsen-shirahonoyu",
+   "n": "아소온센 시라호노유",
+   "jp": "あそう温泉 白帆の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아소온천 시라호노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-tsukuba-tsukuba-no-yu-hotel-ichibo",
+   "n": "쓰쿠바노유 쓰쿠바산온센 호텔 이치보",
+   "jp": "つくばの湯 筑波山温泉 HOTEL ICHIBO",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "쓰쿠바노유 쓰쿠바산온천 호텔 이치보",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ibaraki-tsukuba-tsukuba-onsen-hotel",
+   "n": "쓰쿠바온센 호텔",
+   "jp": "筑波温泉ホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "쓰쿠바온천 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-ishikawa-yamanaka-kajikaso",
+   "n": "야마나카온센 가지카소",
+   "jp": "山中温泉 河鹿荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "야마나카온천 가지카소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kagoshima-kagoshima-yunoyama",
+   "n": "덴넨온센 유노야마",
+   "jp": "天然温泉湯乃山",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 유노야마",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-gora-onsen-hotel-maroude-hakone",
+   "n": "고라온센 호텔 마로우도 하코네",
+   "jp": "強羅温泉 ホテルマロウド箱根",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "고라온천 호텔 마로우도 하코네",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-hakone-ashinoyu-onsen-matsuzakaya-honten",
+   "n": "하코네 아시노유온센 마쓰자카야 혼텐",
+   "jp": "箱根芦之湯温泉 松坂屋本店",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "하코네 아시노유온천 마쓰자카야 혼텐",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-hakone-kowakidani-onsen-mizu-no-oto",
+   "n": "하코네 고와키다니온센 미즈노오토",
+   "jp": "箱根小涌谷温泉 水の音",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "하코네 고와키다니온천 미즈노오토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-hakone-onsen-sanso-nakamura",
+   "n": "하코네온센산소 나카무라",
+   "jp": "箱根温泉山荘 なかむら",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "하코네온천산소 나카무라",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-hakone-yumoto-onsen-hotel-okada",
+   "n": "하코네유모토온센 호텔 오카다",
+   "jp": "箱根湯本温泉 ホテルおかだ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "하코네유모토온천 호텔 오카다",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-onsen-hotel-gorakan",
+   "n": "온센 호텔 고라칸",
+   "jp": "温泉ホテル 強羅館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 호텔 고라칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-onsen-ryokan-mitake",
+   "n": "온센 료칸 미타케",
+   "jp": "温泉旅館みたけ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 료칸 미타케",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-hakone-onsen-ryokan-yusakaso",
+   "n": "온센 료칸 유사카소",
+   "jp": "温泉旅館 湯さか荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 료칸 유사카소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-nanasawa-kabutoyu-onsen-sansuiro",
+   "n": "가부토유온센 산스이로",
+   "jp": "かぶと湯温泉 山水楼",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "가부토유온천 산스이로",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-nanasawa-kotakuji-onsen-gyokusuiro",
+   "n": "고타쿠지온센 교쿠스이로",
+   "jp": "広沢寺温泉 玉翠楼",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "고타쿠지온천 교쿠스이로",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kanagawa-yugawara-yugawara-onsen-chitose",
+   "n": "유가와라온센 지토세",
+   "jp": "湯河原温泉 ちとせ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "유가와라온천 지토세",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kochi-kochi-harunonoyu",
+   "n": "텐넨온센 하루노노유",
+   "jp": "天然温泉 はるのの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "텐넨온천 하루노노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kumamoto-kumamoto-dormy-kumamoto",
+   "n": "덴넨온센 롯카노유 도미인 구마모토",
+   "jp": "天然温泉六花の湯 ドーミーイン熊本",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 롯카노유 도미인 구마모토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-akaumi",
+   "n": "덴넨온센 아카네우미",
+   "jp": "天然温泉 茜海",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 아카네우미",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-asamogawa-shizunosato",
+   "n": "아사모가와온센 시즈노사토",
+   "jp": "浅茂川温泉 静の里",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아사모가와온천 시즈노사토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-hashiudoso",
+   "n": "단고온센 하시우도소",
+   "jp": "丹後温泉 はしうど荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "단고온천 하시우도소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-kumihama-yumotokan",
+   "n": "구미하마온센 유모토칸",
+   "jp": "久美浜温泉 湯元館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "구미하마온천 유모토칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-taiza-nagomian",
+   "n": "다이자온센고 나고미안 소라토우미",
+   "jp": "間人温泉郷 和み庵 空と海",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "다이자온천고 나고미안 소라토우미",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-taiza-sumihei",
+   "n": "다이자온센 스미헤이",
+   "jp": "間人温泉 炭平",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "다이자온천 스미헤이",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-kyoto-kyotango-ugawa-yoshinonosato",
+   "n": "우가와온센 요시노노사토",
+   "jp": "宇川温泉 よし野の里",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "우가와온천 요시노노사토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-miyagi-naruko-ninomiyaso",
+   "n": "민슈쿠온센 니노미야소",
+   "jp": "民宿温泉 二ノ宮荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "민슈쿠온천 니노미야소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-nara-nara-kamokimi-no-yu",
+   "n": "텐넨온센 카모키미노유",
+   "jp": "天然温泉 かもきみの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "텐넨온천 카모키미노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-niigata-muikamachi-ryugon",
+   "n": "온센 오야도 류곤",
+   "jp": "温泉御宿 龍言",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 오야도 류곤",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-oita-hita-honjin",
+   "n": "아이켄토 스고스 온센 료칸 혼진",
+   "jp": "愛犬と過ごす温泉旅館 HONJIN",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아이켄토 스고스 온천 료칸 혼진",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-okinawa-ginowan-aroma",
+   "n": "에나직 덴넨온센 아로마",
+   "jp": "エナジック天然温泉アロマ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "에나직 덴넨온천 아로마",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-okinawa-nanjo-enjin-no-yu",
+   "n": "덴넨온센 사시키노 엔진노유",
+   "jp": "天然温泉さしきの猿人の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 사시키노 엔진노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-izumisano-inunaki-onsen-center",
+   "n": "이누나키온센센터",
+   "jp": "犬鳴温泉センター",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "이누나키온천센터",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-izumisano-kanku-gardenpalace",
+   "n": "간쿠온센 호텔 가든 팰리스",
+   "jp": "関空温泉ホテルガーデンパレス",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "간쿠온천 호텔 가든 팰리스",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-izumisano-yumoto-onsenso",
+   "n": "유모토온센소",
+   "jp": "湯元温泉荘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "유모토온천소",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-kawachinagano-nantenen",
+   "n": "아마미온센 난텐엔",
+   "jp": "あまみ温泉 南天苑",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아마미온천 난텐엔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-minoh-ooedo-kanko-hotel",
+   "n": "오에도온센모노가타리 프리미엄 미노오칸코 호텔",
+   "jp": "大江戸温泉物語Premium 箕面観光ホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 프리미엄 미노오칸코 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-minoh-spa-garden",
+   "n": "오에도온센모노가타리 미노오온센 스파가든",
+   "jp": "大江戸温泉物語 箕面温泉スパーガーデン",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 미노오온천 스파가든",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-osaka-osaka-solaniwa",
+   "n": "소라니와온센 오사카 베이타워",
+   "jp": "空庭温泉 OSAKA BAY TOWER",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "소라니와온천 오사카 베이타워",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saga-ooedo-onsen-monogatari-ureshinokan",
+   "n": "오에도온센모노가타리 우레시노칸",
+   "jp": "大江戸温泉物語 嬉野館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 우레시노칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-chichibu-kawabata-onsen-bon-no-yu",
+   "n": "지치부카와바타온센 본노유",
+   "jp": "秩父川端温泉 梵の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "지치부카와바타온천 본노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-chichibu-onsen-mangan-no-yu",
+   "n": "지치부온센 만간노유",
+   "jp": "秩父温泉 満願の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "지치부온천 만간노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-michi-no-eki-ryokami-onsen-yakushi-no-yu",
+   "n": "미치노에키 료가미온센 야쿠시노유",
+   "jp": "道の駅 両神温泉 薬師の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "미치노에키 료가미온천 야쿠시노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-saitama-chichibu-seibu-chichibu-ekimae-onsen-matsuri-no-yu",
+   "n": "세이부치치부에키마에온센 마쓰리노유",
+   "jp": "西武秩父駅前温泉 祭の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "세이부치치부에키마에온천 마쓰리노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-shizuoka-ito-akazawa-onsen-hotel",
+   "n": "아카자와온센 호텔",
+   "jp": "赤沢温泉ホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아카자와온천 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-shizuoka-ito-daitokan",
+   "n": "이토온센 다이토칸",
+   "jp": "伊東温泉 大東館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "이토온천 다이토칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-shizuoka-ito-hanafubuki",
+   "n": "이즈고겐·조가사키온센 하나후부키",
+   "jp": "伊豆高原・城ヶ崎温泉 花吹雪",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "이즈고겐·조가사키온천 하나후부키",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-shizuoka-ito-kirano-sato",
+   "n": "야와타노온센고 모리노유 기라노사토",
+   "jp": "八幡野温泉郷 杜の湯 きらの里",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "야와타노온천고 모리노유 기라노사토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-shizuoka-ito-yunoniwa",
+   "n": "라포레 이토온센 유노니와",
+   "jp": "ラフォーレ伊東温泉 湯の庭",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "라포레 이토온천 유노니와",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-chuzenjiko-nikko-chuzenjiko-onsen-hotel-kaan",
+   "n": "닛코 주젠지코온센 호텔 가안",
+   "jp": "日光中禅寺湖温泉 ホテル花庵",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "닛코 주젠지코온천 호텔 가안",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-hatashita-onsen-fukujuen",
+   "n": "펫토 다노시무 온센 료칸 후쿠주엔",
+   "jp": "ペットと楽しむ温泉旅館 福久寿苑",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "펫토 다노시무 온천 료칸 후쿠주엔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-kinugawa-onsen-asaya",
+   "n": "기누가와온센 아사야",
+   "jp": "鬼怒川温泉 あさや",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "기누가와온천 아사야",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-kinugawa-onsen-hotel",
+   "n": "기누가와온센 호텔",
+   "jp": "鬼怒川温泉ホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "기누가와온천 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-kinugawa-onsen-sanraku",
+   "n": "기누가와온센 산라쿠",
+   "jp": "鬼怒川温泉 山楽",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "기누가와온천 산라쿠",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-kinugawa-onsen-wakatake-no-sho",
+   "n": "쇼야니 나라우 모테나시노야도 기누가와온센 와카타케노쇼",
+   "jp": "庄屋にならうもてなしの宿 鬼怒川温泉『若竹の庄』",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "쇼야니 나라우 모테나시노야도 기누가와온천 와카타케노쇼",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-ooedo-onsen-monogatari-hotel-kinugawa-gyoen",
+   "n": "오에도온센모노가타리 호텔 기누가와 교엔",
+   "jp": "大江戸温泉物語 ホテル鬼怒川御苑",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 호텔 기누가와 교엔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-ooedo-onsen-monogatari-premium-kinugawa-kanko-hotel",
+   "n": "오에도온센모노가타리 프리미엄 기누가와 간코 호텔",
+   "jp": "大江戸温泉物語Premium 鬼怒川観光ホテル",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 프리미엄 기누가와 간코 호텔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-kinugawa-wakatake-no-sho-bettei-sasane",
+   "n": "기누가와온센 와카타케노쇼 벳테이 사사네",
+   "jp": "鬼怒川温泉 若竹の庄『別邸 笹音』",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "기누가와온천 와카타케노쇼 벳테이 사사네",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-monzen-onsen-ooedo-onsen-monogatari-premium-hotel-new-shiobara",
+   "n": "오에도온센모노가타리 프리미엄 호텔 뉴 시오바라",
+   "jp": "大江戸温泉物語Premium ホテルニュー塩原",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 프리미엄 호텔 뉴 시오바라",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-nakashiobara-onsen-akasawa-onsen-ryokan",
+   "n": "아카사와온센 료칸",
+   "jp": "赤沢温泉旅館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아카사와온천 료칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-nasu-onsen-cottage-sakura-no-oka",
+   "n": "온센 코티지 사쿠라노오카",
+   "jp": "温泉コテージ 桜の丘",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 코티지 사쿠라노오카",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-nasu-yufuri-nasu-takao-onsen-lodge",
+   "n": "홋타라카시노야도 유후리 나스 다카오온센 롯지",
+   "jp": "ほったらかしの宿 ゆうふり那須高雄温泉ロッジ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "홋타라카시노야도 유후리 나스 다카오온천 롯지",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tochigi-sandogoya-onsen-sandogoya-onsen-tabakoya-ryokan",
+   "n": "산도고야온센 다바코야 료칸",
+   "jp": "三斗小屋温泉 煙草屋旅館",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "산도고야온천 다바코야 료칸",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-tokyo-okutama-okutama-onsen-moegi-no-yu",
+   "n": "오쿠타마온센 모에기노유",
+   "jp": "奥多摩温泉 もえぎの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오쿠타마온천 모에기노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-toyama-kurobe-ikuji-tanakaya",
+   "n": "이쿠지온센 다나카야",
+   "jp": "生地温泉 たなかや",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "이쿠지온천 다나카야",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-toyama-kurobe-ogawa-onsen-hotel-ogawa",
+   "n": "오가와온센 모토유 호텔 오가와",
+   "jp": "小川温泉元湯 ホテルおがわ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오가와온천 모토유 호텔 오가와",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-toyama-unazuki-togen",
+   "n": "구로베·우나즈키온센 도겐",
+   "jp": "黒部・宇奈月温泉 桃源",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "구로베·우나즈키온천 도겐",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-toyama-unazuki-yamanoha",
+   "n": "구로베·우나즈키온센 야마노하",
+   "jp": "黒部・宇奈月温泉 やまのは",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "구로베·우나즈키온천 야마노하",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-arida-hikarinoyu",
+   "n": "아리타가와온센 아유자야 히카리노유",
+   "jp": "有田川温泉 鮎茶屋 光の湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "아리타가와온천 아유자야 히카리노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-arida-michishio-no-yu",
+   "n": "기이히다카온센 온센칸 우미노사토 미치시오노유",
+   "jp": "紀伊日高温泉 温泉館「海の里」みちしおの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "기이히다카온천 온천칸 우미노사토 미치시오노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-arida-yuasajo",
+   "n": "유아사온센 유아사조",
+   "jp": "湯浅温泉 湯浅城",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "유아사온천 유아사조",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-katsuura-hamayu",
+   "n": "덴넨온센 고슈요쿠조 하마유",
+   "jp": "天然温泉公衆浴場 はまゆ",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "덴넨온천 고슈요쿠조 하마유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-katsuura-hanakayuu",
+   "n": "난키타이지온센 하나이로도리노야도 가유",
+   "jp": "南紀太地温泉 花いろどりの宿 花游",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "난키타이지온천 하나이로도리노야도 가유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-koya-yadori-iyashinoyu",
+   "n": "야도리온센 이야시노유",
+   "jp": "やどり温泉 いやしの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "야도리온천 이야시노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-kushimoto-ooedo",
+   "n": "오에도온센모노가타리 난키쿠시모토",
+   "jp": "大江戸温泉物語 南紀串本",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 난키쿠시모토",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-ryujin-motoyu",
+   "n": "류진온센 모토유",
+   "jp": "龍神温泉 元湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "류진온천 모토유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-shirahama-gyoen",
+   "n": "오에도온센모노가타리 프리미엄 시라하마 교엔",
+   "jp": "大江戸温泉物語Premium 白浜御苑",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 프리미엄 시라하마 교엔",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-shirahama-mikasa",
+   "n": "히토무네가시 온센 앤 사우나 미카사",
+   "jp": "一棟貸温泉&サウナ「三笠」",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "히토무네가시 온천 앤 사우나 미카사",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-shirahama-saichoraku",
+   "n": "오에도온센모노가타리 프리미엄 시라하마 사이초라쿠",
+   "jp": "大江戸温泉物語Premium 白浜彩朝楽",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도온천모노가타리 프리미엄 시라하마 사이초라쿠",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-kada-hiina",
+   "n": "가다아와시마온센 오사카야 히이나노유",
+   "jp": "加太淡嶋温泉 大阪屋ひいなの湯",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "가다아와시마온천 오사카야 히이나노유",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-kada-kaigetsu",
+   "n": "와카야마 가다온센 가다카이게쓰",
+   "jp": "和歌山加太温泉 加太海月",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "와카야마 가다온천 가다카이게쓰",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-wakayama-wakayamashi-manpa",
+   "n": "와카노우라온센 만파 리조트",
+   "jp": "和歌の浦温泉 萬波 MANPA RESORT",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "와카노우라온천 만파 리조트",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-yamanashi-isawa-oedo-shinko",
+   "n": "오에도 온센 모노가타리 호텔 신코",
+   "jp": "大江戸温泉物語 ホテル新光",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "오에도 온천 모노가타리 호텔 신코",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "ryokan-nov13-6",
+   "n": "온센 료칸 스이메이",
+   "jp": "温泉旅館水明",
+   "en": "Onsen Ryokan Suimei",
+   "score": 6,
+   "flags": [
+    "onsen-reading"
+   ],
+   "msgs": [
+    "잘못된 읽기 '온센' -> '온천'"
+   ],
+   "fix": {
+    "n": "온천 료칸 스이메이",
+    "src": "rule:onsen-reading"
+   }
+  },
+  {
+   "id": "official-hiroshima-hiroshima-other-tsurunoyu",
+   "n": "쓰루노유온천",
+   "jp": "鶴乃湯温泉",
+   "score": 6,
+   "flags": [
+    "dup_n_diff_jp",
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "같은 n(쓰루노유온천)인데 jp 다름: 110, official-hiroshima-hiroshima-other-tsurunoyu",
+    "'온천' 띄어쓰기 소수 표기: 쓰루노유온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-hioki-tanoyu",
+   "n": "다노유온천",
+   "jp": "田之湯温泉",
+   "score": 6,
+   "flags": [
+    "dup_n_diff_jp",
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "같은 n(다노유온천)인데 jp 다름: official-beppu-detail6, official-kagoshima-hioki-tanoyu",
+    "'온천' 띄어쓰기 소수 표기: 다노유온천"
+   ]
+  },
+  {
+   "id": "official-nagasaki-iki-yukawa-onsen",
+   "n": "유카와온천",
+   "jp": "湯川温泉",
+   "score": 5,
+   "flags": [
+    "dup_jp",
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "같은 jp(湯川温泉) 다른 id: official-iwate-IW6109, official-nagasaki-iki-yukawa-onsen",
+    "'온천' 띄어쓰기 소수 표기: 유카와온천"
+   ]
+  },
+  {
+   "id": "official-aomori-AT9277",
+   "n": "사쿠라 온천",
+   "jp": "桜温泉",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(사쿠라온천)인데 jp 다름: official-aomori-AT9277, official-aomori-tohoku-sakura"
+   ]
+  },
+  {
+   "id": "official-aomori-tohoku-sakura",
+   "n": "사쿠라 온천",
+   "jp": "さくら温泉",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(사쿠라온천)인데 jp 다름: official-aomori-AT9277, official-aomori-tohoku-sakura"
+   ]
+  },
+  {
+   "id": "official-atami-furuya",
+   "n": "후루야 료칸",
+   "jp": "古屋旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(후루야료칸)인데 jp 다름: official-atami-furuya, official-shizuoka-atami-furuya"
+   ]
+  },
+  {
+   "id": "official-shizuoka-atami-furuya",
+   "n": "후루야 료칸",
+   "jp": "熱海温泉 古屋旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(후루야료칸)인데 jp 다름: official-atami-furuya, official-shizuoka-atami-furuya"
+   ]
+  },
+  {
+   "id": "official-beppu-detail6",
+   "n": "다노유 온천",
+   "jp": "田の湯温泉",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다노유온천)인데 jp 다름: official-beppu-detail6, official-kagoshima-hioki-tanoyu"
+   ]
+  },
+  {
+   "id": "official-fukushima-iizaka-nakaya",
+   "n": "나카야 료칸",
+   "jp": "なかや旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(나카야료칸)인데 jp 다름: official-fukushima-iizaka-nakaya, official-kanagawa-nanasawa-nakaya-ryokan"
+   ]
+  },
+  {
+   "id": "official-kanagawa-nanasawa-nakaya-ryokan",
+   "n": "나카야 료칸",
+   "jp": "中屋旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(나카야료칸)인데 jp 다름: official-fukushima-iizaka-nakaya, official-kanagawa-nanasawa-nakaya-ryokan"
+   ]
+  },
+  {
+   "id": "official-fukushima-takayu-attakayu",
+   "n": "다카유온천 공동욕장 앗타카유",
+   "jp": "高湯温泉共同浴場 あったか湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다카유온천공동욕장앗타카유)인데 jp 다름: official-fukushima-takayu-attakayu, official-fukushima-TF5806"
+   ]
+  },
+  {
+   "id": "official-fukushima-TF5806",
+   "n": "다카유 온천 공동욕장 앗타카유",
+   "jp": "高湯温泉共同浴場「あったか湯」",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다카유온천공동욕장앗타카유)인데 jp 다름: official-fukushima-takayu-attakayu, official-fukushima-TF5806"
+   ]
+  },
+  {
+   "id": "official-gifu-gero-masuya",
+   "n": "마스야",
+   "jp": "ますや",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(마스야)인데 jp 다름: official-gifu-gero-masuya, official-tochigi-furumachi-onsen-masuya"
+   ]
+  },
+  {
+   "id": "official-tochigi-furumachi-onsen-masuya",
+   "n": "마스야",
+   "jp": "満寿家",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(마스야)인데 jp 다름: official-gifu-gero-masuya, official-tochigi-furumachi-onsen-masuya"
+   ]
+  },
+  {
+   "id": "official-hokkaido-noboribetsu-tamanoyu",
+   "n": "다마노유",
+   "jp": "玉乃湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다마노유)인데 jp 다름: official-hokkaido-noboribetsu-tamanoyu, official-kanagawa-hakone-tama-no-yu"
+   ]
+  },
+  {
+   "id": "official-kanagawa-hakone-tama-no-yu",
+   "n": "다마노유",
+   "jp": "玉の湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다마노유)인데 jp 다름: official-hokkaido-noboribetsu-tamanoyu, official-kanagawa-hakone-tama-no-yu"
+   ]
+  },
+  {
+   "id": "official-hyogo-kinosaki-sotoyu-satonoyu",
+   "n": "사토노유",
+   "jp": "さとの湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(사토노유)인데 jp 다름: official-hyogo-kinosaki-sotoyu-satonoyu, official-nagano-hakuba-sato-no-yu"
+   ]
+  },
+  {
+   "id": "official-nagano-hakuba-sato-no-yu",
+   "n": "사토노유",
+   "jp": "郷の湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(사토노유)인데 jp 다름: official-hyogo-kinosaki-sotoyu-satonoyu, official-nagano-hakuba-sato-no-yu"
+   ]
+  },
+  {
+   "id": "official-kinosaki-kounoyu",
+   "n": "고노유",
+   "jp": "鴻の湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(고노유)인데 jp 다름: official-kinosaki-kounoyu, official-kumamoto-kounoyu"
+   ]
+  },
+  {
+   "id": "official-kumamoto-kounoyu",
+   "n": "고노유",
+   "jp": "こうの湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(고노유)인데 jp 다름: official-kinosaki-kounoyu, official-kumamoto-kounoyu"
+   ]
+  },
+  {
+   "id": "official-kumamoto-oguni-hitaya",
+   "n": "료칸 히타야",
+   "jp": "旅館 日田屋",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(료칸히타야)인데 jp 다름: official-kumamoto-oguni-hitaya, official-oita-hita-hitaya"
+   ]
+  },
+  {
+   "id": "official-oita-hita-hitaya",
+   "n": "료칸 히타야",
+   "jp": "旅館 ひたや",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(료칸히타야)인데 jp 다름: official-kumamoto-oguni-hitaya, official-oita-hita-hitaya"
+   ]
+  },
+  {
+   "id": "official-kumamoto-yamaga-fuji-hotel",
+   "n": "후지 호텔",
+   "jp": "富士ホテル",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(후지호텔)인데 jp 다름: official-kumamoto-yamaga-fuji-hotel, official-yamaga-fuji, official-yamanashi-shimobe-fuji-hotel"
+   ]
+  },
+  {
+   "id": "official-yamaga-fuji",
+   "n": "후지 호텔",
+   "jp": "熊本・山鹿温泉 富士ホテル",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(후지호텔)인데 jp 다름: official-kumamoto-yamaga-fuji-hotel, official-yamaga-fuji, official-yamanashi-shimobe-fuji-hotel"
+   ]
+  },
+  {
+   "id": "official-yamanashi-shimobe-fuji-hotel",
+   "n": "후지 호텔",
+   "jp": "不二ホテル",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(후지호텔)인데 jp 다름: official-kumamoto-yamaga-fuji-hotel, official-yamaga-fuji, official-yamanashi-shimobe-fuji-hotel"
+   ]
+  },
+  {
+   "id": "official-n-tamaya",
+   "n": "다마야 료칸",
+   "jp": "玉屋旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다마야료칸)인데 jp 다름: official-n-tamaya, official-yamaguchi-tawarayama-tamaya"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-tawarayama-tamaya",
+   "n": "다마야 료칸",
+   "jp": "たまや旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(다마야료칸)인데 jp 다름: official-n-tamaya, official-yamaguchi-tawarayama-tamaya"
+   ]
+  },
+  {
+   "id": "official-nagano-asama-kikunoyu",
+   "n": "기쿠노유",
+   "jp": "菊之湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(기쿠노유)인데 jp 다름: official-nagano-asama-kikunoyu, official-yamanaka-kikunoyu"
+   ]
+  },
+  {
+   "id": "official-yamanaka-kikunoyu",
+   "n": "기쿠노유",
+   "jp": "菊の湯",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(기쿠노유)인데 jp 다름: official-nagano-asama-kikunoyu, official-yamanaka-kikunoyu"
+   ]
+  },
+  {
+   "id": "official-nagasaki-ryokan-fujiya",
+   "n": "료칸 후지야",
+   "jp": "旅館 富士屋",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(료칸후지야)인데 jp 다름: official-nagasaki-ryokan-fujiya, official-shizuoka-kanzanji-fujiya"
+   ]
+  },
+  {
+   "id": "official-shizuoka-kanzanji-fujiya",
+   "n": "료칸 후지야",
+   "jp": "旅館ふじや",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(료칸후지야)인데 jp 다름: official-nagasaki-ryokan-fujiya, official-shizuoka-kanzanji-fujiya"
+   ]
+  },
+  {
+   "id": "official-shibu-kameya",
+   "n": "가메야 료칸",
+   "jp": "かめや旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(가메야료칸)인데 jp 다름: official-shibu-kameya, official-yamaguchi-tawarayama-kameya"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-tawarayama-kameya",
+   "n": "가메야 료칸",
+   "jp": "亀屋旅館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(가메야료칸)인데 jp 다름: official-shibu-kameya, official-yamaguchi-tawarayama-kameya"
+   ]
+  },
+  {
+   "id": "official-shizuoka-shuzenji-goyokan",
+   "n": "고요칸",
+   "jp": "五葉館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(고요칸)인데 jp 다름: official-shizuoka-shuzenji-goyokan, official-yamanashi-shimobe-koyokan"
+   ]
+  },
+  {
+   "id": "official-yamanashi-shimobe-koyokan",
+   "n": "고요칸",
+   "jp": "甲陽館",
+   "score": 5,
+   "flags": [
+    "dup_n_diff_jp"
+   ],
+   "msgs": [
+    "같은 n(고요칸)인데 jp 다름: official-shizuoka-shuzenji-goyokan, official-yamanashi-shimobe-koyokan"
+   ]
+  },
+  {
+   "id": "add-takinoyu",
+   "n": "다키노유",
+   "jp": "滝の湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(滝の湯) 다른 id: add-takinoyu, official-nagano-nozawa-sotoyu-11"
+   ]
+  },
+  {
+   "id": "official-aichi-mitani-hiranoya",
+   "n": "히라노야",
+   "jp": "平野屋",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(平野屋) 다른 id: official-aichi-mitani-hiranoya, official-kumamoto-tamana-hiranoya"
+   ]
+  },
+  {
+   "id": "official-kumamoto-tamana-hiranoya",
+   "n": "히라노야",
+   "jp": "平野屋",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(平野屋) 다른 id: official-aichi-mitani-hiranoya, official-kumamoto-tamana-hiranoya"
+   ]
+  },
+  {
+   "id": "official-aomori-AT9338",
+   "n": "긴타로 온천",
+   "jp": "金太郎温泉",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(金太郎温泉) 다른 id: official-aomori-AT9338, official-toyama-kurobe-kintaro-onsen"
+   ]
+  },
+  {
+   "id": "official-toyama-kurobe-kintaro-onsen",
+   "n": "긴타로 온천",
+   "jp": "金太郎温泉",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(金太郎温泉) 다른 id: official-aomori-AT9338, official-toyama-kurobe-kintaro-onsen"
+   ]
+  },
+  {
+   "id": "official-fukushima-iizaka-kikuya",
+   "n": "기쿠야 료칸",
+   "jp": "喜久屋旅館",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(喜久屋旅館) 다른 id: official-fukushima-iizaka-kikuya, official-tochigi-nasu-kikuya-ryokan"
+   ]
+  },
+  {
+   "id": "official-tochigi-nasu-kikuya-ryokan",
+   "n": "기쿠야 료칸",
+   "jp": "喜久屋旅館",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(喜久屋旅館) 다른 id: official-fukushima-iizaka-kikuya, official-tochigi-nasu-kikuya-ryokan"
+   ]
+  },
+  {
+   "id": "official-iwate-IW6109",
+   "n": "유카와 온천",
+   "jp": "湯川温泉",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(湯川温泉) 다른 id: official-iwate-IW6109, official-nagasaki-iki-yukawa-onsen"
+   ]
+  },
+  {
+   "id": "official-jozankei-shikanoyu",
+   "n": "시카노유",
+   "jp": "鹿の湯",
+   "en": "Shikanoyu",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(鹿の湯) 다른 id: official-jozankei-shikanoyu, official-shikanoyu"
+   ]
+  },
+  {
+   "id": "official-shikanoyu",
+   "n": "시카노유",
+   "jp": "鹿の湯",
+   "en": "Shika no Yu",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(鹿の湯) 다른 id: official-jozankei-shikanoyu, official-shikanoyu"
+   ]
+  },
+  {
+   "id": "official-kagawa-kotohira-tsuruya",
+   "n": "쓰루야 료칸",
+   "jp": "つるや旅館",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(つるや旅館) 다른 id: official-kagawa-kotohira-tsuruya, official-nagano-yudanaka-tsuruya"
+   ]
+  },
+  {
+   "id": "official-nagano-yudanaka-tsuruya",
+   "n": "쓰루야 료칸",
+   "jp": "つるや旅館",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(つるや旅館) 다른 id: official-kagawa-kotohira-tsuruya, official-nagano-yudanaka-tsuruya"
+   ]
+  },
+  {
+   "id": "official-nagano-kamisuwa-hamanoyu",
+   "n": "하마노유",
+   "jp": "浜の湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(浜の湯) 다른 id: official-nagano-kamisuwa-hamanoyu, official-nagasaki-hama-no-yu"
+   ]
+  },
+  {
+   "id": "official-nagasaki-hama-no-yu",
+   "n": "하마노유",
+   "jp": "浜の湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(浜の湯) 다른 id: official-nagano-kamisuwa-hamanoyu, official-nagasaki-hama-no-yu"
+   ]
+  },
+  {
+   "id": "official-oita-kokonoe-yakushiyu",
+   "n": "야쿠시유",
+   "jp": "薬師湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(薬師湯) 다른 id: official-oita-kokonoe-yakushiyu, official-shimane-yunotsu-yakushiyu"
+   ]
+  },
+  {
+   "id": "official-shimane-yunotsu-yakushiyu",
+   "n": "야쿠시유",
+   "jp": "薬師湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(薬師湯) 다른 id: official-oita-kokonoe-yakushiyu, official-shimane-yunotsu-yakushiyu"
+   ]
+  },
+  {
+   "id": "official-saga-shoen",
+   "n": "쇼엔",
+   "jp": "松園",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(松園) 다른 id: official-saga-shoen, official-shimane-yunokawa-shoen"
+   ]
+  },
+  {
+   "id": "official-shimane-yunokawa-shoen",
+   "n": "쇼엔",
+   "jp": "松園",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(松園) 다른 id: official-saga-shoen, official-shimane-yunokawa-shoen"
+   ]
+  },
+  {
+   "id": "official-shimane-tamatsukuri-matsunoyu",
+   "n": "마쓰노유",
+   "jp": "松乃湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(松乃湯) 다른 id: official-shimane-tamatsukuri-matsunoyu, official-wakayama-shirahama-matsunoyu"
+   ]
+  },
+  {
+   "id": "official-wakayama-shirahama-matsunoyu",
+   "n": "마쓰노유",
+   "jp": "松乃湯",
+   "score": 4,
+   "flags": [
+    "dup_jp"
+   ],
+   "msgs": [
+    "같은 jp(松乃湯) 다른 id: official-shimane-tamatsukuri-matsunoyu, official-wakayama-shirahama-matsunoyu"
+   ]
+  },
+  {
+   "id": "ryokan-nov13-8",
+   "n": "고시카노 온천 료칸",
+   "jp": "こしかの温泉",
+   "en": "Koshikano Onsen",
+   "score": 3,
+   "flags": [
+    "suffix_onsen_missing"
+   ],
+   "msgs": [
+    "jp ...温泉 인데 n에 '온천' 없음: 고시카노 온천 료칸"
+   ]
+  },
+  {
+   "id": "official-hiroshima-hatsukaichi-ogose",
+   "n": "모토유 오제가와온천",
+   "jp": "元湯 小瀬川温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 모토유 오제가와온천"
+   ]
+  },
+  {
+   "id": "official-hiroshima-hiroshima-other-etajima-so",
+   "n": "에타지마소 에타지마온천",
+   "jp": "江田島荘 えたじま温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 에타지마소 에타지마온천"
+   ]
+  },
+  {
+   "id": "official-hiroshima-hiroshima-other-jinseki",
+   "n": "진세키고원온천",
+   "jp": "神石高原温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 진세키고원온천"
+   ]
+  },
+  {
+   "id": "official-hiroshima-hiroshima-other-sera",
+   "n": "대중연극 세라온천",
+   "jp": "大衆演劇 せら温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 대중연극 세라온천"
+   ]
+  },
+  {
+   "id": "official-iwate-IW5963",
+   "n": "스카와 고원온천",
+   "jp": "須川高原温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 스카와 고원온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-kagawa-other-haha-gami",
+   "n": "하하가미온천",
+   "jp": "母神温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하하가미온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-kagawa-other-kasuga",
+   "n": "가스가온천",
+   "jp": "春日温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 가스가온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-kagawa-other-shioiri",
+   "n": "시오이리온천",
+   "jp": "塩入温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 시오이리온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-kagawa-other-tsubasayama",
+   "n": "쓰바사야마온천",
+   "jp": "つばさ山温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 쓰바사야마온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-shodoshima-yoshida",
+   "n": "쇼도시마 오토빌리지 요시다 후루사토 교류관·요시다온천",
+   "jp": "小豆島オートビレッジYOSHIDAふるさと交流館・吉田温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 쇼도시마 오토빌리지 요시다 후루사토 교류관·요시다온천"
+   ]
+  },
+  {
+   "id": "official-kagawa-takamatsu-hakucho",
+   "n": "하쿠초온천",
+   "jp": "はくちょう温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하쿠초온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-akune-kimiyoshi",
+   "n": "기미요시온천",
+   "jp": "きみよし温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 기미요시온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-hamachigomizu-kuei-onsen",
+   "n": "하마치고가미즈 구에이온천",
+   "jp": "浜児ヶ水区営温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하마치고가미즈 구에이온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-ibusuki-motoyu-onsen",
+   "n": "이부스키 모토유온천",
+   "jp": "いぶすき元湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 이부스키 모토유온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-kagoshima-daikoku",
+   "n": "다이코쿠온천",
+   "jp": "大黒温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 다이코쿠온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-kagoshima-koriyama",
+   "n": "고리야마온천",
+   "jp": "郡山温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 고리야마온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-kuei-unagi-onsen",
+   "n": "구에이 우나기온천",
+   "jp": "区営鰻温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 구에이 우나기온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-muranoyu-onsen",
+   "n": "무라노유온천",
+   "jp": "村之湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 무라노유온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-satsumasendai-maruyama",
+   "n": "마루야마온천",
+   "jp": "丸山温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 마루야마온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-satsumasendai-shimonoyu",
+   "n": "시모노유온천",
+   "jp": "下ノ湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 시모노유온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-satsumasendai-suwa",
+   "n": "스와온천",
+   "jp": "諏訪温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 스와온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-tarumizu-tm-bokujo",
+   "n": "TM 목장온천",
+   "jp": "テイエム牧場温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: TM 목장온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-togo-onsen",
+   "n": "도고온천",
+   "jp": "東郷温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 도고온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-tokumitsu-onsen",
+   "n": "비하다노유 도쿠미쓰온천",
+   "jp": "美肌の湯 徳光温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 비하다노유 도쿠미쓰온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-yajigayu-onsen",
+   "n": "야지가유온천",
+   "jp": "弥次ヶ湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 야지가유온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-yakushima-hirauchi",
+   "n": "히라우치 해중온천",
+   "jp": "平内海中温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 히라우치 해중온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-yakushima-onoaida",
+   "n": "오노아이다온천",
+   "jp": "尾之間温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 오노아이다온천"
+   ]
+  },
+  {
+   "id": "official-kagoshima-yakushima-yudomari",
+   "n": "유도마리온천",
+   "jp": "湯泊温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유도마리온천"
+   ]
+  },
+  {
+   "id": "official-miyazaki-miyakonojo-aoidake",
+   "n": "아오이다케온천",
+   "jp": "青井岳温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 아오이다케온천"
+   ]
+  },
+  {
+   "id": "official-miyazaki-saito-saito-onsen",
+   "n": "사이토온천",
+   "jp": "さいと温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 사이토온천"
+   ]
+  },
+  {
+   "id": "official-miyazaki-takaharu-yunomoto",
+   "n": "유노모토온천",
+   "jp": "湯之元温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유노모토온천"
+   ]
+  },
+  {
+   "id": "official-nagano-karuizawa-sengataki-onsen",
+   "n": "가루이자와 센가타키온천",
+   "jp": "軽井沢 千ヶ滝温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 가루이자와 센가타키온천"
+   ]
+  },
+  {
+   "id": "official-nagano-karuizawa-shiotsubo-onsen",
+   "n": "시오쓰보온천",
+   "jp": "塩壷温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 시오쓰보온천"
+   ]
+  },
+  {
+   "id": "official-nagasaki-iki-sukoyaka",
+   "n": "스코야카온천",
+   "jp": "すこやか温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 스코야카온천"
+   ]
+  },
+  {
+   "id": "official-nagasaki-iki-takamine",
+   "n": "다카미네온천",
+   "jp": "高峰温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 다카미네온천"
+   ]
+  },
+  {
+   "id": "official-nagasaki-iki-yamaguchi",
+   "n": "야마구치온천",
+   "jp": "山口温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 야마구치온천"
+   ]
+  },
+  {
+   "id": "official-nagasaki-jisco-hotel-obama-onsen",
+   "n": "지스코 호텔 오바마온천",
+   "jp": "ジスコホテル小浜温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 지스코 호텔 오바마온천"
+   ]
+  },
+  {
+   "id": "official-niigata-yuzawa-kaikake-onsen",
+   "n": "메노온천 가이카케온천",
+   "jp": "目の温泉 貝掛温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 메노온천 가이카케온천"
+   ]
+  },
+  {
+   "id": "official-oita-atsunoyu-onsen",
+   "n": "아쓰노유온천",
+   "jp": "熱の湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 아쓰노유온천"
+   ]
+  },
+  {
+   "id": "official-oita-bungotakada-ebisudani",
+   "n": "에비스다니온천",
+   "jp": "夷谷温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 에비스다니온천"
+   ]
+  },
+  {
+   "id": "official-oita-bungotakada-hanairo",
+   "n": "하나이로온천",
+   "jp": "花いろ温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하나이로온천"
+   ]
+  },
+  {
+   "id": "official-oita-gokuraku-onsen",
+   "n": "고쿠라쿠온천",
+   "jp": "極楽温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 고쿠라쿠온천"
+   ]
+  },
+  {
+   "id": "official-oita-hashimoto-onsen",
+   "n": "하시모토온천",
+   "jp": "橋本温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하시모토온천"
+   ]
+  },
+  {
+   "id": "official-oita-himeshima-hyoshimizu",
+   "n": "효시미즈온천",
+   "jp": "拍子水温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 효시미즈온천"
+   ]
+  },
+  {
+   "id": "official-oita-kokonoe-ukenokuchi",
+   "n": "우케노쿠치 공동온천",
+   "jp": "筌の口共同温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 우케노쿠치 공동온천"
+   ]
+  },
+  {
+   "id": "official-oita-oita-niu",
+   "n": "니우온천",
+   "jp": "丹生温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 니우온천"
+   ]
+  },
+  {
+   "id": "official-oita-oyado-nurukawa-onsen",
+   "n": "오야도 누루카와온천",
+   "jp": "御宿 ぬるかわ温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 오야도 누루카와온천"
+   ]
+  },
+  {
+   "id": "official-oita-shonai-no-sato-shonai-onsen",
+   "n": "쇼나이노사토 쇼나이온천",
+   "jp": "庄内の里 庄内温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 쇼나이노사토 쇼나이온천"
+   ]
+  },
+  {
+   "id": "official-oita-taketa-nyagayun",
+   "n": "냐가윤온천",
+   "jp": "にゃがゆん温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 냐가윤온천"
+   ]
+  },
+  {
+   "id": "official-oita-taketa-oginosato",
+   "n": "오기노사토온천",
+   "jp": "荻の里温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 오기노사토온천"
+   ]
+  },
+  {
+   "id": "official-oita-usa-innai-yo",
+   "n": "인나이 요온천",
+   "jp": "いんない余温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 인나이 요온천"
+   ]
+  },
+  {
+   "id": "official-oita-yufudake-onsen",
+   "n": "유후다케온천",
+   "jp": "由布岳温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유후다케온천"
+   ]
+  },
+  {
+   "id": "official-oita-yunotsubo-onsen",
+   "n": "유노쓰보온천",
+   "jp": "ゆのつぼ温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유노쓰보온천"
+   ]
+  },
+  {
+   "id": "official-okinawa-miyako-shigira-ogon",
+   "n": "시기라 오곤온천",
+   "jp": "シギラ黄金温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 시기라 오곤온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-iya-kenmi",
+   "n": "겐미온천",
+   "jp": "賢見温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 겐미온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-iya-matsuogawa",
+   "n": "마쓰오가와온천",
+   "jp": "松尾川温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 마쓰오가와온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-e-dochu-land",
+   "n": "도추 랜드 신온천",
+   "jp": "土柱ランド新温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 도추 랜드 신온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-e-fuigo",
+   "n": "후이고온천",
+   "jp": "ふいご温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 후이고온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-e-yoshinogawa",
+   "n": "요시노가와온천",
+   "jp": "吉野川温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 요시노가와온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-s-komodamisaki",
+   "n": "가모다미사키온천",
+   "jp": "かもだ岬温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 가모다미사키온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-s-momijigawa",
+   "n": "모미지가와온천",
+   "jp": "もみじ川温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 모미지가와온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-s-nasajiro",
+   "n": "나사지로온천",
+   "jp": "なさ地呂温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 나사지로온천"
+   ]
+  },
+  {
+   "id": "official-tokushima-tokushima-w-momiji",
+   "n": "모미지온천",
+   "jp": "紅葉温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 모미지온천"
+   ]
+  },
+  {
+   "id": "official-tottori-misasa-suha",
+   "n": "스하온천",
+   "jp": "すーはー温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 스하온천"
+   ]
+  },
+  {
+   "id": "official-tottori-other-tottori-takisan",
+   "n": "다키산온천",
+   "jp": "たきさん温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 다키산온천"
+   ]
+  },
+  {
+   "id": "official-tottori-other-tottori-yukamuri",
+   "n": "유카무리온천",
+   "jp": "ゆかむり温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유카무리온천"
+   ]
+  },
+  {
+   "id": "official-tottori-tottori-hinomaru",
+   "n": "히노마루온천",
+   "jp": "日乃丸温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 히노마루온천"
+   ]
+  },
+  {
+   "id": "official-tottori-tottori-kijima",
+   "n": "기지마온천",
+   "jp": "木島温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 기지마온천"
+   ]
+  },
+  {
+   "id": "official-tottori-tottori-motoyu",
+   "n": "모토유온천",
+   "jp": "元湯温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 모토유온천"
+   ]
+  },
+  {
+   "id": "official-tottori-tottori-takara",
+   "n": "다카라온천",
+   "jp": "宝温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 다카라온천"
+   ]
+  },
+  {
+   "id": "official-tottori-yonago-yodoe-yume",
+   "n": "하쿠호노사토 요도에 유메온천",
+   "jp": "白鳳の里「淀江ゆめ温泉」",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하쿠호노사토 요도에 유메온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-hagi-shizuki",
+   "n": "하기 시즈키온천",
+   "jp": "萩指月温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 하기 시즈키온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-shunan-ishibune",
+   "n": "이시부네온천",
+   "jp": "石船温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 이시부네온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-shunan-yobizuru",
+   "n": "요부쓰루온천",
+   "jp": "呼鶴温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 요부쓰루온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yamaguchi-ganjoju",
+   "n": "미치노에키 간조주온천",
+   "jp": "道の駅 願成就温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 미치노에키 간조주온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yamaguchi-miyano",
+   "n": "미야노온천",
+   "jp": "宮野温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 미야노온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yamaguchi-nagasawa",
+   "n": "나가사와온천",
+   "jp": "長沢温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 나가사와온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yamaguchi-yuzuki",
+   "n": "유노키 지세이온천",
+   "jp": "柚木慈生温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 유노키 지세이온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yuda-greenrich",
+   "n": "그린리치 호텔 유다온천",
+   "jp": "グリーンリッチホテル湯田温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 그린리치 호텔 유다온천"
+   ]
+  },
+  {
+   "id": "official-yamaguchi-yuda-superhotel",
+   "n": "슈퍼호텔 야마구치 유다온천",
+   "jp": "スーパーホテル山口湯田温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 슈퍼호텔 야마구치 유다온천"
+   ]
+  },
+  {
+   "id": "official-yamanashi-isawa-livemax-resort",
+   "n": "리브맥스 리조트 이사와온천",
+   "jp": "リブマックスリゾート石和温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 리브맥스 리조트 이사와온천"
+   ]
+  },
+  {
+   "id": "pref2026-15",
+   "n": "다카세 천연온천",
+   "jp": "たかせ天然温泉",
+   "score": 1,
+   "flags": [
+    "style_onsen_spacing"
+   ],
+   "msgs": [
+    "'온천' 띄어쓰기 소수 표기: 다카세 천연온천"
+   ]
+  }
+ ]
+}

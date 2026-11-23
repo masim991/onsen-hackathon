@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org https://cyberjapandata.gsi.go.jp; connect-src 'self' https://frncsllpkxrsgxyqsfwd.supabase.co https://open.er-api.com https://api.frankfurter.dev https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<title>모니터 관리</title>
+<script src="../theme-init.js?v=20261231"></script>
+<link rel="stylesheet" href="monitor.css?v=20261231">
+</head>
+<body>
+<header class="bar">
+  <h1>모니터 관리</h1>
+  <div class="bar-end"><span id="who" class="who"></span><button type="button" id="signout" class="btn" hidden>로그아웃</button></div>
+</header>
+<main>
+  <section id="login" class="card narrow" hidden>
+    <h2>관리자 로그인</h2>
+    <form id="loginForm" autocomplete="on">
+      <label>이메일<input type="email" name="email" autocomplete="username" required></label>
+      <label>비밀번호<input type="password" name="password" autocomplete="current-password" required></label>
+      <button type="submit" class="btn primary">로그인</button>
+      <p id="loginMsg" class="msg" role="alert"></p>
+    </form>
+  </section>
+  <section id="denied" class="card narrow" hidden>
+    <h2>권한이 없습니다</h2>
+    <p>이 계정은 관리자로 등록되어 있지 않습니다. 데이터는 표시되지 않습니다.</p>
+  </section>
+  <section id="app" hidden>
+    <div id="tabs" class="tabs" role="tablist" aria-label="관리 화면"></div>
+    <div id="panel" class="panel" role="tabpanel" tabindex="-1"></div>
+  </section>
+  <p id="boot" class="msg">불러오는 중…</p>
+</main>
+<script src="monitor.js?v=20261231"></script>
+</body>
+</html>

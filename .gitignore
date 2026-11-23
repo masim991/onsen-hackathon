@@ -1,0 +1,17 @@
+# secrets / local config
+.env
+.env.*
+*.key
+.claude/settings.local.json
+# third-party skills installed locally (restore with skills-lock.json)
+.agents/
+.claude/skills/
+# worker output, logs, DB dumps and caches
+tools/monitor/out/
+tools/cleanup/backup/
+tools/cleanup/db-snapshot/
+tools/**/*.log
+tools/**/backup/
+_removed/
+node_modules/
+*.bak

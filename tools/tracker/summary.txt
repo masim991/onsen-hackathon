@@ -1,0 +1,1 @@
+Tracker 2026-11-21: closure items awaiting review 331 (new 296); newly unreachable 72; oldest checked 2026-11-21; ok 1161, changed 0, unreachable 72, blocked 27

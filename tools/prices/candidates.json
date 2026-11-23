@@ -1,0 +1,1517 @@
+{
+ "generated": "2026-11-21T12:58:27.728Z",
+ "tool": "OnsenPriceFinder/1.0 (read-only; official site price check)",
+ "note": "Extracted from official facility sites. apply.mjs merges only confidence=high.",
+ "items": {
+  "official-fukuoka-daimaru-bessho": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 24900,
+    "unit": "person/night",
+    "quote": "1泊2食/24,900円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/10475",
+    "checkedAt": "2026-11-21T12:57:43.758Z"
+   }
+  ],
+  "official-fukuoka-matsubara-ryokan": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8850,
+    "unit": "person/night",
+    "quote": "1泊2食/8,850円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/16391",
+    "checkedAt": "2026-11-21T12:57:43.759Z"
+   }
+  ],
+  "official-fukuoka-ogiya-ryokan": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 6450,
+    "unit": "person/night",
+    "quote": "1泊朝食付き 6,450円",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/10516",
+    "checkedAt": "2026-11-21T12:57:43.759Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 6450,
+    "unit": "person/night",
+    "quote": "仕事滞在(1泊2食付) 6,450円",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/10516",
+    "checkedAt": "2026-11-21T12:57:43.759Z"
+   }
+  ],
+  "official-fukuoka-taikanso": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15200,
+    "unit": "person/night",
+    "quote": "1泊2食/15,200円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/10577",
+    "checkedAt": "2026-11-21T12:57:43.759Z"
+   }
+  ],
+  "official-fukushima-iizaka-izumiya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8910,
+    "unit": "person/night",
+    "quote": "1泊2食 8,910円~",
+    "confidence": "high",
+    "sourceUrl": "http://anabaraonsen-idumiya.jp/index.html",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 7425,
+    "unit": "person/night",
+    "quote": "1泊2食 7,425円~",
+    "confidence": "high",
+    "sourceUrl": "http://anabaraonsen-idumiya.jp/index.html",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8800,
+    "unit": "person/night",
+    "quote": "1泊2食 8,800円~",
+    "confidence": "high",
+    "sourceUrl": "http://anabaraonsen-idumiya.jp/index.html",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-fukushima-iizaka-yunoya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 19000,
+    "unit": "person/night",
+    "quote": "一泊二食 19000円~",
+    "confidence": "high",
+    "sourceUrl": "http://www.yunoya.co.jp/room.php",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17000,
+    "unit": "person/night",
+    "quote": "一泊二食 17000円~",
+    "confidence": "high",
+    "sourceUrl": "http://www.yunoya.co.jp/room.php",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 12500,
+    "unit": "person/night",
+    "quote": "一泊二食 12500円~",
+    "confidence": "high",
+    "sourceUrl": "http://www.yunoya.co.jp/room.php",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 13500,
+    "unit": "person/night",
+    "quote": "一泊二食 13500円~",
+    "confidence": "high",
+    "sourceUrl": "http://www.yunoya.co.jp/room.php",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16000,
+    "unit": "person/night",
+    "quote": "一泊二食 16000円~",
+    "confidence": "high",
+    "sourceUrl": "http://www.yunoya.co.jp/room.php",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-gunma-ikaho-19": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16650,
+    "unit": "person/night",
+    "quote": "1泊2食付、お一人様16,650円(諸税込)",
+    "confidence": "high",
+    "sourceUrl": "https://www.hotel-kimura.co.jp/group/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16100,
+    "unit": "person/night",
+    "quote": "1泊2食付、お一人様16,100円(諸税込)",
+    "confidence": "high",
+    "sourceUrl": "https://www.hotel-kimura.co.jp/group/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-hyogo-yumura-kotobuki": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 27500,
+    "unit": "person/night",
+    "quote": "1泊2食付き平日ひとり27,500円!",
+    "confidence": "high",
+    "sourceUrl": "https://oyadokotobuki.com/plan/plan007",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-ishikawa-yamashiro-bansyokaku": [
+   {
+    "kind": "per-person",
+    "minYen": 40700,
+    "unit": "person/night",
+    "quote": "1泊1名様 : 40,700円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.bansyoukaku.co.jp/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 28600,
+    "unit": "person/night",
+    "quote": "1泊1名様 : 28,600円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.bansyoukaku.co.jp/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 74800,
+    "unit": "person/night",
+    "quote": "1泊1名様 : 74,800円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.bansyoukaku.co.jp/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-miyagi-cb519142": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15400,
+    "unit": "person/night",
+    "quote": "15,400円〜/ 1名(1泊2食・平日)松の部屋は17,6",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17600,
+    "unit": "person/night",
+    "quote": "15,400円〜/ 1名(1泊2食・平日)松の部屋は17,600円〜。入湯税150円/泊⁠(大人のみ)+宿泊税3",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 18700,
+    "unit": "person/night",
+    "quote": "18,700円〜/ 1名(1泊2食・平日)湯治・自炊も1名か",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10450,
+    "unit": "person/night",
+    "quote": "10,450円〜/ 1名(1泊2食・平日)自炊の素泊まり料金",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 4950,
+    "unit": "person/night",
+    "quote": "10,450円〜/ 1名(1泊2食・平日)自炊の素泊まり料金(4,950円〜)に夕食3,300円・朝食2,200円を加え",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4950,
+    "unit": "person/night",
+    "quote": "4,950円〜/ 1名⁠(1泊・平日)1室2名以上の場合。",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 19700,
+    "unit": "person/night",
+    "quote": "19,700円〜/ 1名⁠(1泊2食)",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 14310,
+    "unit": "person/night",
+    "quote": "14,310円〜/ 1名⁠(1泊夕食付)",
+    "confidence": "high",
+    "sourceUrl": "https://mogamiya.net/plan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-nagano-utsukushigahara-marunaka": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 9900,
+    "unit": "person/night",
+    "quote": "■1泊2食:9,900円(税込)",
+    "confidence": "high",
+    "sourceUrl": "https://marunakaryokan.com/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 11220,
+    "unit": "person/night",
+    "quote": "お一人様11220円~!お得に季節の松本を楽しむ★1泊2食付",
+    "confidence": "high",
+    "sourceUrl": "https://marunakaryokan.com/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-nagasaki-fukutokuya-ryokan": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 14300,
+    "unit": "person/night",
+    "quote": "一泊二食 14,300円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/fukutokuya-ryokan/",
+    "checkedAt": "2026-11-21T12:57:43.760Z"
+   }
+  ],
+  "official-nagasaki-juraku": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 14250,
+    "unit": "person/night",
+    "quote": "一泊二食 14,250円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/juraku/",
+    "checkedAt": "2026-11-21T12:57:45.422Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10000,
+    "unit": "person/night",
+    "quote": "浴一泊二食付き素泊まり歓迎一泊朝食付きお一人様泊歓迎温泉付き部屋目安料金10,000円〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/juraku/",
+    "checkedAt": "2026-11-21T12:57:45.422Z"
+   }
+  ],
+  "official-nagasaki-ryokan-fujiya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 13750,
+    "unit": "person/night",
+    "quote": "一泊二食 13,750円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-fujiya/",
+    "checkedAt": "2026-11-21T12:57:46.172Z"
+   }
+  ],
+  "official-nagasaki-ryokan-kunisaki": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16500,
+    "unit": "person/night",
+    "quote": "一泊二食 16,500円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-kunisaki/",
+    "checkedAt": "2026-11-21T12:57:46.517Z"
+   }
+  ],
+  "official-nagasaki-ryokan-wataya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 9500,
+    "unit": "person/night",
+    "quote": "一泊二食 9,500円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-wataya/",
+    "checkedAt": "2026-11-21T12:57:46.803Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8000,
+    "unit": "person/night",
+    "quote": "和室一泊二食付き素泊まり歓迎一泊朝食付きお一人様泊歓迎目安料金8,000円〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-wataya/",
+    "checkedAt": "2026-11-21T12:57:46.803Z"
+   }
+  ],
+  "official-nagasaki-ryokan-yamadaya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 13200,
+    "unit": "person/night",
+    "quote": "一泊二食 13,200円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-yamadaya/",
+    "checkedAt": "2026-11-21T12:57:47.001Z"
+   }
+  ],
+  "official-nagasaki-ryokan-yunoka": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 19800,
+    "unit": "person/night",
+    "quote": "一泊二食 19,800円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/ryokan-yunoka/",
+    "checkedAt": "2026-11-21T12:57:47.642Z"
+   }
+  ],
+  "official-nagasaki-tsutaya-ryokan": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15400,
+    "unit": "person/night",
+    "quote": "一泊二食 15,400円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/tsutaya-ryokan/",
+    "checkedAt": "2026-11-21T12:57:47.883Z"
+   }
+  ],
+  "official-nara-nara-miyataki-matsuya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15000,
+    "unit": "person/night",
+    "quote": "1泊2食付15,000円~(要予約)",
+    "confidence": "high",
+    "sourceUrl": "https://matuya.yoshino.jp/shisetu.htm",
+    "checkedAt": "2026-11-21T12:57:48.241Z"
+   }
+  ],
+  "official-niigata-senami-seiunsou": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 18000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥18,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 25000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥25,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 28000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥28,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 31000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥31,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 41000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥41,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 33000,
+    "unit": "person/night",
+    "quote": "平日1泊2食(2名1室利用時1名様料金) ¥33,000 ~¥37,000(税別)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.seiunsou.com/room.html",
+    "checkedAt": "2026-11-21T12:57:48.616Z"
+   }
+  ],
+  "official-niigata-senami-taikanso": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 20900,
+    "unit": "person/night",
+    "quote": "1泊2食付き 4名様利用の場合 一人20,900円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.taikanso.senaminoyu.co.jp/",
+    "checkedAt": "2026-11-21T12:57:48.814Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 12375,
+    "unit": "person/night",
+    "quote": "1泊2食付き 4名様利用の場合 一人12,375円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.taikanso.senaminoyu.co.jp/",
+    "checkedAt": "2026-11-21T12:57:48.814Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 22550,
+    "unit": "person/night",
+    "quote": "1泊2食付き 4名様利用の場合 一人22,550円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.taikanso.senaminoyu.co.jp/",
+    "checkedAt": "2026-11-21T12:57:48.814Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 12650,
+    "unit": "person/night",
+    "quote": "1泊2食付き 4名様利用の場合 一人12,650円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.taikanso.senaminoyu.co.jp/",
+    "checkedAt": "2026-11-21T12:57:48.814Z"
+   }
+  ],
+  "official-niigata-yuzawa-urakonoyu-takanoya": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 7200,
+    "unit": "person/night",
+    "quote": "1泊朝食7,200円~",
+    "confidence": "high",
+    "sourceUrl": "https://takanoya.gr.jp/price.php",
+    "checkedAt": "2026-11-21T12:57:49.552Z"
+   }
+  ],
+  "official-saga-banshokaku-shikishima": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 34500,
+    "maxYen": 38200,
+    "unit": "person/night",
+    "quote": "一泊二食付き:平日 34,500円~38,200円・休前日 43,500円~45,100円",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-005.php",
+    "checkedAt": "2026-11-21T12:57:49.696Z"
+   }
+  ],
+  "official-saga-hisago-ryokan": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16150,
+    "unit": "person/night",
+    "quote": "■一泊二食付き:16,150円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-024.php",
+    "checkedAt": "2026-11-21T12:57:49.941Z"
+   }
+  ],
+  "official-saga-ikkyu-so": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 7000,
+    "unit": "person/night",
+    "quote": "■通常宿泊料金 1泊2食 7,000円~ 1泊朝食 4,500円~ 素泊まり 4,00",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-035.php",
+    "checkedAt": "2026-11-21T12:57:50.757Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 4500,
+    "unit": "person/night",
+    "quote": "■通常宿泊料金 1泊2食 7,000円~ 1泊朝食 4,500円~ 素泊まり 4,000円~ ※休前日料金あり",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-035.php",
+    "checkedAt": "2026-11-21T12:57:50.757Z"
+   }
+  ],
+  "official-saga-kotan-ureshino": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 24800,
+    "unit": "person/night",
+    "quote": "平日 一泊二食1名料金 ツイン24,800円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2026/01/-kotan-ureshino.php",
+    "checkedAt": "2026-11-21T12:57:51.181Z"
+   }
+  ],
+  "official-saga-kotobukiya": [
+   {
+    "kind": "per-person-room-only",
+    "minYen": 5500,
+    "unit": "person/night",
+    "quote": "■お一人 素泊り5,500円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2022/04/org-entry-027.php",
+    "checkedAt": "2026-11-21T12:57:51.250Z"
+   }
+  ],
+  "official-saga-onyado-takasago": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16022,
+    "unit": "person/night",
+    "quote": "1泊2食付き:16,022円~(平日2名1室2食付きの1名様料金)",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-023.php",
+    "checkedAt": "2026-11-21T12:57:52.179Z"
+   }
+  ],
+  "official-saga-oyado-kujaku": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17600,
+    "unit": "person/night",
+    "quote": "1泊2食付き:17,600円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-028.php",
+    "checkedAt": "2026-11-21T12:57:52.967Z"
+   }
+  ],
+  "official-saga-ryokan-irifuneso": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 9800,
+    "unit": "person/night",
+    "quote": "一泊朝食付き:9,800円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-009.php",
+    "checkedAt": "2026-11-21T12:57:53.447Z"
+   }
+  ],
+  "official-saga-sentoro": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 14300,
+    "unit": "person/night",
+    "quote": "一泊二食付き:14,300円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-022.php",
+    "checkedAt": "2026-11-21T12:57:54.777Z"
+   }
+  ],
+  "official-saga-tiyonoya": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 4800,
+    "unit": "person/night",
+    "quote": "■通常宿泊料金: 一泊朝食付き 4,800円~ 素泊り 4,100円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/05/org-entry-037.php",
+    "checkedAt": "2026-11-21T12:57:55.805Z"
+   }
+  ],
+  "official-saga-yuzennoyado-toukai": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8500,
+    "unit": "person/night",
+    "quote": "■通常宿泊料金 :一泊二食付 8,500円~ 一泊朝食付 8,000円~ 素泊り 5,50",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-020.php",
+    "checkedAt": "2026-11-21T12:57:56.528Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 8000,
+    "unit": "person/night",
+    "quote": "■通常宿泊料金 :一泊二食付 8,500円~ 一泊朝食付 8,000円~ 素泊り 5,500円~",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-020.php",
+    "checkedAt": "2026-11-21T12:57:56.528Z"
+   }
+  ],
+  "official-shizuoka-ito-kirano-sato": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 26000,
+    "unit": "person/night",
+    "quote": "1泊2食 26,000円~",
+    "confidence": "high",
+    "sourceUrl": "https://itospa.com/stay/detail_24043.html",
+    "checkedAt": "2026-11-21T12:57:56.571Z"
+   }
+  ],
+  "official-shizuoka-ito-umeya": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 5550,
+    "unit": "person/night",
+    "quote": "1泊朝食 大人5,550円 小人4,470円",
+    "confidence": "high",
+    "sourceUrl": "https://itospa.com/stay/detail_24017.html",
+    "checkedAt": "2026-11-21T12:57:58.208Z"
+   }
+  ],
+  "official-tochigi-hatashita-onsen-kokorozukushi-no-yado-nuriya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 9900,
+    "unit": "person/night",
+    "quote": "お一人様 1泊2食付き 9,900円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 6600,
+    "unit": "person/night",
+    "quote": "お一人様 1泊朝食付き 6,600円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10450,
+    "unit": "person/night",
+    "quote": "お一人様 1泊2食付き 10,450円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 11550,
+    "unit": "person/night",
+    "quote": "お一人様 1泊2食付き 11,550円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 11000,
+    "unit": "person/night",
+    "quote": "お一人様 1泊2食付き 11,000円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 7700,
+    "unit": "person/night",
+    "quote": "お一人様 1泊朝食付き 7,700円(税込)~",
+    "confidence": "high",
+    "sourceUrl": "http://www.naf.co.jp/nuriya/plan.stm",
+    "checkedAt": "2026-11-21T12:58:00.563Z"
+   }
+  ],
+  "official-tochigi-kamishiobara-onsen-yama-no-yu-warakuyuen": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 12500,
+    "unit": "person/night",
+    "quote": "1泊2食付き12,500円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.waraku32.com/plan/paln05/",
+    "checkedAt": "2026-11-21T12:58:04.162Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 14300,
+    "unit": "person/night",
+    "quote": "1泊2食付き 14,300円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.waraku32.com/plan/plan01/",
+    "checkedAt": "2026-11-21T12:58:04.162Z"
+   }
+  ],
+  "official-yamaguchi-yuno-shisuien": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 25000,
+    "unit": "person/night",
+    "quote": "1泊2食:25,000円〜 (税抜)",
+    "confidence": "high",
+    "sourceUrl": "https://www.shisuien.com/rooms/",
+    "checkedAt": "2026-11-21T12:58:04.223Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 18000,
+    "unit": "person/night",
+    "quote": "1泊2食:18,000円〜 (税抜)",
+    "confidence": "high",
+    "sourceUrl": "https://www.shisuien.com/rooms/",
+    "checkedAt": "2026-11-21T12:58:04.223Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15000,
+    "unit": "person/night",
+    "quote": "1泊2食:15,000円〜 (税抜)",
+    "confidence": "high",
+    "sourceUrl": "https://www.shisuien.com/rooms/",
+    "checkedAt": "2026-11-21T12:58:04.223Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 14000,
+    "unit": "person/night",
+    "quote": "1泊2食:14,000円〜 (税抜)",
+    "confidence": "high",
+    "sourceUrl": "https://www.shisuien.com/rooms/",
+    "checkedAt": "2026-11-21T12:58:04.223Z"
+   }
+  ],
+  "ryokan-research-1": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 29800,
+    "unit": "person/night",
+    "quote": "1泊2食付 お一人様29,800円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.kinokuniya-bettei.com/",
+    "checkedAt": "2026-11-21T12:58:05.596Z"
+   }
+  ],
+  "ryokan-research-13": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 8500,
+    "unit": "person/night",
+    "quote": "宿泊:1泊2食付き 約8,500円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.wakayama-kanko.or.jp/spots/detail_4248.html",
+    "checkedAt": "2026-11-21T12:58:07.227Z"
+   }
+  ],
+  "official-fukuoka-ivy-hotel-chikushino": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 10250,
+    "unit": "person/night",
+    "quote": "1泊朝食/10,250円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.crossroadfukuoka.jp/spot/10468",
+    "checkedAt": "2026-11-21T12:58:07.378Z"
+   }
+  ],
+  "official-hirayunomori": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 11000,
+    "unit": "person/night",
+    "quote": "1泊2食付:11,000円〜",
+    "confidence": "high",
+    "sourceUrl": "https://www.hirayunomori.co.jp/stay/",
+    "checkedAt": "2026-11-21T12:58:07.813Z"
+   }
+  ],
+  "official-ibaraki-kitaibaraki-izura-kanko-hotel": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17600,
+    "unit": "person/night",
+    "quote": "1泊2食付 [平日]17,600円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15400,
+    "unit": "person/night",
+    "quote": "1泊2食付 [平日]15,400円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 19800,
+    "unit": "person/night",
+    "quote": "1泊2食付 [平日]19,800円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 22000,
+    "unit": "person/night",
+    "quote": "1泊2食付 [平日]22,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 21000,
+    "unit": "person/night",
+    "quote": "1泊2食・お一人様 21,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 23000,
+    "unit": "person/night",
+    "quote": "1泊2食・お一人様 23,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 25000,
+    "unit": "person/night",
+    "quote": "1泊2食・お一人様 25,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 28000,
+    "unit": "person/night",
+    "quote": "1泊2食・お一人様 28,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.izura.net/plan/group.php",
+    "checkedAt": "2026-11-21T12:58:08.229Z"
+   }
+  ],
+  "official-kochi-kochi-seira-shimanto": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 13500,
+    "unit": "person/night",
+    "quote": "料金 2名1室利用お1人様 13,500円(税別)~(1泊2食付き)",
+    "confidence": "high",
+    "sourceUrl": "https://www.seirashimanto.com/plan.htm",
+    "checkedAt": "2026-11-21T12:58:10.376Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 13000,
+    "unit": "person/night",
+    "quote": "【料金】2名1室利用2食付き お一人様13,000円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.seirashimanto.com/room.htm",
+    "checkedAt": "2026-11-21T12:58:10.376Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 11100,
+    "unit": "person/night",
+    "quote": "【料金】2名1室利用2食付き お1人様11,100円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.seirashimanto.com/room.htm",
+    "checkedAt": "2026-11-21T12:58:10.376Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10200,
+    "unit": "person/night",
+    "quote": "【料金】2名1室利用2食付き お1人様10,200円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.seirashimanto.com/room.htm",
+    "checkedAt": "2026-11-21T12:58:10.376Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 23000,
+    "unit": "person/night",
+    "quote": "【料金】2名1室利用2食付き 四万十牛会席プランの場合、お一人様23,000円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.seirashimanto.com/room.htm",
+    "checkedAt": "2026-11-21T12:58:10.376Z"
+   }
+  ],
+  "official-mie-kumano-hotel-tosoryuso": [
+   {
+    "kind": "per-person",
+    "minYen": 5000,
+    "unit": "person/night",
+    "quote": "1人1泊あたりの旅行代金が、平日5,000円、休日3,000円以上であること",
+    "confidence": "high",
+    "sourceUrl": "https://seiryusou.com/",
+    "checkedAt": "2026-11-21T12:58:10.476Z"
+   }
+  ],
+  "official-nagano-hirugami-hirugami-no-mori": [
+   {
+    "kind": "per-person-room-only",
+    "minYen": 6000,
+    "unit": "person/night",
+    "quote": "宿泊料金が6,000円(素泊まり・税抜き)以上でご宿泊のすべてのお",
+    "confidence": "high",
+    "sourceUrl": "https://hirumori.co.jp/",
+    "checkedAt": "2026-11-21T12:58:10.837Z"
+   }
+  ],
+  "official-nagasaki-hamakan-hotel": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 5500,
+    "unit": "person/night",
+    "quote": "素泊まり歓迎一泊朝食付きお一人様泊歓迎目安料金5,500円〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/hamakan-hotel/",
+    "checkedAt": "2026-11-21T12:58:11.195Z"
+   }
+  ],
+  "official-nagasaki-hotel-orange-bay": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 13500,
+    "unit": "person/night",
+    "quote": "一泊朝食 13,500円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/hotel-orange-bay/",
+    "checkedAt": "2026-11-21T12:58:11.500Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 10000,
+    "unit": "person/night",
+    "quote": "洋室和洋室素泊まり歓迎一泊朝食付きお一人様泊歓迎温泉付き部屋目安料金10,000円〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/hotel-orange-bay/",
+    "checkedAt": "2026-11-21T12:58:11.500Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 24000,
+    "unit": "person/night",
+    "quote": "目安料金 | 一泊朝食 13,500円(税込)〜 / 【離れ】一泊朝食24,000円(税込)〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/hotel-orange-bay/",
+    "checkedAt": "2026-11-21T12:58:11.500Z"
+   }
+  ],
+  "official-nagasaki-jisco-hotel-obama-onsen": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 5500,
+    "unit": "person/night",
+    "quote": "素泊まり歓迎一泊朝食付きお一人様泊歓迎目安料金5,500円〜",
+    "confidence": "high",
+    "sourceUrl": "https://obama.or.jp/hotel/jisco-obama/",
+    "checkedAt": "2026-11-21T12:58:11.889Z"
+   }
+  ],
+  "official-niigata-yuzawa-kashiwaya-annex": [
+   {
+    "kind": "per-person-1meal",
+    "minYen": 7000,
+    "unit": "person/night",
+    "quote": "7,000円~(1泊朝食付、土・祝前日)",
+    "confidence": "high",
+    "sourceUrl": "https://www.e-yuzawa.gr.jp/stay/",
+    "checkedAt": "2026-11-21T12:58:12.526Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 9850,
+    "unit": "person/night",
+    "quote": "9,850円~(1泊朝食付)",
+    "confidence": "high",
+    "sourceUrl": "https://www.e-yuzawa.gr.jp/stay/",
+    "checkedAt": "2026-11-21T12:58:12.526Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 6600,
+    "unit": "person/night",
+    "quote": "6,600円~(1泊朝食付)",
+    "confidence": "high",
+    "sourceUrl": "https://www.e-yuzawa.gr.jp/stay/motohashi-ryokan/",
+    "checkedAt": "2026-11-21T12:58:12.526Z"
+   }
+  ],
+  "official-saga-hotel-sakura-ureshino": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 16500,
+    "unit": "person/night",
+    "quote": "平日 16,500円~ (1泊2食付き)",
+    "confidence": "high",
+    "sourceUrl": "https://spa-u.net/facility/2017/06/org-entry-038.php",
+    "checkedAt": "2026-11-21T12:58:13.090Z"
+   }
+  ],
+  "official-shinhotaka-yarimikan": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 20150,
+    "unit": "person/night",
+    "quote": "1泊2食付20,150円~(税込)",
+    "confidence": "high",
+    "sourceUrl": "https://yarimikan.com/",
+    "checkedAt": "2026-11-21T12:58:13.096Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 22350,
+    "unit": "person/night",
+    "quote": "1泊2食付22,350円~(税込)",
+    "confidence": "high",
+    "sourceUrl": "https://yarimikan.com/",
+    "checkedAt": "2026-11-21T12:58:13.096Z"
+   }
+  ],
+  "official-tochigi-furumachi-onsen-hotel-ohruri": [
+   {
+    "kind": "per-person",
+    "minYen": 6300,
+    "unit": "person/night",
+    "quote": "1名様1泊¥6,300円~",
+    "confidence": "high",
+    "sourceUrl": "https://www.ohruri.com/shiobara_ohruri",
+    "checkedAt": "2026-11-21T12:58:13.654Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6930,
+    "unit": "person/night",
+    "quote": "1名様1泊¥6,930~",
+    "confidence": "high",
+    "sourceUrl": "https://www.ohruri.com/shiobara_ohruri",
+    "checkedAt": "2026-11-21T12:58:13.654Z"
+   }
+  ],
+  "official-tokushima-mannaka": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 21000,
+    "unit": "person/night",
+    "quote": "1名様[2食付] : 21,000円 ~",
+    "confidence": "high",
+    "sourceUrl": "https://mannaka.co.jp/hotel/",
+    "checkedAt": "2026-11-21T12:58:13.853Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 12500,
+    "unit": "person/night",
+    "quote": "1名様[朝食付] : 12,500円 ~",
+    "confidence": "high",
+    "sourceUrl": "https://mannaka.co.jp/hotel/",
+    "checkedAt": "2026-11-21T12:58:13.853Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17000,
+    "unit": "person/night",
+    "quote": "1名様[2食付] : 17,000円 ~",
+    "confidence": "high",
+    "sourceUrl": "https://mannaka.co.jp/hotel/",
+    "checkedAt": "2026-11-21T12:58:13.853Z"
+   }
+  ],
+  "official-toyama-garaku": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 20000,
+    "unit": "person/night",
+    "quote": "料金は1泊2食付1名あたりの最安値(ご夕食20,000円コースを含む)となります。",
+    "confidence": "high",
+    "sourceUrl": "https://www.garaku.co.jp/rooms/",
+    "checkedAt": "2026-11-21T12:58:14.557Z"
+   }
+  ],
+  "official-yamaguchi-yuda-fujinoya": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10230,
+    "unit": "person/night",
+    "quote": "1泊2食ビジネスプラン 10,230円~",
+    "confidence": "high",
+    "sourceUrl": "https://hotel-fujinoya.com/cms/page105.html",
+    "checkedAt": "2026-11-21T12:58:15.126Z"
+   }
+  ],
+  "official-yamaguchi-yuda-kiraku": [
+   {
+    "kind": "per-person-room-only",
+    "minYen": 7500,
+    "unit": "person/night",
+    "quote": "シングル 1泊 7,500円〜(税込・素泊まり・日程により変動)",
+    "confidence": "high",
+    "sourceUrl": "https://hotelkiraku.com/",
+    "checkedAt": "2026-11-21T12:58:15.180Z"
+   }
+  ],
+  "official-yamanashi-shimobe-fuji-hotel": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15990,
+    "unit": "person/night",
+    "quote": "大人宿泊(一泊二食付き)15,990 円",
+    "confidence": "high",
+    "sourceUrl": "https://fuji-hotel.com/plan/",
+    "checkedAt": "2026-11-21T12:58:15.332Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 7260,
+    "unit": "person/night",
+    "quote": "・宿泊(一泊二食付き) 7,260 円",
+    "confidence": "high",
+    "sourceUrl": "https://fuji-hotel.com/plan/",
+    "checkedAt": "2026-11-21T12:58:15.332Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 6160,
+    "unit": "person/night",
+    "quote": "・宿泊(朝食付き) 6,160 円",
+    "confidence": "high",
+    "sourceUrl": "https://fuji-hotel.com/plan/",
+    "checkedAt": "2026-11-21T12:58:15.332Z"
+   },
+   {
+    "kind": "per-person-1meal",
+    "minYen": 5060,
+    "unit": "person/night",
+    "quote": "・宿泊(夕食付き) 5,060 円",
+    "confidence": "high",
+    "sourceUrl": "https://fuji-hotel.com/plan/",
+    "checkedAt": "2026-11-21T12:58:15.332Z"
+   }
+  ],
+  "ryokan-research-5": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 7500,
+    "unit": "person/night",
+    "quote": "1泊2食付 / お一人様 7,500円(税込)",
+    "confidence": "high",
+    "sourceUrl": "https://kannonyu-yawaragi.com/business-plan/",
+    "checkedAt": "2026-11-21T12:58:15.651Z"
+   },
+   {
+    "kind": "per-person-room-only",
+    "minYen": 6000,
+    "unit": "person/night",
+    "quote": "素泊り / お一人様 6,000円(税込)",
+    "confidence": "high",
+    "sourceUrl": "https://kannonyu-yawaragi.com/business-plan/",
+    "checkedAt": "2026-11-21T12:58:15.651Z"
+   }
+  ],
+  "official-akita-26a96f31": [
+   {
+    "kind": "per-person",
+    "minYen": 8070,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/8,070円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6420,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/6,420円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6200,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/6,200円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4400,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/4,400円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4180,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/4,180円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 13280,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/13,280円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6640,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/6,640円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4620,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/4,620円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 8620,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/8,620円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6970,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/6,970円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6750,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/6,750円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4950,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/4,950円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 4730,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/4,730円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 14380,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/14,380円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 7190,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/7,190円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 5170,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/5,170円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 9720,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/9,720円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 7850,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/7,850円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6050,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/6,050円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 5830,
+    "unit": "person/night",
+    "quote": "3人利用 1泊 1人/5,830円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 16580,
+    "unit": "person/night",
+    "quote": "1人利用 1泊 1人/16,580円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 8290,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/8,290円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 6270,
+    "unit": "person/night",
+    "quote": "2人利用 1泊 1人/6,270円",
+    "confidence": "high",
+    "sourceUrl": "https://www.tsukamoto-sogyo.co.jp/mizusawa/onsen/index.html",
+    "checkedAt": "2026-11-21T12:58:16.507Z"
+   }
+  ],
+  "official-akita-AK": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 6000,
+    "unit": "person/night",
+    "quote": "のんびり湯治プラン 1泊2食付き 6,000円",
+    "confidence": "high",
+    "sourceUrl": "https://www.yuwa-kousya.jp/yuasis/",
+    "checkedAt": "2026-11-21T12:58:17.826Z"
+   }
+  ],
+  "official-akita-yokote-sakuraso": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 9500,
+    "unit": "person/night",
+    "quote": "中・高校生 1泊2食付き お一人様 9,500円",
+    "confidence": "high",
+    "sourceUrl": "https://www.city.yokote.lg.jp/shisetsu/1001528/1002620.html",
+    "checkedAt": "2026-11-21T12:58:18.282Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 9900,
+    "unit": "person/night",
+    "quote": "大学生 1泊2食付き お一人様 9,900円",
+    "confidence": "high",
+    "sourceUrl": "https://www.city.yokote.lg.jp/shisetsu/1001528/1002620.html",
+    "checkedAt": "2026-11-21T12:58:18.282Z"
+   },
+   {
+    "kind": "per-person",
+    "minYen": 3000,
+    "unit": "person/night",
+    "quote": "回の使用における3泊目以降の宿泊使用について、1泊につき使用者1人当たり3,000円を市が負担します。なお、寝具を使用しない幼児",
+    "confidence": "high",
+    "sourceUrl": "https://www.city.yokote.lg.jp/shisei/1001173/1013251.html",
+    "checkedAt": "2026-11-21T12:58:18.282Z"
+   }
+  ],
+  "official-ishikawa-wakura-hanagoyomi": [
+   {
+    "kind": "per-person-room-only",
+    "minYen": 8800,
+    "unit": "person/night",
+    "quote": "こじんまりとしたお部屋ですが平日(オフ期)に限り素泊まり8,800円のリーズナブルな料金で、1室お1人様からでも",
+    "confidence": "high",
+    "sourceUrl": "http://wakura-hanagoyomi.com/package/",
+    "checkedAt": "2026-11-21T12:58:18.349Z"
+   }
+  ],
+  "official-kochi-kochi-konoka": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 10520,
+    "unit": "person/night",
+    "quote": "一泊二食付 10520円〜 素泊まり 5010円",
+    "confidence": "high",
+    "sourceUrl": "https://konokaonsen.com/stay/",
+    "checkedAt": "2026-11-21T12:58:18.747Z"
+   }
+  ],
+  "official-oita-taketa-resonate-kuju": [
+   {
+    "kind": "per-person-2meals",
+    "minYen": 17280,
+    "unit": "person/night",
+    "quote": "1泊2食 お一人様 ¥17,280~",
+    "confidence": "high",
+    "sourceUrl": "https://www.resonate.co.jp/",
+    "checkedAt": "2026-11-21T12:58:19.141Z"
+   },
+   {
+    "kind": "per-person-2meals",
+    "minYen": 15120,
+    "unit": "person/night",
+    "quote": "1泊2食 お一人様 ¥15,120~",
+    "confidence": "high",
+    "sourceUrl": "https://www.resonate.co.jp/",
+    "checkedAt": "2026-11-21T12:58:19.141Z"
+   }
+  ]
+ }
+}
