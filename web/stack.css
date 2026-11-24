@@ -70,9 +70,18 @@
 /* 좁은 화면: 행 겹침(sticky)을 끄고, 메뉴는 밀어 보는 대신 줄바꿈(잘림 방지), 중복되는 "온천 찾기" 메뉴는 감춘다 */
 @media (max-width: 700px) {
   .stack-row { position: static; }
-  html header.top nav { flex-wrap: wrap; overflow: visible; padding: 0 !important; -webkit-mask-image: none; mask-image: none; scroll-padding: 0; }
+  /* 메뉴는 한 줄 가로 스크롤(오른쪽 끝이 흐려져 더 있음을 알림). 줄바꿈하면 고정 머리글이 2줄이 되어 화면의 20%를 가린다 */
+  html header.top nav { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 0 28px 0 0 !important; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); scroll-padding: 0 28px 0 0; overscroll-behavior-x: contain; }
+  html header.top nav::-webkit-scrollbar { display: none; }
+  html header.top nav :is(a, button) { flex: none; white-space: nowrap; }
+  /* 좌우·위쪽 안전 영역(노치·가로 모드) */
+  html header.top { padding-left: max(12px, env(safe-area-inset-left)) !important; padding-right: max(12px, env(safe-area-inset-right)) !important; padding-top: max(4px, env(safe-area-inset-top)) !important; }
+  /* 스크롤하면 메뉴 줄을 접어 머리글을 한 줄(상표+찜·다크·언어)로 줄인다. 스크롤 구동 애니메이션을 지원할 때만(cover.js 가 html.cover-on 을 붙임) */
+  html.cover-on header.top nav { animation: nav-fold linear both; animation-timeline: scroll(root); animation-range: 40px 120px; }
+  @keyframes nav-fold { from { max-height: 48px; opacity: 1; } to { max-height: 0; opacity: 0; visibility: hidden; } }
   html header.top nav :is(a, button) { font-size: 14px !important; padding-inline: 8px; }
   header.top nav a[href="#results"] { display: none; }
   a.wt { position: relative; }
   a.wt::after { content: ""; position: absolute; inset: -12px -4px; }
 }
+.detail-close { box-shadow: 0 2px 8px rgb(20 39 42 / .22); }

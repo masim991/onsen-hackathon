@@ -367,7 +367,22 @@
 
   // ---- 탭 틀 ----
   const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi], ['ailogs', 'AI 로그', viewAiLogs], ['approvals', '로고·사진 승인', viewApprovals]];
+  // 하트비트 배너(워커 실행 끝에 monitor_logs result='heartbeat'). 최신 하트비트가 실패이거나, 정상 하트비트가 3시간보다 오래되면 빨간 배너. 규칙은 tools/monitor/worker.mjs heartbeatState 와 같다.
+  async function heartbeatBanner() {
+    let b = $('hbBanner');
+    if (!b) { b = el('div', {id: 'hbBanner', role: 'alert', hidden: true}); b.style.cssText = 'margin:0 0 12px;padding:10px 14px;border-radius:8px;font-weight:600;border:1px solid var(--bad);background:var(--bad-bg);color:var(--bad)'; $('panel').before(b); }
+    try {
+      const {data} = await api('monitor_logs?select=ts,level,meta&result=eq.heartbeat&order=ts.desc&limit=20');
+      const hb = data || [], ok = (r) => r.level !== 'error' && !(r.meta && r.meta.ok === false), good = hb.find(ok);
+      let msg = '';
+      if (!hb.length) msg = '모니터 하트비트가 아직 없습니다. 워커가 한 번도 정상 종료하지 않았거나 실행되지 않았습니다.';
+      else if (hb[0] !== good) msg = `마지막 모니터 실행이 실패했습니다 (${when(hb[0].ts)}, ${rel(hb[0].ts)}). GitHub Actions 로그를 확인하세요.`;
+      else if (Date.now() - Date.parse(good.ts) > 3 * 3600000) msg = `모니터가 3시간 넘게 정상 실행되지 않았습니다. 마지막 성공 ${when(good.ts)} (${rel(good.ts)}). 외부 cron/Actions 상태를 확인하세요.`;
+      b.textContent = msg; b.hidden = !msg;
+    } catch { b.hidden = true; }
+  }
   async function openTab(id) {
+    heartbeatBanner();
     const [, , view] = TABS.find((t) => t[0] === id);
     document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === id));
     const panel = $('panel'); panel.replaceChildren(el('p', {class: 'msg'}, '불러오는 중…'));

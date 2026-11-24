@@ -15,7 +15,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
 const OUT = path.join(HERE, 'out');
 LIM.hostDelayMs = 1100; // >=1.1 s between requests to one host (the shared gate also serialises per host)
-const INTERVAL = { notice: 360, price_hours: 1440, photo: 10080 };
+const INTERVAL = { notice: 1440, price_hours: 1440, photo: 10080 }; // notice 360 -> 1440 (R5 A1): ~300 checks/day, so one daily check per target
 const MAX_ATTEMPTS = 3, MAX_IMG = 5 * 1024 * 1024, DAY = 86400000;
 const sha = (s, n = 32) => crypto.createHash('sha256').update(s).digest('hex').slice(0, n);
 const pad = (n) => String(n).padStart(2, '0');
@@ -564,7 +564,9 @@ async function processJob(job, sink, opts, stats) {
 async function run(sink, opts) {
   const worker = `w-${os.hostname().slice(0, 20)}-${process.pid}`, stats = {};
   log('info', { result: 'enqueued', meta: { jobs: await sink.enqueueDue() } });
+  const t0 = Date.now(), deadline = t0 + (opts.deadlineMin || 30) * 60000; // stop claiming new rounds well before the workflow timeout
   for (let round = 0; round < MAX_ATTEMPTS + 2; round++) {
+    if (round > 0 && Date.now() > deadline) { stats.deadline_stop = 1; break; }
     const jobs = await sink.claim(worker, opts.limit);
     if (!jobs.length) break;
     let next = 0;
@@ -739,7 +741,7 @@ function sqlSink(opts = {}) {
       st.push(insertSql('photo_assets', q.photos, 'on conflict (facility_id, sha256) do nothing', ['facility_id', 'image_url', 'sha256', 'license_status', 'published']));
       for (const r of q.records) st.push(r[0] === '__prune' ? `select public.monitor_prune(${+r[1]});` : `select public.monitor_apply_record(${lit(r[0])}, ${lit(r[1])}, ${lit(JSON.stringify(r[2]))}::jsonb);`);
       st.push(...q.calls);
-      st.push(insertSql('monitor_logs', q.logs.filter((l) => l.level !== 'info' || /summary|seeded|prune|enqueued/.test(l.result || '')), 'on conflict do nothing', ['level', 'facility_id', 'job_id', 'job_kind', 'result', 'error_cause', 'meta']), insertSql('ai_usage', q.ai), insertSql('ai_logs', q.ailogs));
+      st.push(insertSql('monitor_logs', q.logs.filter((l) => l.level !== 'info' || /summary|seeded|prune|enqueued|heartbeat/.test(l.result || '')), 'on conflict do nothing', ['level', 'facility_id', 'job_id', 'job_kind', 'result', 'error_cause', 'meta']), insertSql('ai_usage', q.ai), insertSql('ai_logs', q.ailogs));
       if (S.targets.length) st.push(`select setval(pg_get_serial_sequence('public.monitor_targets','id'), (select max(id) from public.monitor_targets)), setval(pg_get_serial_sequence('public.monitor_jobs','id'), greatest((select coalesce(max(id),1) from public.monitor_jobs),1));`);
       fs.mkdirSync(OUT, { recursive: true });
       const files = []; let cur = [], size = 0, n = 0;
@@ -795,7 +797,7 @@ function restSink() {
       if (tpatch) await rq('PATCH', `monitor_targets?id=eq.${+job.target_id}`, tpatch, 'return=minimal');
     },
     markDue: (fid, kind) => rq('PATCH', `monitor_targets?facility_id=eq.${e(fid)}${kind ? '&kind=eq.' + e(kind) : ''}`, { next_check_at: nowIso() }, 'return=minimal'),
-    log(x) { if (x.level === 'info' && !/summary|seeded|prune|enqueued/.test(x.result || '')) return; buf.push({ // per-job info rows stay on stdout only
+    log(x) { if (x.level === 'info' && !/summary|seeded|prune|enqueued|heartbeat/.test(x.result || '')) return; buf.push({ // per-job info rows stay on stdout only
  ts: x.ts, level: x.level, facility_id: x.facility_id, job_id: x.job_id, job_kind: x.job_kind, result: x.result, error_cause: x.error_cause, meta: x.meta ?? null }); },
     aiUsage: (r) => rq('POST', 'ai_usage', r, 'return=minimal'),
     addAiLog: (r) => rq('POST', 'ai_logs', r, 'return=minimal'),
@@ -835,7 +837,7 @@ function seedRows(ids) {
 
 // ---------- main ----------
 function parseArgs(argv) {
-  const a = { mode: null, sink: 'rest', n: 30, ids: null, kind: null, backoffMin: 5, conc: 6, limit: 60, days: 30, recheck: null, revert: null, changes: null };
+  const a = { mode: null, sink: 'rest', n: 30, ids: null, kind: null, backoffMin: 5, conc: 6, limit: 60, deadlineMin: 30, days: 30, recheck: null, revert: null, changes: null };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i], v = () => argv[++i];
     if (k === '--seed' || k === '--run' || k === '--classify' || k === '--selftest' || k === '--prune' || k === '--apply') a.mode = k.slice(2);
@@ -843,12 +845,22 @@ function parseArgs(argv) {
     else if (k === '--changes') a.changes = v();
     else if (k === '--recheck') { a.mode = 'recheck'; a.recheck = v(); }
     else if (k === '--sink') a.sink = v(); else if (k === '--n') a.n = +v() || 30; else if (k === '--ids') a.ids = v().split(',').filter(Boolean);
+    else if (k === '--deadline-min') a.deadlineMin = Math.max(1, +v() || 30);
     else if (k === '--limit') a.limit = Math.max(1, +v() || 60); else if (k === '--kind') a.kind = v(); else if (k === '--backoff-min') a.backoffMin = Math.max(0, +v()); else if (k === '--days') a.days = +v() || 30;
     else { console.error('Unknown option ' + k); process.exit(2); }
   }
   if (a.kind && !INTERVAL[a.kind]) { console.error('--kind must be notice|price_hours|photo'); process.exit(2); }
   if (!['rest', 'sql'].includes(a.sink)) { console.error('--sink must be rest|sql'); process.exit(2); }
   return a;
+}
+export function heartbeatMeta(ok, stats, ms) { return { ok: !!ok, duration_s: Math.round(ms / 1000), ...(stats ? { stats } : {}) }; }
+// Admin banner rule (mirrored in web/admin/monitor.js): red when the newest heartbeat failed, or the newest good one is older than maxH hours / missing.
+export function heartbeatState(rows, now = Date.now(), maxH = 3) {
+  const hb = rows.filter((r) => r && r.result === 'heartbeat').sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
+  const good = hb.find((r) => r.level !== 'error' && r.meta?.ok !== false);
+  if (!hb.length) return { bad: true, why: 'none' };
+  if (hb[0] !== good) return { bad: true, why: 'failed', last: hb[0], good };
+  return now - Date.parse(good.ts) > maxH * 3600000 ? { bad: true, why: 'stale', last: good, good } : { bad: false, last: good, good };
 }
 async function main() {
   const a = parseArgs(process.argv.slice(2));
@@ -865,7 +877,16 @@ async function main() {
     await sink.seed(rows, facs);
     log('info', { result: 'seeded', meta: { facilities: ids.length, targets: rows.length } });
   } else if (a.mode === 'run') {
-    await run(sink, a); await classifyPhotos(sink).catch((e) => log('warn', { result: 'classify_failed', error_cause: errText(e).slice(0, 80) })); await applyApproved(sink);
+    const t0 = Date.now();
+    try {
+      const st = await run(sink, a); await classifyPhotos(sink).catch((e) => log('warn', { result: 'classify_failed', error_cause: errText(e).slice(0, 80) })); await applyApproved(sink);
+      log('info', { result: 'heartbeat', meta: heartbeatMeta(true, st, Date.now() - t0) }); // last step of a good run; the admin page checks its age
+    } catch (e) {
+      log('error', { result: 'heartbeat', error_cause: errText(e).slice(0, 80), meta: heartbeatMeta(false, null, Date.now() - t0) });
+      try { await sink.flush('run'); } catch { /* the original failure matters more */ }
+      console.error('::error::monitor run failed: ' + errText(e).slice(0, 120));
+      process.exit(1);
+    }
     const d = new Date(); // daily retention: the 30-min cron hits this window once a day
     if (d.getUTCHours() === 3 && d.getUTCMinutes() < 30) { await sink.prune(a.days); log('info', { result: 'prune_requested', meta: { days: a.days } }); }
   }
@@ -1117,6 +1138,15 @@ async function selftest() {
   if (SAVED.m === undefined) delete process.env.AI_MOCK; else process.env.AI_MOCK = SAVED.m;
   AI.call = SAVED.call;
   pages.clear();
+  // heartbeat banner rule + intervals (R5 A1/A2)
+  const H = (minAgo, extra = {}) => ({ ts: new Date(Date.now() - minAgo * 60000).toISOString(), level: 'info', result: 'heartbeat', meta: { ok: true }, ...extra });
+  t('heartbeat: none => bad', heartbeatState([]).bad && heartbeatState([]).why === 'none');
+  t('heartbeat: fresh ok => not bad', !heartbeatState([H(30)]).bad);
+  t('heartbeat: 4h old => stale', heartbeatState([H(240)]).why === 'stale' && !heartbeatState([H(170)]).bad);
+  t('heartbeat: newest is a failure => bad even if a good one is fresh', heartbeatState([H(60), H(5, { level: 'error', meta: { ok: false } })]).why === 'failed');
+  t('heartbeat: failure then newer success => ok', !heartbeatState([H(30, { level: 'error', meta: { ok: false } }), H(5)]).bad);
+  t('heartbeatMeta shape', heartbeatMeta(true, { ok: 3 }, 61000).duration_s === 61 && heartbeatMeta(false, null, 0).ok === false);
+  t('notice interval is 1440 min', INTERVAL.notice === 1440 && INTERVAL.price_hours === 1440 && INTERVAL.photo === 10080);
   console.log(bad ?`SELFTEST FAILED (${bad})` : 'SELFTEST PASSED');
   process.exit(bad ? 1 : 0);
 }

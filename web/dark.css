@@ -30,7 +30,7 @@ html[data-theme="dark"], html[data-theme="dark"] body { background: var(--washi)
 [data-theme="dark"] .brand .mark, [data-theme="dark"] .brand-txt { filter: none; }
 
 /* 채움(흰 글자) 요소: 글자용으로 밝아진 토큰 대신 짙은 청록 */
-[data-theme="dark"] :is(.hs-go, .card .badges .bdg.stay, .d-badges .stay, .d-six li::before, .nophoto-card .np-chip, .see-results, .pg-toc a[aria-current], .pg-cta a, .pager button[aria-current], #favToggle[aria-pressed="true"] #favCount, .badge, .pill input:checked + span, .thumbs button[aria-current="true"], .btn, .rowopt input:checked) { background-color: var(--act); border-color: var(--act); color: #fff; }
+[data-theme="dark"] :is(.hs-go, .card .badges .bdg.stay, .d-badges .stay, .d-six li::before, .see-results, .pg-toc a[aria-current], .pg-cta a, .pager button[aria-current], #favToggle[aria-pressed="true"] #favCount, .badge, .pill input:checked + span, .thumbs button[aria-current="true"], .btn, .rowopt input:checked) { background-color: var(--act); border-color: var(--act); color: #fff; }
 [data-theme="dark"] :is(.hs-go:hover, .pg-cta a:hover, .btn:hover) { background: var(--act-hover); border-color: var(--act-hover); color: #fff; }
 [data-theme="dark"] .btn.line { background: transparent; color: var(--ai-800); border-color: var(--ai-800); }
 [data-theme="dark"] .btn.line:hover { background: var(--ai-100); }
@@ -96,3 +96,7 @@ html[data-theme="dark"] header.top .fav-top, html[data-theme="dark"].cover-on he
 [data-theme="dark"] :is(.pg a:hover, .pg-back a:hover) { color: var(--ink); }
 [data-theme="dark"] .pg-cta a:hover { color: #fff; }
 [data-theme="dark"] header:not(.top) ~ main a, [data-theme="dark"] header:not(.top) ~ footer a { color: var(--ai-800); }
+
+/* 지도 타일: 다크 모드에서는 밝은 타일이 화면에서 튀지 않게 명도를 낮춘다(마커·도형·컨트롤은 그대로) */
+[data-theme="dark"] .leaflet-tile-pane { filter: saturate(.35) brightness(.62) contrast(1.05); }
+[data-theme="dark"] :is(.cmp tr.cmp-unconf th, .cmp tr.cmp-unconf td) { background: var(--hinoki); color: var(--ink-2); }

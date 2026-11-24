@@ -26,13 +26,13 @@ const I18N = {
       use: '이용 방식', unit: '곳', bath: '탕의 형태', water: '온천수', quality: '성분', stayCond: '숙소 조건', conv: '편의',
       budget: '예산', budgetSub: '1박 · 어른 1인', noLimit: '제한 없음', budgetAria: '1박 1인 숙박료 상한', low: '낮게',
       budgetHelp: '확인 당시 기준가입니다. 가격을 알 수 없는 시설도 기본으로 함께 보여 줍니다.',
-      unp: '가격 미확인 시설도 포함', cover: (n, m, inc) => `가격 확인 ${n}곳 / 미공개 ${m}곳 ${inc ? '포함' : '제외'}`, fxIndic: '원화 금액은 참고용 환율로 환산한 값입니다. 현지에서는 엔화로 냅니다.', photoOnly: (n) => `사진 있는 곳 ${n}`, priceOnly: (n) => `가격 있는 곳 ${n}`, show: (n) => `${n}곳 보기`,
+      unp: '가격 미확인 시설도 포함', cover: (n, m, inc) => `가격 확인 ${n}곳 / 미공개 ${m}곳 ${inc ? '포함' : '제외'}`, coverNone: (m) => `이 조건에는 가격이 확인된 시설이 없어 예산으로 거를 수 없습니다 (가격 미공개 ${m}곳).`, pricedBtn: (n) => `가격 확인된 곳만 보기 (${n}곳)`, fxIndic: '원화 금액은 참고용 환율로 환산한 값입니다. 현지에서는 엔화로 냅니다.', photoOnly: (n) => `사진 있는 곳 ${n}`, priceOnly: (n) => `가격 있는 곳 ${n}`, show: (n) => `${n}곳 보기`,
       hint: (n, hit) => `조건 ${n}개 적용, ${hit}곳이 맞습니다`, hintAll: (total) => `시설 ${total}곳에서 고릅니다`,
       upTo: (text) => `최대 ${text}`, more: (n) => `성분 ${n}가지 더 보기`, less: '접기',
     },
     label: { day: '당일 이용', stay: '숙박', open: '노천탕', priv: '대절탕', room: '객실 노천탕', flow: '원천 방류', solo: '1인 숙박 가능', sudo: '식사 없이 숙박 가능', card: '카드 결제', shuttle: '송영', park: '주차장' },
     results: { before: '검색 결과 ', after: '건', chips: '적용한 조건', sort: '정렬', byName: '가나다 순', byPrice: '숙박 요금 낮은 순', byOpen: '노천탕 많은 순', detail: '시설 상세' },
-    chip: { clear: (label) => `${label} 조건 지우기`, price: (text) => `1박 1인 ${text} 이하`, fav: '찜한 시설만', photo: '사진 있는 곳만', priced: '가격 있는 곳만', noUnp: '가격 미확인 시설 제외' },
+    chip: { clear: (label) => `${label} 조건 지우기`, price: (text) => `1박 1인 ${text} 이하`, fav: '찜한 시설만', photo: '사진 있는 곳만', priced: '가격 있는 곳만', noUnp: '가격 미확인 시설 제외', wide: '검색 중: 숙박·유형 조건 해제', wideClear: '숙박 가능·료칸 조건 다시 적용' },
     home: {
       searchAria: '온천 검색', regionLabel: '지역', regionAll: '전국', textLabel: '시설명·온천지 검색', ph: '시설명, 온천지, 도도부현', btn: '검색',
       chips: '등록 시설이 많은 온천지', chipAria: (name) => `${name} 온천지로 찾기`, regionsTitle: '지역으로 찾기', regionsLead: '지역을 고르면 그곳에 등록된 시설을 모두 보여 드립니다.',
@@ -59,8 +59,8 @@ const I18N = {
       mapDir: '길찾기', mapAreaLabel: (a) => `${a} 주변(대략)`, mapTouch: '두 손가락으로 지도를 움직이세요.',
       mapAria: { facility: (n) => `${n} 위치 지도, 시설 단위 위치`, area: (n) => `${n} 주변 지도, 온천지 단위의 대략적인 범위`, pref: (n) => `${n} 지도, 도도부현 단위` },
     },
-    empty: { none: '이 조건에 맞는 시설이 없습니다.', noFav: '아직 찜한 시설이 없습니다.', tryLoose: '조건을 하나씩 풀어 보거나 다른 지역을 골라 보세요.', favHow: '시설 카드의 하트를 누르면 여기에 모입니다.', clear: '조건 모두 지우기', undo: '마지막 조건 해제' },
-    cmp: { btn: (n) => `비교하기 (${n})`, title: '찜한 시설 비교', note: '찜한 시설의 등록된 값을 나란히 놓았습니다. 빈 칸은 확인되지 않은 값이며, 최저 표시는 확인된 값끼리만 비교합니다. 요금과 운영 상태는 공식 사이트에서 다시 확인하세요.', pick: (n) => `비교할 시설 고르기 (최대 ${n}곳)`, need: '비교하려면 2곳 이상 고르세요.', low: '확인된 값 중 최저', area: '지역', checked: '확인일', same: '공식 사이트와 같음' },
+    empty: { none: '이 조건에 맞는 시설이 없습니다.', noFav: '아직 찜한 시설이 없습니다.', tryLoose: '조건을 하나씩 풀어 보거나 다른 지역을 골라 보세요.', favHow: '시설 카드의 하트를 누르면 여기에 모입니다.', favOut: (n) => `찜한 ${n}곳이 현재 조건에 맞지 않습니다. 조건을 지우면 보입니다.`, clear: '조건 모두 지우기', undo: '마지막 조건 해제' },
+    cmp: { btn: (n) => `비교하기 (${n})`, title: '찜한 시설 비교', note: '찜한 시설의 등록된 값을 나란히 놓았습니다. 빈 칸은 확인되지 않은 값이며, 최저 표시는 확인된 값끼리만 비교합니다. 요금과 운영 상태는 공식 사이트에서 다시 확인하세요.', pick: (n) => `비교할 시설 고르기 (최대 ${n}곳)`, need: '비교하려면 2곳 이상 고르세요.', low: '확인된 값 중 최저', area: '지역', checked: '확인일', same: '공식 사이트와 같음', unconf: '확인되지 않은 항목' },
     pay: {
       title: '결제 방법 안내', lead: '온천 한눈에는 결제를 받지 않습니다. 시설 공식 사이트나 예약처로 이동해 예약하고 결제합니다.',
       items: ['사전 카드 결제와 현장 결제 가능 여부는 예약처와 상품마다 다릅니다.', '결제 시점과 취소 조건은 예약 직전 화면에서 다시 확인합니다.', '당일 입욕은 현장에서 엔화 현금으로 내는 곳이 많습니다.', '화면의 원화 금액은 그날 고시 환율로 환산한 참고 값입니다. 실제 결제 금액은 카드사와 환전 시점에 따라 달라집니다.'],
@@ -71,7 +71,7 @@ const I18N = {
       avg: (p, m, n, lo, hi) => `참고: ${p} 1인 1박 2식 확인 가격 중앙값 ${m} (확인 ${n}곳, 범위 ${lo}~${hi}) · 이 시설의 요금 아님`, book: '예약은 공식 사이트에서', clearQ: '검색어 지우기',
       comp: (p, w, m) => `비교 가능: 요금 ${p}/${m}곳, 온천수 ${w}/${m}곳`, rm: '빼기', rmAria: (n) => `${n} 비교에서 빼기`, why: '2곳 이상 담으면 비교할 수 있어요' },
     unk: '미확인', noPhoto: '사진 미등록', fav: '비교용 담기', favAria: (name) => `${name} 비교용으로 담기`, close: '닫기', source: '출처', newWin: ' (새 창)',
-    offNotice: {t: '공식 공지', note: '자동으로 정리한 요약입니다 · 정확한 내용은 공식 페이지에서 확인하세요', src: '원문 보기'}, notice: '운영 상태 확인 필요', priceSmall: '숙박 1박 · 어른 1인', seeDetail: '조건은 상세에서 확인', noPrice: '가격 미공개 · 공식 사이트에서 확인', noStayPrice: '숙박 요금 미공개', dayPriceLabel: '당일 입욕',
+    offNotice: {t: '공식 공지', note: '자동으로 정리한 요약입니다 · 정확한 내용은 공식 페이지에서 확인하세요', src: '원문 보기'}, notice: '운영 상태 확인 필요', priceSmall: '숙박 1박 · 어른 1인', stayShort: '숙박', stayBasis: '1박 1인', dayNoPrice: '당일 입욕 요금 미공개', priceDisclaimer: '가격은 참고용입니다. 예약 전 공식 사이트에서 확인하세요.', seeDetail: '조건은 상세에서 확인', noPrice: '가격 미공개 · 공식 사이트에서 확인', noStayPrice: '숙박 요금 미공개', dayPriceLabel: '당일 입욕',
     np: { note: '사진이 없는 시설은 아는 정보만 간단히 보여 드립니다. 요금·온천수 등 표시되지 않은 항목은 미확인이며, 시설을 열면 확인됩니다.' },
     favToast: (n, added) => added ? `찜했습니다 · 찜한 시설 ${n}곳` : `찜을 해제했습니다 · 찜한 시설 ${n}곳`, favTop: (n) => `찜한 시설 ${n}곳 보기`,
     has: '있음', hasNot: '없음', can: '가능', cannot: '불가', stayNone: '숙박 없음', noOpen: '노천탕 없음',
@@ -121,13 +121,13 @@ const I18N = {
       use: '利用方法', unit: '件', bath: 'お風呂', water: '泉質・湯使い', quality: '泉質', stayCond: '宿泊条件', conv: '設備',
       budget: '予算', budgetSub: '1名1泊', noLimit: '上限なし', budgetAria: '1名1泊の料金の上限', low: '低め',
       budgetHelp: '確認時の参考料金です。料金が分からない施設も、初期設定ではあわせて表示します。',
-      unp: '料金未確認の施設も含める', cover: (n, m, inc) => `価格確認済み ${n}件 / 未公開 ${m}件${inc ? 'を含む' : 'を除く'}`, fxIndic: '', photoOnly: (n) => `写真あり ${n}`, priceOnly: (n) => `料金あり ${n}`, show: (n) => `${n}件を見る`,
+      unp: '料金未確認の施設も含める', cover: (n, m, inc) => `価格確認済み ${n}件 / 未公開 ${m}件${inc ? 'を含む' : 'を除く'}`, coverNone: (m) => `この条件では料金を確認できた施設がないため、予算で絞り込めません（料金未公開 ${m}件）。`, pricedBtn: (n) => `料金確認済みのみ表示 (${n}件)`, fxIndic: '', photoOnly: (n) => `写真あり ${n}`, priceOnly: (n) => `料金あり ${n}`, show: (n) => `${n}件を見る`,
       hint: (n, hit) => `${n}件の条件を適用中、${hit}件が該当します`, hintAll: (total) => `${total}件の施設から選べます`,
       upTo: (text) => `${text}以下`, more: (n) => `泉質をあと${n}種類表示`, less: '閉じる',
     },
     label: { day: '日帰り入浴', stay: '宿泊', open: '露天風呂', priv: '貸切風呂', room: '露天風呂付き客室', flow: '源泉かけ流し', solo: '1人で宿泊できる', sudo: '素泊まりできる', card: 'カード決済', shuttle: '送迎', park: '駐車場' },
     results: { before: '検索結果 ', after: '件', chips: '適用中の条件', sort: '並び順', byName: '五十音順', byPrice: '宿泊料金が安い順', byOpen: '露天風呂が多い順', detail: '施設の詳細' },
-    chip: { clear: (label) => `${label}の条件を解除`, price: (text) => `1名1泊 ${text}以下`, fav: 'お気に入りのみ', photo: '写真ありのみ', priced: '料金ありのみ', noUnp: '料金未確認を除外' },
+    chip: { clear: (label) => `${label}の条件を解除`, price: (text) => `1名1泊 ${text}以下`, fav: 'お気に入りのみ', photo: '写真ありのみ', priced: '料金ありのみ', noUnp: '料金未確認を除外', wide: '検索中: 宿泊・タイプ条件を解除中', wideClear: '宿泊可・旅館の条件を再適用' },
     home: {
       searchAria: '温泉を検索', regionLabel: '地域', regionAll: '全国', textLabel: '施設名・温泉地で検索', ph: '施設名、温泉地、都道府県', btn: '検索',
       chips: '登録施設が多い温泉地', chipAria: (name) => `${name}で探す`, regionsTitle: '地域から探す', regionsLead: '地域を選ぶと、登録されている施設をすべて表示します。',
@@ -154,8 +154,8 @@ const I18N = {
       mapDir: '経路を見る', mapAreaLabel: (a) => `${a}周辺（おおよそ）`, mapTouch: '2本指で地図を動かせます。',
       mapAria: { facility: (n) => `${n}の位置の地図（施設単位）`, area: (n) => `${n}周辺の地図（温泉地単位のおおよその範囲）`, pref: (n) => `${n}の地図（都道府県単位）` },
     },
-    empty: { none: '条件に合う施設が見つかりませんでした。', noFav: 'お気に入りの施設はまだありません。', tryLoose: '条件を変えてお試しください。', favHow: '施設カードのハートを押すと、ここに集まります。', clear: '条件をすべてクリア', undo: '直前の条件を解除' },
-    cmp: { btn: (n) => `比較する (${n})`, title: 'お気に入りの比較', note: 'お気に入りの施設に登録されている情報を並べています。空欄は未確認の項目で、最安の表示は確認できた値どうしでのみ比べています。料金や営業状況は公式サイトで改めてご確認ください。', pick: (n) => `比較する施設を選ぶ（最大${n}件）`, need: '比較するには2件以上選んでください。', low: '確認済みの中で最安', area: 'エリア', checked: '確認日', same: '公式サイトと同じ' },
+    empty: { none: '条件に合う施設が見つかりませんでした。', noFav: 'お気に入りの施設はまだありません。', tryLoose: '条件を変えてお試しください。', favHow: '施設カードのハートを押すと、ここに集まります。', favOut: (n) => `お気に入り ${n}件が現在の条件に合いません。条件を解除すると表示されます。`, clear: '条件をすべてクリア', undo: '直前の条件を解除' },
+    cmp: { btn: (n) => `比較する (${n})`, title: 'お気に入りの比較', note: 'お気に入りの施設に登録されている情報を並べています。空欄は未確認の項目で、最安の表示は確認できた値どうしでのみ比べています。料金や営業状況は公式サイトで改めてご確認ください。', pick: (n) => `比較する施設を選ぶ（最大${n}件）`, need: '比較するには2件以上選んでください。', low: '確認済みの中で最安', area: 'エリア', checked: '確認日', same: '公式サイトと同じ', unconf: '未確認の項目' },
     pay: {
       title: '支払いについて', lead: 'このサイトでは予約・決済を受け付けていません。施設の公式サイトや予約サイトで手続きしてください。',
       items: ['事前カード決済・現地決済の可否は予約先とプランにより異なります。', '支払時期とキャンセル条件を予約前に確認してください。', '日帰り入浴は現金が必要な施設もあります。', '表示している料金は確認時の参考料金です。実際の支払額は予約先やプランによって変わります。'],
@@ -165,7 +165,7 @@ const I18N = {
       avg: (p, m, n, lo, hi) => `参考: ${p}の1名1泊2食 確認済み料金の中央値 ${m}（確認${n}件、範囲 ${lo}〜${hi}）· この施設の料金ではありません`, book: '予約は公式サイトで', clearQ: '検索ワードを消す',
       comp: (p, w, m) => `比較できる項目: 料金 ${p}/${m}件、泉質 ${w}/${m}件`, rm: '外す', rmAria: (n) => `${n}を比較から外す`, why: '2件以上保存すると比較できます' },
     unk: '未確認', noPhoto: '写真未登録', fav: '比較用に保存', favAria: (name) => `${name}を比較用に保存`, close: '閉じる', source: '出典', newWin: '（新しいウィンドウ）',
-    offNotice: {t: '公式のお知らせ', note: '自動で要約しています · 正確な内容は公式ページでご確認ください', src: '元のページを見る'}, notice: '営業状況の確認が必要です', priceSmall: '宿泊 1泊・大人1名', seeDetail: '条件は詳細で確認', noPrice: '料金は未公開 · 公式サイトで確認', noStayPrice: '宿泊料金 未公開', dayPriceLabel: '日帰り入浴',
+    offNotice: {t: '公式のお知らせ', note: '自動で要約しています · 正確な内容は公式ページでご確認ください', src: '元のページを見る'}, notice: '営業状況の確認が必要です', priceSmall: '宿泊 1泊・大人1名', stayShort: '宿泊', stayBasis: '1泊1名', dayNoPrice: '日帰り入浴 料金未公開', priceDisclaimer: '料金は参考情報です。ご予約前に公式サイトでご確認ください。', seeDetail: '条件は詳細で確認', noPrice: '料金は未公開 · 公式サイトで確認', noStayPrice: '宿泊料金 未公開', dayPriceLabel: '日帰り入浴',
     np: { note: '写真のない施設は、分かっている情報だけを簡単に表示しています。料金・泉質など表示のない項目は未確認で、施設を開くと確認できます。' },
     favToast: (n, added) => added ? `お気に入りに追加 · 全${n}件` : `お気に入りを解除 · 全${n}件`, favTop: (n) => `お気に入り ${n}件を見る`,
     has: 'あり', hasNot: 'なし', can: '可能', cannot: '不可', stayNone: '宿泊なし', noOpen: '露天風呂なし',
@@ -215,13 +215,13 @@ const I18N = {
       use: 'Visit type', unit: '', bath: 'Baths', water: 'Spring water', quality: 'Water type', stayCond: 'Stay preferences', conv: 'Conveniences',
       budget: 'Budget', budgetSub: 'per adult per night', noLimit: 'No limit', budgetAria: 'Maximum nightly rate per adult', low: 'Lower',
       budgetHelp: 'Indicative rates at the time of checking. Properties without a known rate are included by default.',
-      unp: 'Include properties with no price', cover: (n, m, inc) => `${n} with a price / ${m} undisclosed ${inc ? 'included' : 'excluded'}`, fxIndic: 'Dollar amounts are indicative rates. You pay in yen locally.', photoOnly: (n) => `With photo ${n}`, priceOnly: (n) => `With price ${n}`, show: (n) => `Show ${n}`,
+      unp: 'Include properties with no price', cover: (n, m, inc) => `${n} with a price / ${m} undisclosed ${inc ? 'included' : 'excluded'}`, coverNone: (m) => `No property here has a confirmed price, so the budget cannot narrow results (${m} undisclosed).`, pricedBtn: (n) => `Show only confirmed prices (${n})`, fxIndic: 'Dollar amounts are indicative rates. You pay in yen locally.', photoOnly: (n) => `With photo ${n}`, priceOnly: (n) => `With price ${n}`, show: (n) => `Show ${n}`,
       hint: (n, hit) => `${n} filter${n === 1 ? '' : 's'} applied, ${hit} match${hit === 1 ? 'es' : ''}`, hintAll: (total) => `Choose from ${total} properties`,
       upTo: (text) => `Up to ${text}`, more: (n) => `Show ${n} more water types`, less: 'Show fewer',
     },
     label: { day: 'Day use', stay: 'Overnight stay', open: 'Open-air bath', priv: 'Private bath', room: 'In-room open-air bath', flow: 'Free-flowing spring water', solo: 'Solo stay', sudo: 'Room only, no meals', card: 'Card payment', shuttle: 'Shuttle', park: 'Parking' },
     results: { before: 'Search results: ', after: '', chips: 'Active filters', sort: 'Sort', byName: 'A–Z', byPrice: 'Lowest overnight rate', byOpen: 'Most open-air baths', detail: 'Property details' },
-    chip: { clear: (label) => `Remove filter: ${label}`, price: (text) => `Up to ${text} per night`, fav: 'Favorites only', photo: 'With photo only', priced: 'With price only', noUnp: 'Unpriced excluded' },
+    chip: { clear: (label) => `Remove filter: ${label}`, price: (text) => `Up to ${text} per night`, fav: 'Favorites only', photo: 'With photo only', priced: 'With price only', noUnp: 'Unpriced excluded', wide: 'Searching: stay/type filters off', wideClear: 'Reapply stay and ryokan filters' },
     home: {
       searchAria: 'Search hot springs', regionLabel: 'Region', regionAll: 'All Japan', textLabel: 'Search by name or area', ph: 'Name, hot spring area or prefecture', btn: 'Search',
       chips: 'Areas with the most listings', chipAria: (name) => `Search ${name}`, regionsTitle: 'Browse by region', regionsLead: 'Choose a region to see every property listed there.',
@@ -248,8 +248,8 @@ const I18N = {
       mapDir: 'Directions', mapAreaLabel: (a) => `Around ${a} (approximate)`, mapTouch: 'Use two fingers to move the map.',
       mapAria: { facility: (n) => `Map of ${n}, facility-level location`, area: (n) => `Map around ${n}, approximate hot spring area only`, pref: (n) => `Map of ${n}, prefecture level` },
     },
-    empty: { none: 'No properties match your search.', noFav: 'No favorites yet.', tryLoose: 'Try changing your filters.', favHow: 'Tap the heart on a property card to collect it here.', clear: 'Clear all filters', undo: 'Undo last filter' },
-    cmp: { btn: (n) => `Compare (${n})`, title: 'Compare favorites', note: 'Registered details of your favorites, side by side. Empty cells are not confirmed, and the lowest-price mark compares confirmed values only. Please recheck prices and operating status on the official site.', pick: (n) => `Choose properties to compare (up to ${n})`, need: 'Choose at least 2 to compare.', low: 'Lowest confirmed', area: 'Area', checked: 'Checked', same: 'Same as official site' },
+    empty: { none: 'No properties match your search.', noFav: 'No favorites yet.', tryLoose: 'Try changing your filters.', favHow: 'Tap the heart on a property card to collect it here.', favOut: (n) => `${n} favorite(s) don't match the current filters. Clear filters to see them.`, clear: 'Clear all filters', undo: 'Undo last filter' },
+    cmp: { btn: (n) => `Compare (${n})`, title: 'Compare favorites', note: 'Registered details of your favorites, side by side. Empty cells are not confirmed, and the lowest-price mark compares confirmed values only. Please recheck prices and operating status on the official site.', pick: (n) => `Choose properties to compare (up to ${n})`, need: 'Choose at least 2 to compare.', low: 'Lowest confirmed', area: 'Area', checked: 'Checked', same: 'Same as official site', unconf: 'Not confirmed' },
     pay: {
       title: 'Payment information', lead: 'We do not take payments. Book directly with the property or booking provider.',
       items: ['Check whether your plan requires advance card payment or allows payment at the property.', 'Review payment timing and cancellation terms before confirming.', 'Some day-use facilities accept cash only.', 'Currency conversion is indicative. Your card issuer and payment date determine the final amount.'],
@@ -259,7 +259,7 @@ const I18N = {
       avg: (p, m, n, lo, hi) => `Reference: median of confirmed per-person, 2-meal prices in ${p}: ${m} (${n} properties, range ${lo}–${hi}). Not this property's rate.`, book: 'Book on the official site', clearQ: 'Clear search',
       comp: (p, w, m) => `Comparable: price ${p}/${m}, water ${w}/${m}`, rm: 'Remove', rmAria: (n) => `Remove ${n} from compare`, why: 'Save 2 or more to compare' },
     unk: 'Not confirmed', noPhoto: 'No photo on file', fav: 'Save to compare', favAria: (name) => `Save ${name} to compare`, close: 'Close', source: 'source', newWin: ' (opens in a new window)',
-    offNotice: {t: 'Official notice', note: 'Summarised automatically · check the official page for details', src: 'View original'}, notice: 'Please confirm operating status before visiting.', priceSmall: 'Overnight · per adult', seeDetail: 'See details for conditions', noPrice: 'Price not published · check the official site', noStayPrice: 'Stay price not published', dayPriceLabel: 'Day-use',
+    offNotice: {t: 'Official notice', note: 'Summarised automatically · check the official page for details', src: 'View original'}, notice: 'Please confirm operating status before visiting.', priceSmall: 'Overnight · per adult', stayShort: 'Stay', stayBasis: '1 night, per adult', dayNoPrice: 'Day-use price not published', priceDisclaimer: 'Prices are for reference. Please confirm on the official site before booking.', seeDetail: 'See details for conditions', noPrice: 'Price not published · check the official site', noStayPrice: 'Stay price not published', dayPriceLabel: 'Day-use',
     np: { note: 'Properties without a photo show only what is known. Items not shown, such as rates or water type, are not confirmed; open a property to see.' },
     favToast: (n, added) => added ? `Saved · ${n} favorite${n === 1 ? '' : 's'}` : `Removed · ${n} favorite${n === 1 ? '' : 's'}`, favTop: (n) => `Show ${n} favorite${n === 1 ? '' : 's'}`,
     has: 'Available', hasNot: 'Not available', can: 'Available', cannot: 'Not available', stayNone: 'No overnight stays', noOpen: 'No open-air bath',
@@ -394,7 +394,7 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
         <output id="budgetOut" for="dayMax">${R.noLimit}</output>
         <input type="range" id="dayMax" name="dayMax" min="5000" max="101000" step="1000" value="101000" aria-label="${R.budgetAria}">
         <div class="ends"><span>${R.low}</span><span>${R.noLimit}</span></div><p class="map-help">${R.budgetHelp}</p>
-        <div id="priceCover" class="price-cover" hidden><p id="priceCoverLine" class="map-help"></p><label class="rowopt"><input type="checkbox" id="inclUnp" name="unp" value="1" checked><span class="t">${R.unp}</span></label></div>
+        <div id="priceCover" class="price-cover" hidden><p id="priceCoverLine" class="map-help"></p><button type="button" class="link" id="priceCoverOnly" data-priced-only hidden></button><label class="rowopt"><input type="checkbox" id="inclUnp" name="unp" value="1" checked><span class="t">${R.unp}</span></label></div>
         <p id="fxIndic" class="map-help"></p>
       </section>
     </details>

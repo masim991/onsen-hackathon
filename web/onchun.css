@@ -154,24 +154,43 @@ aside#detail.detail { width: min(720px, 100vw); padding: 18px 28px 34px; }
 aside#detail.detail:not([hidden]) { display: block; }
 
 /* 상세 위치 지도 */
-.d-map .d-mapbox { height: 240px; margin: 10px 0; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; isolation: isolate; background: var(--hinoki); }
+.d-map .d-mapbox { height: 220px; margin: 10px 0; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; isolation: isolate; background: var(--hinoki); }
 .d-map .d-maphint { margin: 0 0 12px; color: var(--ink-2); font-size: 15px; }
 .d-srcst { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; background: var(--hinoki); font-size: 15px; }
 .d-srcst span, .d-srcst small { display: block; margin-top: 4px; color: var(--ink-2); }
 .d-srcst-changed, .d-srcst-unreachable { border-color: #b98a14; background: #f3e8c4; }
 
 /* ── 사진 없는 시설: 같은 4열 격자 안의 낮은 한 줄 카드(이름순 그대로). 행·격자는 stack.css, 여기서는 카드 안쪽만 ── */
-.stack-row > .card.nophoto-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) 44px; grid-template-areas: "chip name heart" "chip loc loc" "chip line line"; align-content: center; align-items: start; gap: 2px 10px; align-self: start; min-height: 84px; padding: 10px 4px 10px 12px; }
-.nophoto-card .np-chip { grid-area: chip; align-self: center; display: grid; place-items: center; align-content: center; gap: 2px; width: 64px; height: 56px; border-radius: 8px; background: var(--ai-800); color: #fff; }
+.stack-row > .card.nophoto-card { display: grid; grid-template-columns: 64px minmax(0, 1fr) 44px; grid-template-areas: "chip name heart" "chip loc loc" "chip line line"; align-content: center; align-items: start; gap: 2px 10px; align-self: stretch; min-height: 84px; padding: 10px 4px 10px 12px; }
+.nophoto-card .np-chip { grid-area: chip; align-self: center; display: grid; place-items: center; align-content: center; gap: 2px; width: 64px; height: 56px; border-radius: 8px; border: 1px solid var(--rule); background: linear-gradient(160deg, var(--hinoki), var(--ai-100)); color: var(--ai-800); }
 .nophoto-card .np-chip .ic { width: 20px; height: 20px; }
 .nophoto-card .np-chip b { max-width: 100%; padding: 0 2px; font: 700 14px/1.15 var(--ui); letter-spacing: -.04em; text-align: center; word-break: keep-all; overflow-wrap: anywhere; }
 .stack-row > .card.nophoto-card .body { display: contents; }
 .stack-row > .card.nophoto-card h3 { grid-area: name; margin: 0; min-width: 0; line-height: 1.3; align-self: center; }
-.stack-row > .card.nophoto-card h3 .pick { font-size: 16px !important; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.stack-row > .card.nophoto-card h3 .pick { font-size: 16px !important; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: break-word; }
 .stack-row > .card.nophoto-card .loc { grid-area: loc; margin: 0; font-size: 14px !important; line-height: 1.35; color: var(--ink-2); overflow-wrap: anywhere; }
 .stack-row > .card.nophoto-card .np-line { grid-area: line; margin: 0; font-size: 14px !important; line-height: 1.4; color: var(--ink-2); overflow-wrap: anywhere; }
 .stack-row > .card.nophoto-card .side { grid-area: heart; min-width: 0; width: 44px; margin: 0; padding: 0; border: 0; align-self: start; }
 .stack-row > .card:not(.nophoto-card) { align-self: stretch; }
+/* 사진 없는 카드: 카드 폭이 440px 이상(2~4열)이면 사진 카드와 같은 세로형으로 바꿔 행 높이를 맞춘다. 칩은 사진 자리의 글자 면(도도부현 이름) */
+@container (min-width: 440px) {
+  .stack-row > .card.nophoto-card { display: flex; flex-direction: column; align-items: stretch; gap: 0; min-height: 0; padding: 0; }
+  .nophoto-card .np-chip { flex: none; align-self: stretch; width: 100%; height: 132px; gap: 6px; border: 0; border-bottom: 1px solid var(--rule-soft); border-radius: 0; }
+  .nophoto-card .np-chip .ic { width: 30px; height: 30px; opacity: .55; }
+  .nophoto-card .np-chip b { font: 700 28px/1.15 var(--hand); letter-spacing: 0; }
+  .stack-row > .card.nophoto-card .body { display: block; flex: 1; min-width: 0; padding: 14px 16px 6px; }
+  .stack-row > .card.nophoto-card h3 { margin: 0 0 4px; }
+  .stack-row > .card.nophoto-card h3 .pick { font-size: 21px !important; -webkit-line-clamp: 3; }
+  .stack-row > .card.nophoto-card .loc { margin: 0 0 6px; font-size: 15.5px !important; }
+  .stack-row > .card.nophoto-card .np-line { margin: 0; font-size: 15px !important; line-height: 1.5; }
+  .stack-row > .card.nophoto-card .side { display: flex; align-self: stretch; width: auto; padding: 10px 16px 14px; border-top: 1px solid var(--rule-soft); }
+}
+/* 한국어 제목은 음절 중간에서 끊지 않고 어절 단위로 줄바꿈한다(아주 긴 낱말만 break-word 로 끊는다) */
+html:lang(ko) .card h3 .pick, html:lang(ko) .listing h3 { word-break: keep-all; overflow-wrap: break-word; }
+.card h3 .pick { text-wrap: balance; }
+/* 카드 가격 줄: 17px 굵게, 숫자 폭 고정. 라벨(small)은 14px 로 낮춘다 */
+.card .prices .price:not(.noprice) { font-size: 17px !important; font-weight: 700; font-variant-numeric: tabular-nums; }
+.card .prices .price:not(.noprice) small { font-size: 14px !important; font-weight: 600; color: var(--ink-2); }
 .card .price.noprice small { font-size: 14px !important; color: var(--ink-2); font-weight: 600; }
 .rich-row { margin: 0 0 12px; }
 .rich-row .link { min-height: 44px; padding: 0 2px; font-size: 15px; text-decoration: underline; text-underline-offset: 4px; }
@@ -294,3 +313,8 @@ dialog.cmp::backdrop { background: rgb(8 14 20 / .6); }
 .cmp-rm { min-width: 44px; min-height: 44px; margin-top: 6px; padding: 0 14px; border: 1px solid var(--rule); border-radius: 6px; background: transparent; color: inherit; font: 600 14px/1 var(--ui); cursor: pointer; }
 #cmpBtn[aria-disabled="true"] { font-weight: 600; opacity: .8; }
 @media (max-width: 640px) { .fbox label[for] { display: flex; align-items: flex-end; min-height: 44px; padding-bottom: 4px; } }
+/* 비교표 마지막 "확인되지 않음" 행, 예산 칸의 가격 있는 곳만 버튼, 정보 칩(x 없음) */
+.cmp tr.cmp-unconf th, .cmp tr.cmp-unconf td { color: var(--ink-2); font-weight: 500; font-size: 14px; background: var(--hinoki); }
+#priceCoverOnly { display: block; margin: .4rem 0; }
+[data-chip="wide"] { border-style: dashed; cursor: default; }
+[data-chip="wide"]:hover { background: inherit; }

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Sitemap: (SITE_URL not set; run tools/seo/gen.mjs with SITE_URL to add the Sitemap line)

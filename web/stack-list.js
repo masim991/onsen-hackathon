@@ -176,15 +176,16 @@
   // 상세 서랍: 닫기 버튼·Esc·바깥 클릭. (site.js의 state/render 사용)
   const detail = document.querySelector('#detail');
   if (detail && typeof state !== 'undefined') {
-    const close = () => { state.sel = null; render(); };
+    // 닫기 버튼·Esc로 닫으면 포커스를 연 카드(id로 다시 찾는다. render가 목록을 새로 만들기 때문)로 돌려 보낸다. 바깥 클릭은 클릭한 곳을 그대로 둔다.
+    const close = (restore) => { const id = state.sel; state.sel = null; render(); if (restore && id) setTimeout(() => document.querySelector(`.card [data-pick="${id}"]`)?.focus({ preventScroll: true })); };
     const syncDrawer = () => {
       document.documentElement.classList.toggle('drawer-open', !detail.hidden);
       if (!detail.hidden && !detail.querySelector('.detail-close')) detail.insertAdjacentHTML('afterbegin', `<button type="button" class="detail-close" aria-label="${typeof UI === 'undefined' ? '닫기' : UI.close}">×</button>`);
     };
     new MutationObserver(syncDrawer).observe(detail, { childList: true, attributes: true, attributeFilter: ['hidden'] });
     syncDrawer(); // 주소의 #facility-… 로 처음부터 열려 있는 경우도 닫기 버튼을 넣는다
-    detail.addEventListener('click', e => e.target.closest('.detail-close') && close());
-    addEventListener('keydown', e => e.key === 'Escape' && !detail.hidden && !document.querySelector('dialog[open]') && close());
+    detail.addEventListener('click', e => e.target.closest('.detail-close') && close(true));
+    addEventListener('keydown', e => e.key === 'Escape' && !detail.hidden && !document.querySelector('dialog[open]') && close(true));
     // 클릭으로 상세·목록이 다시 그려지면 e.target이 DOM에서 빠지므로, 클릭 시작 시점의 경로(composedPath)로 판단한다.
     document.addEventListener('click', e => { if (!detail.hidden && !e.composedPath().some(n => n.matches && n.matches('#detail, .card, [data-doc], dialog'))) close(); });
   }

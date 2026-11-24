@@ -2,7 +2,7 @@
   const project = 'https://frncsllpkxrsgxyqsfwd.supabase.co';
   const key = 'sb_publishable_7rJJBUzpz-WimUPB6eSOZg_cz4K_fGW';
   const lang = document.documentElement.lang.slice(0, 2);
-  const scripts = ['site.js?v=20270103','map.js?v=20270103','language.js?v=20270103','stack-list.js?v=20270103','hires.js?v=20270103','footer.js?v=20270103','motion.js?v=20270103'];
+  const scripts = ['site.js?v=20270105','map.js?v=20270105','language.js?v=20270105','stack-list.js?v=20270105','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
   // 보안: DB 값은 innerHTML로 렌더링되므로 수신 시점에 HTML 이스케이프 + URL 스킴(http/https) 검증
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clean = v => typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map(clean) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)])) : v;
@@ -122,21 +122,30 @@
     } catch (error) { console.warn('Change check failed.', error); }
     finally { seen.busy = false; }
   }
+  // 기준값은 처음에 받은 카탈로그에서 얻는다(추가 요청 없음). 받지 못했으면 첫 poll 이 기준값을 잡는다.
+  function seedSeen({rows, notices}) {
+    if (notices) seen.n = notices[0] ? `${notices[0].id}@${notices[0].detected_at}` : '';
+    const ts = rows.map(r => r.updated_at).filter(v => typeof v === 'string');
+    if (ts.length) seen.f = ts.reduce((a, b) => a > b ? a : b);
+  }
+  // 탭이 숨겨지면 타이머를 멈추고, 다시 보이면 즉시 한 번 확인한 뒤 60초 간격을 재개한다.
+  let timer = 0;
   function startPolling() {
-    poll(); // 기준값을 잡는다(처음엔 다시 그리지 않는다)
-    setInterval(poll, 60000);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+    const stop = () => { clearInterval(timer); timer = 0; };
+    const run = () => { stop(); timer = setInterval(poll, 60000); };
+    if (!document.hidden) run();
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else { poll(); run(); } });
   }
   // async=false: 내려받기는 동시에, 실행은 넣은 순서대로(앞 스크립트의 전역 값을 뒤 스크립트가 쓴다).
   function loadScript(src) { return new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);}); }
   (async () => {
     // 일본어·영어 시설 설명 번역표(한국어는 불필요)는 DB 응답을 기다리는 동안 같이 받는다(번역표는 RAW와 무관).
-    const locale = lang !== 'ko' ? loadScript(`locale-${lang === 'ja' ? 'ja' : 'en'}-data.js?v=20270103`) : Promise.resolve();
-    try { const data=await readCatalog();applyCatalog(data); }
+    const locale = lang !== 'ko' ? loadScript(`locale-${lang === 'ja' ? 'ja' : 'en'}-data.js?v=20270105`) : Promise.resolve();
+    try { const data=await readCatalog();applyCatalog(data);seedSeen(data); }
     catch (error) {
       document.documentElement.dataset.catalog = 'local'; console.warn('Supabase catalog unavailable; using local data.',error);
       // 폴백에서도 숨긴(unlisted) 시설은 보이지 않게: 공개 id 목록에 있는 번들 기록만 남긴다(목록을 못 받으면 그대로 둔다)
-      try { await loadScript('listed-ids.js?v=20270103'); const ok = new Set(window.LISTED_IDS.map(String)); for (let i=RAW.length-1; i>=0; i--) if (!ok.has(String(RAW[i].id))) RAW.splice(i,1); } catch {}
+      try { await loadScript('listed-ids.js?v=20270105'); const ok = new Set(window.LISTED_IDS.map(String)); for (let i=RAW.length-1; i>=0; i--) if (!ok.has(String(RAW[i].id))) RAW.splice(i,1); } catch {}
     }
     applyAux(await AUX);
     await locale;

@@ -28,3 +28,6 @@ tools/names/audit-result.json
 
 # manual price review decisions (internal)
 tools/prices/removed-prices.*
+
+# originals backup before image shrink (reversible)
+_originals_backup/

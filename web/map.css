@@ -6,3 +6,6 @@
 .map-panel .map-reset{display:inline-flex;align-items:center;justify-content:center;min-height:38px;margin:4px 0 8px;padding:0 12px;border:1px solid #c8c3b8;border-radius:6px;background:#f7f5f0;color:#3e4a3d;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
 .map-panel .map-reset:hover{background:#eae5dc}
 .map-panel .map-reset:focus-visible{outline:3px solid #c86d51;outline-offset:2px}
+
+/* 지도 타일(국토지리원 pale)의 푸른 바다색을 팔레트(젖은 돌·청록)에 맞게 눌러 준다. 타일 레이어만, 마커·도형은 그대로 */
+.leaflet-tile-pane { filter: saturate(.4) sepia(.14); }

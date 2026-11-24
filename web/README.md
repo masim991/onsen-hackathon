@@ -29,7 +29,7 @@
 - 카드/상세/필터 동작: `site.js`. 목록 배치/페이지 넘김: `stack-list.js` + `stack.css`
 - 색, 글꼴, 크기: `theme.css`(최종 토큰), 레이아웃 기본은 `style.css`
 - 히어로/인트로: `cover*.css`, `intro.*`. 푸터: `footer.*`. 안내/온천수 페이지: `page.js` + `page.css`
-- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20270103: 점검 시각 KST·대기 표시, 언어 전환 빈 칸(html 스크롤 강제 제거), 당일 입욕 가격 분리 표시; 20270102: 공식 가격 64→50건 정정 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
+- 캐시 갱신: html과 `db-loader.js`의 `?v=` 값을 한꺼번에 올린다 (현재 20270105: 점검 시각 KST·대기 표시, 언어 전환 빈 칸(html 스크롤 강제 제거), 당일 입욕 가격 분리 표시; 20270102: 공식 가격 64→50건 정정 반영). 새 파일: `theme-init.js`(head 동기 실행, 다크 모드 data-theme 적용·버튼 생성), `dark.css`(다크 토큰·밝은 하드코딩 색 덮어쓰기, 항상 마지막 CSS).
 
 ## 공식 공지 표시와 변경 반영 (db-loader.js + site.js)
 - 승인된(`published`) `facility_notices`만 익명으로 읽힌다(RLS). 시설·사진과 병렬로 받고 실패해도 무시. 상세 서랍에만 '공식 공지' 구역이 그려지며(`noticeHtml`), 공지가 없으면 화면은 그대로다. 문구: `i18n.js`의 `offNotice`(ko/ja/en).
@@ -48,4 +48,17 @@
 
 ## 가격 표시 규칙 (숙박 vs 당일 입욕)
 - 숙박 가격(`stayPrice`)과 당일 입욕 가격(`dayPrice`)은 섞지 않는다. 카드·서랍·비교표 모두 당일 가격은 '당일 입욕 ¥N'(환율 규칙 동일)으로 따로 라벨을 붙이고, 숙박 가격만 없을 때는 일반 '가격 미공개' 대신 '숙박 요금 미공개'(`UI.noStayPrice`, 서랍·비교는 `tile.stayNp`)를 쓴다.
+- 사진 없는 카드(`compactCard`): '숙박 ¥N (기준)'은 숙박 가격에만, '당일 입욕 ¥N'(없으면 '당일 입욕 요금 미공개')은 당일 가격에만 짝지어 쓴다. 가격 면책 한 줄(`UI.priceDisclaimer`)은 카드마다 반복하지 않고 서랍 가격 주석과 비교표 하단에만 둔다.
+- 예산 슬라이더: 지역 내 숙박 가격 확인 시설이 0곳이면 '확인 0곳' 숫자 대신 이유(`rail.coverNone`)를 보이고, 이미 미확인 포함 중이면 '미확인 포함' 칸을 숨긴다(제외 중이면 남겨 되돌릴 수 있다). 가격 확인 시설이 있고 미공개도 있으면 '가격 확인된 곳만 보기'(`#priceCoverOnly`, `state.priced`)를 보인다.
+- 이름 검색(`?q=`, 첫 화면 검색)은 기본 '숙박·료칸' 조건이 당일 시설을 조용히 숨기지 않도록 kind=all·숙박 해제로 시작하고(`state.wide`), 안내 칩 '검색 중: 숙박·유형 조건 해제'(활성 조건 수에는 안 셈)를 누르면 조건을 다시 건다. 사용자가 유형·숙박을 직접 바꾸면 칩은 사라진다.
+- 서랍: 카드를 열면 포커스가 서랍 제목(h3)으로 가고, ×·Esc로 닫으면 연 카드 버튼(id로 재탐색)으로 돌아온다(바깥 클릭은 포커스를 건드리지 않음). `aria-expanded`는 render 때마다 `state.sel`로 다시 쓴다. 비교표: 모든 열이 '확인되지 않음'인 행은 마지막 한 줄(`cmp.unconf`)로 합친다.
 - '가격 있는 곳만' 칩(`hasPrice`)은 숙박·당일 중 하나라도 있으면 센다. 가격 슬라이더·'가격 미확인 포함'·가격순 정렬은 숙박 가격만 쓴다.
+
+## SEO·신뢰 페이지·배포 헤더 (D 패키지)
+- **도메인은 한 곳에서만 정한다**: `SITE_URL=https://실제도메인 node tools/seo/gen.mjs` (PowerShell: ` $env:SITE_URL='https://...'; node tools/seo/gen.mjs`). 이 스크립트가 `index/ja/en.html`의 `<!-- seo:head -->`·`<!-- seo:noscript -->` 블록(title, description, canonical, hreflang, OG, Twitter, noscript), `sitemap.xml`, `robots.txt`를 다시 쓴다. 결과 파일을 커밋해 배포한다(빌드 단계 없음). 블록 안은 손으로 고치지 않는다(문구는 gen.mjs의 `C` 표).
+- **TODO(owner)**: 배포 도메인이 아직 없다. `SITE_URL` 미설정이면 canonical/hreflang/og:url/og:image는 넣지 않고 sitemap은 `SITE_URL_NOT_SET.invalid` 자리표시자를 쓴다(잘못된 도메인을 알리지 않기 위함). 도메인 확정 후 위 명령을 한 번 실행한다.
+- **TODO(owner)**: 실제 문의 이메일/양식이 없다. `web/legal/contact*.html`은 '창구 준비 중'으로 안내한다. 정하면 `tools/seo/legal.mjs`의 contact 문구를 고치고 `node tools/seo/legal.mjs`로 9개 페이지를 다시 만든다. 약관·개인정보·제휴 표기('현재 제휴 수수료 없음')는 정식 공개 전 법률 검토와 오너 확인이 필요하다.
+- **JSON-LD(WebSite)**: `SEO_JSONLD=1` 로 gen.mjs를 실행하면 넣는다. 단 inline `<script>` 라서 `tools/security/check.mjs`의 f-csp 검사(183행 부근)가 `type="application/ld+json"` 을 예외로 허용해야 통과한다. 그 한 줄 수정 후 켠다(데이터 블록이라 CSP 실행 위험 없음).
+- 정책 페이지: `web/legal/{terms,privacy,contact}{,-ja,-en}.html`(`tools/seo/legal.mjs` 생성, 인라인 style만 사용). 푸터가 링크한다(모달 제거).
+- 폴링(db-loader): 기준값은 처음 받은 카탈로그에서 얻고(추가 요청 없음), 탭이 숨겨지면 60초 타이머를 멈추며 다시 보이면 즉시 1회 확인 후 재개한다.
+- 캐시(vercel.json): js/css `max-age=0, must-revalidate`, html·json 300초, 이미지 1일+SWR(파일명 끝에 8자리 이상 16진 해시가 있는 이미지만 1년 immutable), robots/sitemap 1시간. 히어로 preload는 실제 사용하는 로컬 `images/gunma.jpg`로 바꿨다(기존 Wikimedia 주소는 쓰이지 않아 낭비였음).

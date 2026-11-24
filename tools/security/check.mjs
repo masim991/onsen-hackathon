@@ -3,6 +3,7 @@
 // Exit code 1 if any FAIL. WARN lines are advisory (human review).
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -295,6 +296,33 @@ for (const [p, s] of web(/^web\/data\/[^/]+\.json$/)) {
       for (const k of ['checked', 'changedAt']) if (v[k] != null && !(DATE.test(String(v[k])) && Number.isFinite(Date.parse(v[k])))) fail('g-data', f, 0, `${t}: ${k} is not a date`);
     }
     if (typeof v === 'string' && /^https?:/i.test(v) && !/^https:\/\//i.test(v)) warn('g-data', f, 0, `${t}: non-https URL`);
+  }
+}
+
+// ---- (k) photo licence required fields (web/data.js PHOTOS + web/photo-assets.js) ----------------
+// Every shot is [path, author, licence, meta?]. FAIL when author or licence is missing, or when a non-Commons
+// (facility/official) shot has no https source. WARN on non-https hotlinks. Evaluated in a sandbox; nothing is executed outside it.
+{
+  const dataSrc = read.get(path.join(ROOT, 'web/data.js')), assetSrc = read.get(path.join(ROOT, 'web/photo-assets.js'));
+  if (dataSrc && assetSrc) {
+    try {
+      const noop = new Proxy(function () {}, { get: () => noop, apply: () => noop });
+      const ctx = vm.createContext({ window: noop, document: noop, console: { log() {}, warn() {}, error() {} } });
+      const out = vm.runInContext(`${dataSrc}\n${assetSrc}\n({ PHOTOS, LOCAL_PHOTOS })`, ctx, { timeout: 5000 });
+      let shots = 0;
+      for (const [key, ph] of Object.entries(out.PHOTOS)) (ph.shots || []).forEach((sh, i) => {
+        shots++;
+        const [file, author, lic, meta] = sh, at = `PHOTOS.${key}.shots[${i}]`, bad = (v) => typeof v !== 'string' || !v.trim();
+        if (bad(file)) return fail('k-photo-licence', 'web/data.js', 0, `${at}: missing file path`);
+        if (bad(author) && bad(meta?.credit)) fail('k-photo-licence', 'web/photo-assets.js', 0, `${at} (${file}): missing author/credit`);
+        if (bad(lic) && bad(meta?.credit)) fail('k-photo-licence', 'web/photo-assets.js', 0, `${at} (${file}): missing licence`);
+        const commons = /^[0-9a-f]\/[0-9a-f]{2}\//.test(file); // Commons hash path implies a Commons source page
+        if (!commons && !(typeof meta?.source === 'string' && /^https:\/\//.test(meta.source))) fail('k-photo-licence', 'web/photo-assets.js', 0, `${at} (${file}): non-Commons photo without https source`);
+        for (const u of [meta?.source, meta?.terms, file]) if (typeof u === 'string' && /^http:\/\//i.test(u)) warn('k-photo-http', 'web/photo-assets.js', 0, `${at}: non-https URL ${u}`);
+      });
+      for (const [k, v] of Object.entries(out.LOCAL_PHOTOS)) if (/^http:\/\//i.test(v)) warn('k-photo-http', 'web/photo-assets.js', 0, `LOCAL_PHOTOS ${k}: non-https ${v}`);
+      console.log(`photo licence check: ${shots} photo entries inspected`);
+    } catch (e) { fail('k-photo-licence', 'web/photo-assets.js', 0, `could not evaluate photo data: ${e.message}`); }
   }
 }
 

@@ -213,7 +213,7 @@ function toast(msg) {
   clearTimeout(toastTimer);
   requestAnimationFrame(() => { toastEl.textContent = msg; toastEl.classList.add('on'); toastTimer = setTimeout(() => toastEl.classList.remove('on'), 2600); });
 }
-const state = { sel: null, shot: 0, favOnly: false, photo: false, priced: false, rg: null, q: '', link: null };
+const state = { wide: false, sel: null, shot: 0, favOnly: false, photo: false, priced: false, rg: null, q: '', link: null };
 
 const AREA_REP = new Map();
 const areaKey = (a) => { const n = norm(areaName(a)).replace(/[\s\-·・]/g, ''); return n.replace(/(온천|温泉|onsen)$/, '') || n; };
@@ -305,7 +305,7 @@ const PREF_SHORT = (() => {
 const prefChip = (f) => escQ(PREF_SHORT[f.pref] || Array.from(unesc(f.prefName)).slice(0, 3).join(''));
 function compactCard(f) {
   const sel = state.sel === f.id;
-  const known = [f.day === 'y' && !dayShown(f) && LABEL.day, f.stayPrice != null && moneyText(f.stayPrice, f.off ? '〜' : '') + (f.off ? ` (${basisText(f)})` : ''), dayShown(f) && `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}`, stayNp(f) && UI.noStayPrice, UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
+  const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
   return `
   <article class="card nophoto-card${sel ? ' sel' : ''}" data-id="${f.id}">
     <span class="np-chip" aria-hidden="true">${ic('onsen')}<b>${prefChip(f)}</b></span>
@@ -379,6 +379,10 @@ function cmpRender(focusId) {
     [T.sourcePage, source],
     [C.checked, (f) => T.checkedOn(f.x.checked || f.checked)],
   ];
+  // 모든 열이 '확인되지 않음'인 행은 표에서 빼고 마지막에 한 줄로 합친다
+  const cells = rows.map(([label, fn]) => [label, fs.map(fn)]);
+  const empty = cells.filter(([, c]) => c.length && c.every((h) => h === nc)).map(([l]) => l);
+  const body = cells.filter(([l]) => !empty.includes(l)).map(([label, c]) => `<tr><th scope="row">${label}</th>${c.map((h) => `<td>${h}</td>`).join('')}</tr>`).join('');
   const head = (f) => `<th scope="col">${f.shots.length ? `<img src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="" loading="lazy">` : `<span class="cmp-chip" aria-hidden="true">${prefChip(f)}</span>`}<b>${f.name}</b><button type="button" class="cmp-rm" data-cmp-rm="${f.id}" aria-label="${UI.px.rmAria(f.name)}">${UI.px.rm}</button></th>`;
   cmpDlg.innerHTML = `
     <div class="cmp-top"><h2 id="cmpTitle">${C.title}</h2><button type="button" class="cmp-x" data-cmp-close aria-label="${UI.close}">×</button></div>
@@ -386,8 +390,8 @@ function cmpRender(focusId) {
     ${fs.length >= 2 ? `<p class="cmp-note cmp-comp"><b>${UI.px.comp(fs.filter((f) => price.stay(f) != null || price.day(f) != null).length, fs.filter((f) => f.quality.length).length, fs.length)}</b> · ${UI.px.book}</p>` : ''}
     ${all.length > CMP_MAX ? `<fieldset class="cmp-pick"><legend>${C.pick(CMP_MAX)}</legend>${all.map((f) => { const on = cmpSel.includes(f.id); return `<label><input type="checkbox" value="${f.id}"${on ? ' checked' : ''}${!on && fs.length >= CMP_MAX ? ' disabled' : ''}><span>${f.name}</span></label>`; }).join('')}</fieldset>` : ''}
     ${fs.length < 2 ? `<p class="cmp-note" role="status">${C.need}</p>` : `<div class="cmp-wrap" role="region" aria-labelledby="cmpTitle" tabindex="0"><table><thead><tr><th scope="col"><span class="vh">${C.title}</span></th>${fs.map(head).join('')}</tr></thead>
-      <tbody>${rows.map(([label, fn]) => `<tr><th scope="row">${label}</th>${fs.map((f) => `<td>${fn(f)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-      ${fx.rate && fs.some((f) => price.stay(f) != null || price.day(f) != null) ? `<p class="cmp-note">${UI.fxNote(fx.when, UI.fxRateText(fx.rate))}${fxOldTag()}</p>` : ''}`}`;
+      <tbody>${body}${empty.length ? `<tr class="cmp-unconf"><th scope="row">${C.unconf}</th><td colspan="${fs.length}">${empty.join(' · ')}: ${nc}</td></tr>` : ''}</tbody></table></div>
+      ${fs.some((f) => price.stay(f) != null || price.day(f) != null) ? `<p class="cmp-note">${fx.rate ? UI.fxNote(fx.when, UI.fxRateText(fx.rate)) + fxOldTag() + ' · ' : ''}${UI.priceDisclaimer}</p>` : ''}`}`;
   if (focusId) cmpDlg.querySelector(`input[value="${focusId}"]`)?.focus();
 }
 $('#cmpBtn').addEventListener('click', () => { if (favs.size < 2) return toast(UI.cmp.need); cmpSel = [...favs].slice(0, CMP_MAX); cmpRender(); if (!cmpDlg.open && favs.size > 1) cmpDlg.showModal(); });
@@ -469,6 +473,7 @@ function detailHtml(f) {
     f.dayNote ? wonize(f.dayNote) : '',
     f.stay !== 'n' && f.stayP ? `${LABEL.stay}: ${wonize(f.stayP)}` : '',
     fx.rate && (f.dayPrice != null || f.stayPrice != null) ? UI.fxNote(fx.when, UI.fxRateText(fx.rate)) + fxOldTag() : '',
+    f.dayPrice != null || f.stayPrice != null ? UI.priceDisclaimer : '', // 가격은 참고용 한 줄(카드마다 반복하지 않는다)
   ].filter(Boolean).map((n) => `<li>${n}</li>`).join('');
 
   // 시설 정보 표: 값이 있는 줄만
@@ -608,6 +613,8 @@ function initDetailMap() {
 function chips(c) {
   const items = [];
   if (c.q) items.push(['q', UI.home.searchChip(escQ(c.q))]);
+  const wide = state.wide && c.q && c.kind === 'all' && !c.flags.includes('stay'); // 검색어 때문에 숙박·유형 조건을 푼 상태: 숫자에는 넣지 않고 안내만
+  if (wide) items.push(['wide', UI.chip.wide, UI.chip.wideClear]);
   if (c.rg != null) items.push(['rg', regionName(c.rg)]);
   if (c.pref) items.push(['pref', prefName(c.pref)]);
   if (c.area) items.push(['region', areaName(c.area)]);
@@ -618,8 +625,8 @@ function chips(c) {
   if (state.photo) items.push(['photo', UI.chip.photo]);
   if (state.priced) items.push(['priced', UI.chip.priced]);
   if (state.favOnly) items.push(['fav', UI.chip.fav]);
-  $('#chips').innerHTML = items.map(([k, label]) => `<li><button type="button" data-chip="${k}" aria-label="${UI.chip.clear(label)}">${label}${ic('x')}</button></li>`).join('');
-  return items.length;
+  $('#chips').innerHTML = items.map(([k, label, aria]) => `<li><button type="button" data-chip="${k}" aria-label="${aria || UI.chip.clear(label)}">${label}${k === 'wide' ? '' : ic('x')}</button></li>`).join('');
+  return items.length - (wide ? 1 : 0);
 }
 
 let lastSel = null;
@@ -660,6 +667,7 @@ function restoreFromUrl() {
   if (area && FAC.some((f) => f.area === area)) { form.elements.region.value = areaOpt(area); any = true; }
   const kind = params.get('kind');
   if (['ryokan', 'hotel', 'all'].includes(kind)) { form.elements.kind.value = kind; any = true; }
+  else if (q) { form.elements.kind.value = 'all'; form.querySelector('input[name="f"][value="stay"]').checked = false; state.wide = true; } // 이름 검색이 기본 '숙박·료칸' 조건 때문에 당일 시설을 조용히 숨기지 않게
   const m = /^#facility-([\w-]{1,80})$/.exec(hash);
   if (m && FAC.some((f) => f.id === m[1])) { state.sel = state.link = m[1]; any = true; }
   syncHero();
@@ -700,7 +708,12 @@ function render() {
   if (c.dayMax) {
     const can = fit.filter((f) => f.stay !== 'n');
     const priced = can.filter((f) => f.stayPrice != null).length;
-    $('#priceCoverLine').textContent = UI.rail.cover(priced.toLocaleString(UI.loc), (can.length - priced).toLocaleString(UI.loc), c.unp);
+    const none = !priced, un = can.length - priced, canFilter = !none && !state.priced && un > 0;
+    // 가격이 확인된 곳이 하나도 없으면 '확인 0곳' 숫자 대신 이유를 말하고, 미확인 포함 칸은 이미 포함 중일 때 숨긴다(제외 중이면 되돌릴 수 있게 둔다)
+    $('#priceCoverLine').textContent = none ? UI.rail.coverNone(un.toLocaleString(UI.loc)) : UI.rail.cover(priced.toLocaleString(UI.loc), un.toLocaleString(UI.loc), c.unp);
+    form.elements.unp.closest('label').hidden = none && c.unp;
+    const po = $('#priceCoverOnly');
+    po.hidden = !canFilter; po.textContent = UI.rail.pricedBtn(priced.toLocaleString(UI.loc));
   }
   $('#fxIndic').textContent = fx.rate ? UI.rail.fxIndic : '';
   const photoBtn = $('#photoOnly'), priceBtn = $('#priceOnly');
@@ -735,9 +748,9 @@ function render() {
   $('#budgetOut').innerHTML = dm >= NO_LIMIT ? UI.rail.noLimit : UI.rail.upTo(moneyText(dm)) + (fx.rate ? ` <small>${yen(dm)}</small>` : '');
   form.elements.dayMax.style.setProperty('--fill', ((dm - 5000) / (NO_LIMIT - 5000) * 100) + '%');
 
-  const E = UI.empty, noFav = state.favOnly && !favs.size;
+  const E = UI.empty, noFav = state.favOnly && !favs.size, favOut = state.favOnly && favs.size && !hit.length;
   $('#list').innerHTML = hit.length ? hit.map(card).join('') : `<div class="empty"><strong>${noFav ? E.noFav : E.none}</strong>
-    <p>${noFav ? E.favHow : E.tryLoose}</p>
+    <p>${noFav ? E.favHow : favOut ? E.favOut(favs.size) : E.tryLoose}</p>
     ${prevSnap && !noFav ? `<button type="button" class="btn" data-undo>${E.undo}</button> ` : ''}${c.q ? `<button type="button" class="btn line" data-chip="q">${UI.px.clearQ}</button> ` : ''}<button type="button" class="btn line" data-clear>${E.clear}</button></div>`;
 
   const f = FAC.find((x) => x.id === state.sel);
@@ -760,7 +773,7 @@ function quick({ rg = null, pref = '', area = '', q = '' } = {}) {
   form.elements.kind.value = 'all';
   form.querySelectorAll('input[name="f"], input[name="quality"]').forEach((el) => { el.checked = false; });
   form.elements.dayMax.value = NO_LIMIT;
-  state.favOnly = false; state.photo = state.priced = false; form.elements.unp.checked = true; state.rg = rg; state.q = q; state.sel = null;
+  state.favOnly = false; state.photo = state.priced = false; form.elements.unp.checked = true; state.rg = rg; state.q = q; state.sel = null; state.wide = !!q;
   form.elements.pref.value = pref;
   form.elements.region.value = area ? areaOpt(area) : '';
   syncHero();
@@ -852,6 +865,7 @@ document.addEventListener('click', (e) => {
     if (k === 'fav') state.favOnly = false;
     else if (k === 'photo') state.photo = false;
     else if (k === 'priced') state.priced = false;
+    else if (k === 'wide') { state.wide = false; form.elements.kind.value = 'ryokan'; form.querySelector('input[name="f"][value="stay"]').checked = true; }
     else if (k === 'unp') form.elements.unp.checked = true;
     else if (k === 'rg') { state.rg = null; syncHero(); }
     else if (k === 'q') { state.q = ''; syncHero(); }
@@ -865,7 +879,7 @@ document.addEventListener('click', (e) => {
   if (e.target.closest('[data-clear]')) return clearAll();
   if (e.target.closest('#favToggle, #favTop')) { state.favOnly = !state.favOnly; render(); return; }
   if (e.target.closest('#photoOnly')) { state.photo = !state.photo; render(); return; }
-  if (e.target.closest('#priceOnly')) { state.priced = !state.priced; render(); return; }
+  if (e.target.closest('#priceOnly, [data-priced-only]')) { state.priced = !state.priced; render(); return; }
   if (e.target.closest('#seeResults')) { form.querySelector('details').open = false; $('#results').scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' }); return; }
   if (e.target.closest('[data-undo]')) return restore(prevSnap);
   if (e.target.closest('a')) return;
@@ -876,13 +890,14 @@ document.addEventListener('click', (e) => {
     state.link = null;
     state.shot = 0;
     render();
-    document.querySelector(`[data-pick="${id}"]`)?.focus({ preventScroll: true });
+    // 목록이 다시 만들어진 뒤(stack-list가 카드를 재배치한 다음)에 서랍 제목으로 포커스를 옮긴다. 닫을 때 돌아올 곳은 stack-list.js가 id로 찾는다.
+    setTimeout(() => { const h = !$('#detail').hidden && $('#detail h3'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } });
   }
 });
 
 form.elements.pref.addEventListener('input', () => { form.elements.region.value = ''; state.rg = null; syncHero(); });
-form.addEventListener('input', (e) => { if (e.target.name === 'f' && e.target.value === 'stay' && !e.target.checked) form.elements.kind.value = 'all'; render(); });
-form.addEventListener('reset', () => { state.favOnly = false; state.photo = state.priced = false; state.rg = null; state.q = ''; syncHero(); $('#sort').value = ''; setTimeout(() => { form.elements.kind.value = 'all'; form.querySelector('input[name="f"][value="stay"]').checked = false; render(); }); });
+form.addEventListener('input', (e) => { if (e.target.name === 'kind' || (e.target.name === 'f' && e.target.value === 'stay')) state.wide = false; if (e.target.name === 'f' && e.target.value === 'stay' && !e.target.checked) form.elements.kind.value = 'all'; render(); });
+form.addEventListener('reset', () => { state.wide = false; state.favOnly = false; state.photo = state.priced = false; state.rg = null; state.q = ''; syncHero(); $('#sort').value = ''; setTimeout(() => { form.elements.kind.value = 'all'; form.querySelector('input[name="f"][value="stay"]').checked = false; render(); }); });
 $('#sort').addEventListener('change', render);
 if (matchMedia('(max-width: 900px)').matches) form.querySelector('details').open = false;
 

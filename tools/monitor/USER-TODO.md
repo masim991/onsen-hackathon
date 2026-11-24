@@ -66,3 +66,19 @@
 - 이 PC에 남은 모니터 테스트 데이터(monitor_* 대상 90개, 공지 19건, 사진 해시 90건)는 일부러 남겨 두었습니다. 지우려면 `delete from public.monitor_targets;`(자식 행 자동 삭제) 후 `facility_notices`/`photo_assets`/`facility_changes`/`monitor_logs` 를 비우세요.
 - 숨긴 시설 2,243건(unlisted)은 삭제하지 않았습니다. 일부를 다시 보이게 하면(`update onsen_facilities set unlisted=false where id in (...)`, 전체 되돌리기는 `tools/cleanup/unhide.sql`) `web/listed-ids.js` 를 다시 만드세요(`web/README.md` 숨김 절). 안 만들어도 사이트는 정상이고 DB 장애 폴백에서만 빠집니다.
 - 하지 않은 것(요청이 있을 때만): 공지 자동 공개(현재 전부 `published=false`), 사진 공개(`license_status='verified'` 승인 필요), 관리자 화면 실시간 반영(Realtime은 CSP에 wss 호스트 추가 필요).
+
+## 8. 외부 cron으로 모니터를 매시간 돌리기 (오너 전용, PC 꺼도 동작)
+GitHub의 `schedule`은 하루 2번 정도만 돌아서 점검이 필요량(약 1,500건/일)의 1/5밖에 안 됩니다. 외부 서비스가 매시간 워크플로를 깨우게 합니다. 토큰은 채팅·커밋·로그에 절대 붙여넣지 말고 cron 서비스의 비밀 입력칸에만 넣으세요.
+1. GitHub > Settings(프로필) > Developer settings > Personal access tokens > **Fine-grained tokens** > Generate new token.
+   - Repository access: **Only select repositories** > 이 저장소 하나만.
+   - Permissions > Repository permissions > **Actions: Read and write** (다른 권한은 모두 No access; Metadata 읽기는 자동).
+   - 만료는 90일 정도로 짧게 잡고 달력에 갱신일을 적어 둡니다. 토큰은 생성 직후 한 번만 보이니 바로 다음 단계에 입력하세요.
+2. cron-job.org(무료) 가입 > Create cronjob.
+   - URL: `https://api.github.com/repos/<OWNER>/<REPO>/actions/workflows/monitor.yml/dispatches` (<OWNER>/<REPO>는 본인 저장소)
+   - Schedule: 60분마다(Every 60 minutes).
+   - Advanced > Request method **POST**, Request body: `{"ref":"main"}`
+   - Headers: `Authorization: Bearer <토큰>`, `Accept: application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, `Content-Type: application/json`, `User-Agent: onsen-monitor-cron`
+   - 성공 응답은 HTTP 204(본문 없음). cron-job.org의 실패 알림 이메일을 켜 두세요.
+3. 확인: Actions 탭 > monitor 에 정시 부근 실행이 생기는지, 1시간 뒤 /admin/monitor 에 빨간 배너가 없는지. 워크플로는 동시에 하나만 돌고(concurrency) 겹치면 대기합니다.
+4. 문제가 생기면 cron-job.org에서 작업을 끄기만 하면 됩니다. 토큰이 새면 GitHub에서 즉시 Revoke 하세요. 이 토큰은 Actions만 다루고 코드·비밀값에는 접근하지 못합니다.
+5. 등록 전에는 /admin/monitor 에 하트비트 경고 배너가 뜰 수 있습니다(첫 정상 실행 후 사라짐).
