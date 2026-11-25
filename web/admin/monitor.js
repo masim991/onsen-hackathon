@@ -119,23 +119,27 @@
     }};
   }
   // 목록 화면 골격: 필터 폼 + 목록 + 페이저. build(query)는 REST 경로, row(r)는 항목 노드.
-  function listView({filters, path, row, empty}) {
+  function listView({filters, path, row, empty, initial = {}}) {
     const state = {page: 0}, box = el('div', {}), status = msgBox(), form = el('form', {class: 'tools'}), pg = pager(state, () => run());
+    let sequence = 0;
     const ctl = {};
-    for (const [name, label, node] of filters) { ctl[name] = node; form.append(field(label, node)); }
+    for (const [name, label, node] of filters) { ctl[name] = node; if (initial[name] != null) node.value = initial[name]; form.append(field(label, node)); }
     form.append(el('button', {type: 'submit', class: 'btn primary'}, '조회'));
     form.addEventListener('submit', (e) => { e.preventDefault(); state.page = 0; run(); });
+    form.addEventListener('change', (e) => { if (e.target.tagName === 'SELECT') { state.page = 0; run(); } });
     async function run() {
+      const request = ++sequence;
       say(status, '불러오는 중…');
       try {
         const v = Object.fromEntries(Object.entries(ctl).map(([k, n]) => [k, n.value]));
         const {data, total} = await api(`${path(v)}&limit=${SIZE}&offset=${state.page * SIZE}`, {count: true});
+        if (request !== sequence) return;
         box.replaceChildren(...(data.length ? data.map((r) => row(r, run)) : [el('p', {class: 'msg'}, empty || '데이터가 없습니다.')]));
         pg.update(total, data.length); say(status, '');
-      } catch (e) { say(status, e.message, 'err'); }
+      } catch (e) { if (request === sequence) say(status, e.message, 'err'); }
     }
     const node = el('div', {}, form, status, box, pg.node);
-    return {node, run};
+    return {node, run, setFilters(values) { for (const [name, value] of Object.entries(values)) if (ctl[name]) ctl[name].value = value; state.page = 0; run(); }};
   }
   async function patch(path, body, box) { // RLS가 막으면 0건이므로 representation 으로 확인한다
     try {
@@ -196,10 +200,59 @@
     return form;
   }
 
+  // 서로 다른 운영 기록을 시간순으로 모아 보고, 원본 탭의 시설 필터로 이동한다.
+  async function viewActivity() {
+    const root = el('section', {class: 'activity'}), intro = el('div', {class: 'activity-intro'},
+      el('div', {}, el('h2', {}, '최근 활동'), el('p', {}, '변경·작업·공지·로그를 시간순으로 확인합니다. 각 기록에서 해당 시설의 전체 이력으로 이동할 수 있습니다.')),
+      el('button', {type: 'button', class: 'btn', on: {click: () => openTab('activity')}}, '새로고침'));
+    const status = msgBox(), results = el('div', {class: 'activity-list'});
+    const search = el('input', {type: 'search', placeholder: '시설 id 또는 내용', 'aria-label': '최근 활동 검색'});
+    const kinds = [['all', '전체'], ['change', '변경'], ['log', '오류·로그'], ['job', '작업'], ['notice', '공지'], ['ai', 'AI 로그']];
+    let selected = 'all', events = [];
+    const switches = el('div', {class: 'activity-switch', role: 'group', 'aria-label': '기록 종류'},
+      kinds.map(([kind, label]) => el('button', {type: 'button', class: 'btn', 'aria-pressed': kind === 'all' ? 'true' : 'false', on: {click: () => {
+        selected = kind;
+        for (const b of switches.querySelectorAll('button')) b.setAttribute('aria-pressed', b.dataset.kind === kind ? 'true' : 'false');
+        render();
+      }}, 'data-kind': kind}, label)));
+    const sources = [
+      ['change', 'facility_changes?select=id,facility_id,field,status,created_at,applied_at,old_value,new_value,evidence,source_url&order=created_at.desc&limit=35', r => ({kind: 'change', tab: 'changes', time: r.created_at, fid: r.facility_id, state: ST_KO[r.status] || r.status, title: `${r.field === 'price' ? '가격' : r.field === 'hours' ? '영업시간' : r.field} 변경`, note: `${pretty(r.old_value)} → ${pretty(r.new_value)}`, detail: r.evidence, url: r.source_url, tone: r.status === 'rejected' ? 'bad' : r.status === 'pending_review' ? 'warn' : 'good'})],
+      ['log', 'monitor_logs?select=id,facility_id,job_kind,level,result,error_cause,ts&order=ts.desc&limit=45', r => ({kind: 'log', tab: 'logs', time: r.ts, fid: r.facility_id, state: r.level, title: `${KIND_KO[r.job_kind] || r.job_kind || '시스템'} · ${r.result || '기록'}`, note: r.error_cause, tone: r.level === 'error' ? 'bad' : r.level === 'warn' ? 'warn' : ''})],
+      ['job', 'monitor_jobs?select=id,facility_id,kind,status,run_after,started_at,finished_at,error&order=id.desc&limit=30', r => ({kind: 'job', tab: 'jobs', time: r.finished_at || r.started_at || r.run_after, fid: r.facility_id, state: r.status, title: `${KIND_KO[r.kind] || r.kind} 점검`, note: r.error, tone: stCls(r.status)})],
+      ['notice', 'facility_notices?select=id,facility_id,title,published,detected_at,source_url&order=detected_at.desc&limit=30', r => ({kind: 'notice', tab: 'notices', time: r.detected_at, fid: r.facility_id, state: r.published ? '공개' : '비공개', title: r.title || '제목 없는 공지', url: r.source_url, tone: r.published ? 'good' : 'warn'})],
+      ['ai', 'ai_logs?select=id,facility_id,kind,status,model,error,created_at&order=created_at.desc&limit=30', r => ({kind: 'ai', tab: 'ailogs', time: r.created_at, fid: r.facility_id, state: r.status, title: `${AI_KIND_KO[r.kind] || r.kind} · ${r.model || '모델 미기록'}`, note: r.error, tone: r.status === 'error' ? 'bad' : ''})]
+    ];
+    root.append(intro, el('div', {class: 'activity-controls'}, field('최근 기록에서 찾기', search), switches), status, results);
+    function render() {
+      const q = search.value.trim().toLocaleLowerCase();
+      const shown = events.filter(r => (selected === 'all' || selected === r.kind) && (!q || [r.fid, r.title, r.note, r.state].some(v => String(v || '').toLocaleLowerCase().includes(q)))).slice(0, 60);
+      results.replaceChildren(...(shown.length ? shown.map(r => el('article', {class: 'activity-entry'},
+        el('time', {}, when(r.time)),
+        el('div', {class: 'activity-entry-main'},
+          el('div', {class: 'activity-entry-heading'}, tag(kinds.find(([k]) => k === r.kind)?.[1] || r.kind), tag(r.state || '-', r.tone), el('strong', {}, r.title)),
+          el('div', {class: 'meta'}, r.fid || '시설 없음'),
+          r.note ? el('p', {class: 'activity-note'}, String(r.note).slice(0, 180)) : null,
+          el('div', {class: 'activity-entry-actions'}, el('button', {type: 'button', class: 'btn', on: {click: () => openTab(r.tab, {fid: r.fid || '', st: '', level: ''})}}, r.fid ? '이 시설 전체 기록' : '전체 기록'), r.url ? link(r.url, '원문') : null)))) : [el('p', {class: 'msg'}, '조건에 맞는 최근 기록이 없습니다. 전체 이력은 각 탭에서 검색하세요.')]));
+      say(status, `최근 기록 ${events.length}건 중 ${shown.length}건 표시`);
+    }
+    search.addEventListener('input', render);
+    const fetched = await Promise.allSettled(sources.map(([, path]) => api(path)));
+    const errors = [];
+    fetched.forEach((result, i) => {
+      if (result.status === 'fulfilled') events.push(...result.value.data.map(sources[i][2]));
+      else errors.push(sources[i][0]);
+    });
+    events.sort((a, b) => Date.parse(b.time || 0) - Date.parse(a.time || 0));
+    render();
+    if (errors.length) root.append(el('p', {class: 'msg err'}, `불러오지 못한 기록: ${errors.join(', ')}`));
+    return root;
+  }
+
   // ---- 탭: 대기열 ----
   const stCls = (s) => s === 'failed' ? 'bad' : s === 'ok' ? 'good' : s === 'queued' || s === 'running' ? 'warn' : '';
-  function viewJobs() {
+  function viewJobs(initial = {}) {
     return listView({
+      initial,
       filters: [['status', '상태', sel('status', [['', '전체'], ...['queued', 'running', 'ok', 'failed', 'skipped'].map((s) => [s, s])])], ['fid', '시설 id', el('input', {maxlength: 80})]],
       path: (v) => `monitor_jobs?select=*&order=id.desc${v.status ? `&status=eq.${v.status}` : ''}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}`,
       row: (j, rerun) => {
@@ -213,8 +266,9 @@
   }
 
   // ---- 탭: 공지 ----
-  function viewNotices() {
+  function viewNotices(initial = {}) {
     return listView({
+      initial,
       filters: [['pub', '공개 상태', sel('pub', [['', '전체'], ['false', '비공개'], ['true', '공개']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
       path: (v) => `facility_notices?select=*&order=detected_at.desc${v.pub ? `&published=eq.${v.pub}` : ''}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}`,
       row: (n, rerun) => {
@@ -242,22 +296,9 @@
       : el('div', {class: 'meta'}, '흐름: ', FLOW.map(([, t], n) => el('span', {}, n ? ' → ' : '', n === i ? el('b', {}, `[${t}]`) : t)));
   };
   // 최근 7일 자동 반영 목록(맨 위): 승인 없이 이미 반영된 값을 훑어보고 틀린 것만 되돌리기 요청. textContent만 사용(el 헬퍼).
-  function recentAuto(rerun) {
-    const box = el('div', {}), list = el('div', {}), msg = msgBox();
-    box.append(el('h3', {}, '최근 7일 자동 반영'), el('p', {class: 'meta'}, '워커가 확신해서 이미 반영한 값입니다. 틀린 값만 되돌리기를 요청하세요(다음 워커 실행 때 복원, 이력은 남음).'), msg, list);
-    (async () => {
-      try {
-        const {data} = await api(`facility_changes?select=*&status=eq.auto_applied&created_at=gte.${encodeURIComponent(new Date(Date.now() - 7 * 864e5).toISOString())}&order=created_at.desc&limit=100`);
-        if (!data.length) return list.append(el('p', {class: 'meta'}, '없음'));
-        for (const c of data) list.append(el('div', {class: 'item'}, el('div', {}, tag('자동 반영', 'good'), ` #${c.id} · ${c.facility_id} · ${c.field} · ${when(c.created_at)}`),
-          el('div', {class: 'meta'}, '새 값'), el('pre', {}, pretty(c.new_value)), el('div', {class: 'meta'}, '근거 인용'), el('pre', {}, c.evidence || '-'), el('div', {class: 'meta'}, '출처: ', link(c.source_url)),
-          el('div', {class: 'acts'}, el('button', {type: 'button', class: 'btn danger', on: {click: async () => { const r = await patch(`facility_changes?id=eq.${c.id}`, {status: 'revert_requested', reviewed_by: session.user.id}, msg); if (r) { rerun(); list.replaceChildren(); } }}}, '되돌리기 요청'))));
-      } catch (e) { say(msg, e.message, 'err'); }
-    })();
-    return box;
-  }
-  function viewChanges() {
+  function viewChanges(initial = {}) {
     const v = listView({
+      initial: {st: 'pending_review', ...initial},
       filters: [['st', '상태', sel('st', [['pending_review', '검토 대기'], ['', '전체'], ['approved', '승인(반영 대기)'], ['applied', '반영됨'], ['revert_requested', '되돌리기 요청'], ['reverted', '되돌림'], ['auto_applied', '자동 반영'], ['rejected', '반려']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
       path: (v) => `facility_changes?select=*&order=created_at.desc${v.st ? `&status=eq.${v.st}` : ''}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}`,
       row: (c, rerun) => {
@@ -265,28 +306,47 @@
           const r = await patch(`facility_changes?id=eq.${c.id}`, {status, reviewed_by: session.user.id}, box); if (r) rerun();
         }}}, label);
         const wait = ['pending_review', 'approved', 'revert_requested'].includes(c.status);
-        return el('div', {class: 'item'}, el('div', {}, tag(ST_KO[c.status] || c.status, c.status === 'rejected' ? 'bad' : wait ? 'warn' : 'good'), ` #${c.id} · ${c.facility_id} · ${c.field} · ${when(c.created_at)}`),
-          flowNode(c.status),
-          el('div', {class: 'meta'}, '이전 값'), el('pre', {}, pretty(c.old_value)), el('div', {class: 'meta'}, '새 값'), el('pre', {}, pretty(c.new_value)),
-          el('div', {class: 'meta'}, '근거 인용'), el('pre', {}, c.evidence || '-'), el('div', {class: 'meta'}, '출처: ', link(c.source_url)),
-          c.applied_at ? el('div', {class: 'meta'}, `반영 ${when(c.applied_at)}${c.reverted_at ? ` · 되돌림 ${when(c.reverted_at)}` : ''}`) : null,
-          c.apply_note ? el('div', {class: 'meta'}, `워커 메모(반려 사유): ${c.apply_note}`) : null,
+        return el('article', {class: 'item record-item'},
+          el('div', {class: 'record-heading'}, tag(ST_KO[c.status] || c.status, c.status === 'rejected' ? 'bad' : wait ? 'warn' : 'good'),
+            el('strong', {}, `${c.field === 'price' ? '가격' : c.field === 'hours' ? '영업시간' : c.field} 변경`),
+            el('span', {class: 'meta'}, `#${c.id} · ${when(c.created_at)}`)),
+          el('div', {class: 'meta record-facility'}, c.facility_id),
+          el('p', {class: 'record-preview'}, `${pretty(c.old_value)} → ${pretty(c.new_value)}`),
           c.status === 'pending_review' ? el('div', {class: 'acts'}, review('승인 (반영 예약)', 'approved', 'primary'), review('반려', 'rejected', 'danger')) : null,
-          c.status === 'pending_review' ? el('p', {class: 'meta'}, '승인하면 다음 워커 실행 때 시설 데이터에 반영됩니다. 반려하면 반영되지 않습니다.') : null,
           c.status === 'approved' ? el('div', {class: 'acts'}, review('승인 취소(반려)', 'rejected', 'danger')) : null,
-          c.status === 'approved' ? el('p', {class: 'meta'}, '워커가 곧 반영합니다. 그 전이면 취소할 수 있습니다.') : null,
           ['applied', 'auto_applied'].includes(c.status) ? el('div', {class: 'acts'}, review('되돌리기 요청', 'revert_requested', 'danger')) : null,
-          ['applied', 'auto_applied'].includes(c.status) ? el('p', {class: 'meta'}, '되돌리기를 요청하면 다음 워커 실행 때 이전 값으로 복원됩니다(이력은 남습니다).') : null,
-          c.status === 'revert_requested' ? el('p', {class: 'meta'}, '워커가 다음 실행 때 되돌립니다.') : null, box);
+          el('details', {class: 'record-details'}, el('summary', {}, '근거와 처리 과정'),
+            flowNode(c.status),
+            el('div', {class: 'meta'}, '이전 값'), el('pre', {}, pretty(c.old_value)), el('div', {class: 'meta'}, '새 값'), el('pre', {}, pretty(c.new_value)),
+            el('div', {class: 'meta'}, '근거 인용'), el('pre', {}, c.evidence || '-'), el('div', {class: 'meta'}, '출처: ', link(c.source_url)),
+            c.applied_at ? el('div', {class: 'meta'}, `반영 ${when(c.applied_at)}${c.reverted_at ? ` · 되돌림 ${when(c.reverted_at)}` : ''}`) : null,
+            c.apply_note ? el('div', {class: 'meta'}, `워커 메모: ${c.apply_note}`) : null), box);
       }});
-    return {node: el('div', {}, recentAuto(v.run), el('p', {class: 'msg'}, '흐름: 대기 → 승인 → 반영됨(워커) → 되돌림. 승인하면 다음 워커 실행 때 시설 데이터(record.monitor)에 반영됩니다. 원본 필드는 바뀌지 않습니다.'), v.node), run: v.run};
+    const quick = el('div', {class: 'quick-filters'},
+      [['pending_review', '검토 대기'], ['auto_applied', '자동 반영'], ['', '전체 이력']].map(([st, label]) => el('button', {type: 'button', class: 'btn', on: {click: () => v.setFilters({st})}}, label)));
+    return {node: el('div', {}, el('h2', {}, '변경 이력'), el('p', {class: 'msg'}, '값과 상태를 먼저 보고, 근거가 필요할 때 기록을 펼치세요. 승인된 변경은 다음 워커 실행 때 반영됩니다.'), quick, v.node), run: v.run};
   }
 
   // 이미 DB에 반영된 변경과 공개 공지를 한 화면에서 확인한다.
   async function viewApplied() {
     const root = el('div', {}), status = msgBox(), content = el('div', {});
+    const search = el('input', {type: 'search', placeholder: '시설 id 또는 내용'});
+    const kind = sel('kind', [['', '전체'], ['가격', '가격'], ['시간', '시간'], ['공지', '공지']]);
+    let rows = [];
     const refresh = el('button', {type: 'button', class: 'btn', on: {click: () => load()}}, '새로고침');
-    root.append(el('h2', {}, 'DB 반영 내역'), el('p', {class: 'msg'}, '시설에 반영된 가격·시간과 공개된 공지를 최근 순으로 확인합니다. 웹 화면에는 다음 갱신 시 반영됩니다.'), refresh, status, content);
+    root.append(el('h2', {}, 'DB 반영 내역'), el('p', {class: 'msg'}, '시설에 반영된 가격·시간과 공개된 공지를 최근 순으로 확인합니다. 웹 화면에는 다음 갱신 시 반영됩니다.'),
+      el('div', {class: 'tools'}, field('시설 id 또는 내용', search), field('종류', kind), refresh), status, content);
+    function render() {
+      const q = search.value.trim().toLocaleLowerCase();
+      const shown = rows.filter(r => (!kind.value || r.kind === kind.value) && (!q || [r.fid, r.title, r.evidence].some(v => String(v || '').toLocaleLowerCase().includes(q))));
+      content.replaceChildren(...(shown.length ? shown.map(r => el('article', {class:'item record-item'},
+        el('div', {class:'record-heading'}, tag(r.kind, 'good'), r.state ? tag(r.state, r.state === '현재 적용' ? 'good' : 'warn') : null, el('strong', {}, r.fid), el('span', {class:'meta'}, when(r.time))),
+        el('p', {class:'record-preview'}, r.title || '-'),
+        el('details', {class:'record-details'}, el('summary', {}, '값과 출처'), r.previous ? el('p', {class:'meta'}, '이전 값: ', r.previous) : null,
+          el('p', {}, r.evidence || '근거 없음'), el('p', {class:'meta'}, '출처: ', link(r.url))))) : [el('p', {class:'msg'}, '조건에 맞는 반영 내역이 없습니다.')]));
+      say(status, `최근 기록 ${rows.length}건 중 ${shown.length}건 표시 (가격·시간, 공지 각 최대 100건)`);
+    }
+    search.addEventListener('input', render); kind.addEventListener('change', render);
     async function load() {
       say(status, '불러오는 중…');
       try {
@@ -298,15 +358,11 @@
         const facilities = ids.length ? (await api(`onsen_facilities?select=id,record&id=in.(${ids.map(encodeURIComponent).join(',')})`)).data : [];
         const current = new Map(facilities.map(f => [f.id, f.record?.monitor || {}]));
         const matches = c => { const v = current.get(c.facility_id)?.[c.field]; return !!v && (c.status === 'applied' ? String(v.change_id) === String(c.id) : v.quote === c.evidence && v.source_url === c.source_url); };
-        const rows = [
+        rows = [
           ...changes.data.map(c => ({time:c.applied_at || c.created_at, kind:c.field === 'price' ? '가격' : '시간', state:matches(c) ? '현재 적용' : '이력 · 현재 값 다름', fid:c.facility_id, title:pretty(c.new_value), previous:c.old_value == null ? '' : pretty(c.old_value), evidence:c.evidence, url:c.source_url})),
           ...notices.data.map(n => ({time:n.detected_at, kind:'공지', fid:n.facility_id, title:n.title, evidence:n.summary_ko, url:n.source_url}))
         ].sort((a,b) => Date.parse(b.time) - Date.parse(a.time));
-        content.replaceChildren(...(rows.length ? rows.map(r => el('article', {class:'item'},
-          el('div', {}, tag(r.kind, 'good'), ' ', r.state ? tag(r.state, r.state === '현재 적용' ? 'good' : 'warn') : null, ' ', el('strong', {}, r.fid), ' · ', when(r.time)),
-          el('p', {}, r.title || '-'), r.previous ? el('p', {class:'meta'}, '이전 값: ', r.previous) : null,
-          el('p', {class:'meta'}, r.evidence || '근거 없음'), el('p', {class:'meta'}, '출처: ', link(r.url)))) : [el('p', {class:'msg'}, '반영된 내역이 없습니다.')]));
-        say(status, `최근 가격·시간 ${changes.data.length}건, 공지 ${notices.data.length}건 (각 최대 100건)`);
+        render();
       } catch (e) { say(status, e.message, 'err'); }
     }
     await load(); return root;
@@ -334,8 +390,9 @@
   // ---- 탭: AI 로그 ----
   const AI_KIND_KO = {notice_summary: '공지 요약', change_summary: '변경 요약', image_classify: '이미지 분류'};
   const AI_REV_KO = {unreviewed: '미검토', accepted: '승인', rejected: '반려', edited: '수정'};
-  function viewAiLogs() {
+  function viewAiLogs(initial = {}) {
     return listView({
+      initial,
       filters: [['kind', '종류', sel('kind', [['', '전체'], ...Object.entries(AI_KIND_KO)])], ['status', '상태', sel('status', [['', '전체'], ...['ok', 'error', 'skipped', 'mock'].map((s) => [s, s])])],
         ['rev', '검토', sel('rev', [['unreviewed', '미검토'], ['', '전체'], ['accepted', '승인'], ['rejected', '반려'], ['edited', '수정']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
       path: (v) => 'ai_logs?select=*&order=created_at.desc' + (v.kind ? '&kind=eq.' + v.kind : '') + (v.status ? '&status=eq.' + v.status : '') + (v.rev ? '&review_status=eq.' + v.rev : '') + (clean(v.fid) ? '&facility_id=ilike.*' + encodeURIComponent(clean(v.fid)) + '*' : ''),
@@ -348,12 +405,16 @@
           try { await api('rpc/ai_log_review', {method: 'POST', body: {p_id: l.id, p_status: status, p_summary: status === 'edited' ? ta.value.trim() : null}}); say(box, '저장했습니다.', 'ok'); rerun(); } catch (e) { say(box, e.message, 'err'); }
         }}}, label);
         const dg = l.input_digest || {};
-        return el('div', {class: 'item'}, el('div', {}, tag(l.status, l.status === 'error' ? 'bad' : l.status === 'ok' ? 'good' : l.status === 'skipped' ? '' : 'warn'), ' ', tag(AI_KIND_KO[l.kind] || l.kind), ' ', tag(AI_REV_KO[l.review_status] || l.review_status, l.review_status === 'unreviewed' ? 'warn' : 'good'), ` #${l.id} · ${l.facility_id || '-'} · ${when(l.created_at)}`),
-          el('div', {class: 'meta'}, `모델 ${l.model} · 토큰 입력 ${l.tokens_in} / 출력 ${l.tokens_out}${l.notice_id ? ` · 공지 #${l.notice_id}` : ''}${l.photo_id ? ` · 사진 #${l.photo_id}` : ''}${l.change_id ? ` · 변경 #${l.change_id}` : ''}`),
-          el('div', {class: 'meta'}, '입력(해시 + 발췌, 전체 원문 아님)'), el('pre', {}, `${dg.excerpt || '-'}\nsha256 ${String(dg.sha256 || '').slice(0, 16)}…`),
-          el('div', {class: 'meta'}, '출력'), el('pre', {}, isSum ? (o.summary_ko || '(요약 없음)') : `${(o.labels || []).map((x) => LABEL_KO[x] || x).join(', ') || '-'} · 신뢰도 ${o.confidence ?? '-'}${o.reason ? `\n${o.reason}` : ''}${o.publish_state ? `\n판정: ${STATE_KO[o.publish_state] || o.publish_state}` : ''}`),
-          l.error ? el('pre', {}, l.error) : null,
-          l.reviewed_at ? el('div', {class: 'meta'}, `검토 ${when(l.reviewed_at)}`) : null,
+        const outputText = isSum ? (o.summary_ko || '(요약 없음)') : `${(o.labels || []).map((x) => LABEL_KO[x] || x).join(', ') || '-'} · 신뢰도 ${o.confidence ?? '-'}${o.reason ? `\n${o.reason}` : ''}${o.publish_state ? `\n판정: ${STATE_KO[o.publish_state] || o.publish_state}` : ''}`;
+        return el('article', {class: 'item record-item'},
+          el('div', {class: 'record-heading'}, tag(l.status, l.status === 'error' ? 'bad' : l.status === 'ok' ? 'good' : l.status === 'skipped' ? '' : 'warn'), tag(AI_KIND_KO[l.kind] || l.kind), tag(AI_REV_KO[l.review_status] || l.review_status, l.review_status === 'unreviewed' ? 'warn' : 'good'), el('span', {class: 'meta'}, `#${l.id} · ${when(l.created_at)}`)),
+          el('div', {class: 'meta record-facility'}, l.facility_id || '시설 없음', ` · ${l.model || '모델 미기록'}`),
+          el('p', {class: 'record-preview'}, l.error || outputText),
+          el('details', {class: 'record-details'}, el('summary', {}, '입력·출력 상세'),
+            el('div', {class: 'meta'}, `토큰 입력 ${l.tokens_in} / 출력 ${l.tokens_out}${l.notice_id ? ` · 공지 #${l.notice_id}` : ''}${l.photo_id ? ` · 사진 #${l.photo_id}` : ''}${l.change_id ? ` · 변경 #${l.change_id}` : ''}`),
+            el('div', {class: 'meta'}, '입력(해시 + 발췌, 전체 원문 아님)'), el('pre', {}, `${dg.excerpt || '-'}\nsha256 ${String(dg.sha256 || '').slice(0, 16)}…`),
+            el('div', {class: 'meta'}, '출력'), el('pre', {}, outputText),
+            l.error ? el('pre', {}, l.error) : null, l.reviewed_at ? el('div', {class: 'meta'}, `검토 ${when(l.reviewed_at)}`) : null),
           ta ? field('한국어 요약 (수정하면 공지 요약(summary_ko)도 바뀝니다)', ta) : null,
           reviewable ? el('div', {class: 'acts'}, go('accepted', 'primary', '승인'), ta ? go('edited', '', '수정 저장') : null, go('rejected', 'danger', '반려')) : null,
           reviewable && isSum ? el('p', {class: 'meta'}, '반려하면 이 AI 요약을 공지에서 지우고 비공개로 돌립니다(공지 본문은 그대로).') : null,
@@ -386,13 +447,20 @@
   }
 
   // ---- 탭: 오류 로그 ----
-  function viewLogs() {
-    return listView({
+  function viewLogs(initial = {}) {
+    const v = listView({
+      initial: {level: 'error', ...initial},
       filters: [['fid', '시설 id', el('input', {maxlength: 80})], ['kind', '종류', sel('kind', [['', '전체'], ...KINDS.map((k) => [k, KIND_KO[k]])])], ['result', '결과', el('input', {maxlength: 40, placeholder: 'failed, skipped…'})],
         ['level', '수준', sel('level', [['', '전체'], ['info', 'info'], ['warn', 'warn'], ['error', 'error']])], ['q', '본문 검색', el('input', {maxlength: 60})]],
       path: (v) => `monitor_logs?select=*&order=ts.desc${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}${v.kind ? `&job_kind=eq.${v.kind}` : ''}${clean(v.result) ? `&result=ilike.*${encodeURIComponent(clean(v.result))}*` : ''}${v.level ? `&level=eq.${v.level}` : ''}${clean(v.q) ? `&or=(error_cause.ilike.*${encodeURIComponent(clean(v.q))}*,result.ilike.*${encodeURIComponent(clean(v.q))}*)` : ''}`,
-      row: (l) => el('div', {class: 'item'}, el('div', {}, tag(l.level, l.level === 'error' ? 'bad' : l.level === 'warn' ? 'warn' : ''), ` ${when(l.ts)} · ${l.facility_id || '-'} · ${l.job_kind || '-'} · ${l.result || '-'}`),
-        l.error_cause ? el('pre', {}, l.error_cause) : null, l.meta ? el('div', {class: 'meta'}, pretty(l.meta)) : null)});
+      row: (l) => el('article', {class: 'item record-item'},
+        el('div', {class: 'record-heading'}, tag(l.level, l.level === 'error' ? 'bad' : l.level === 'warn' ? 'warn' : ''),
+          el('strong', {}, `${KIND_KO[l.job_kind] || l.job_kind || '시스템'} · ${l.result || '기록'}`), el('span', {class: 'meta'}, when(l.ts))),
+        el('div', {class: 'meta record-facility'}, l.facility_id || '시설 없음', l.job_id ? ` · 작업 #${l.job_id}` : ''),
+        l.error_cause ? el('p', {class: 'record-preview'}, l.error_cause) : null,
+        l.meta ? el('details', {class: 'record-details'}, el('summary', {}, '상세 데이터'), el('pre', {}, pretty(l.meta))) : null)});
+    const quick = el('div', {class: 'quick-filters'}, [['error', '오류'], ['warn', '경고'], ['', '전체 로그']].map(([level, label]) => el('button', {type: 'button', class: 'btn', on: {click: () => v.setFilters({level})}}, label)));
+    return {node: el('div', {}, el('h2', {}, '오류 로그'), el('p', {class: 'msg'}, '오류를 먼저 보여 줍니다. 시설 id나 본문으로 검색하고, 상세 데이터는 필요한 기록만 펼치세요.'), quick, v.node), run: v.run};
   }
 
   // ---- 탭: AI 사용량 ----
@@ -410,7 +478,7 @@
   }
 
   // ---- 탭 틀 ----
-  const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['applied', 'DB 반영 내역', viewApplied], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi], ['ailogs', 'AI 로그', viewAiLogs], ['approvals', '로고·사진 승인', viewApprovals]];
+  const TABS = [['activity', '최근 활동', viewActivity], ['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['changes', '변경 이력', viewChanges], ['applied', 'DB 반영 내역', viewApplied], ['logs', '오류 로그', viewLogs], ['notices', '공지', viewNotices], ['photos', '이미지', viewPhotos], ['approvals', '사진 승인', viewApprovals], ['ailogs', 'AI 로그', viewAiLogs], ['ai', 'AI 사용량', viewAi]];
   // 하트비트 배너(워커 실행 끝에 monitor_logs result='heartbeat'). 최신 하트비트가 실패이거나, 정상 하트비트가 3시간보다 오래되면 빨간 배너. 규칙은 tools/monitor/worker.mjs heartbeatState 와 같다.
   async function heartbeatBanner() {
     let b = $('hbBanner');
@@ -425,19 +493,23 @@
       b.textContent = msg; b.hidden = !msg;
     } catch { b.hidden = true; }
   }
-  async function openTab(id) {
+  let tabRequest = 0;
+  async function openTab(id, initial = {}) {
+    const request = ++tabRequest;
     heartbeatBanner();
     const [, , view] = TABS.find((t) => t[0] === id);
     document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === id));
     const panel = $('panel'); panel.replaceChildren(el('p', {class: 'msg'}, '불러오는 중…'));
-    const node = await view();
+    panel.setAttribute('aria-labelledby', `tab-${id}`);
+    const node = await view(initial);
+    if (request !== tabRequest) return;
     panel.replaceChildren(node.node || node);
     if (node.run) node.run();
   }
   function showApp() {
     $('who').textContent = session.user.email || ''; $('signout').hidden = false;
-    $('tabs').replaceChildren(...TABS.map(([id, label]) => el('button', {type: 'button', role: 'tab', 'data-tab': id, 'aria-selected': 'false', on: {click: () => openTab(id)}}, label)));
-    $('app').hidden = false; openTab('overview');
+    $('tabs').replaceChildren(...TABS.map(([id, label], index) => el('button', {type: 'button', role: 'tab', id: `tab-${id}`, 'data-tab': id, 'data-group': index < 3 ? 'watch' : index < 6 ? 'history' : 'review', 'aria-controls': 'panel', 'aria-selected': 'false', on: {click: () => openTab(id)}}, label)));
+    $('app').hidden = false; openTab('activity');
   }
   function reset(which) {
     for (const id of ['login', 'denied', 'app', 'boot']) $(id).hidden = id !== which;

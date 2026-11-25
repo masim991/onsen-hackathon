@@ -38,6 +38,7 @@
 - 알려진 한계: 공지는 최신 1건만 비교하므로 오래된 공지의 공개/비공개 전환은 새로고침 때 반영된다. 워커가 `record`를 바꿀 때는 `updated_at`을 올려야 한다(`monitor_apply_record`가 한다, migration 002).
 - 모니터링 값 표시(`site.js` `monitorPrice/monitorHours`, migration 003이 쓴 `record.monitor.price|hours`): 원본 DB 가격(`stayPricePerPerson`)이 있으면 쓰지 않고, 없을 때만 `data/prices.json` 가격과 확인일이 더 새로운 쪽을 고른다. 시설 자신의 공식 사이트 https 출처만, 90일 초과 '오래된 가격', 360일 초과 숨김, 1실 단위 가격은 숨김, 식사 기준을 모르면 '기준 미표시'. 출처 문구는 '공식 사이트(모니터링) · 확인일'. 시간은 상세 서랍 '시설 정보'에 원본 시간과 별도 줄(확인일·출처 링크, 환율 없음)로만 표시. `record.monitor`가 없으면 화면은 그대로. `db-loader.js`는 되돌림으로 키가 사라지면 이전 값도 지운다.
 - 관리자 화면 `admin/monitor.html`: 공개 사이트에서 링크하지 않고 noindex, 별도 CSS/JS. 로그인은 Supabase Auth REST, 세션은 메모리+sessionStorage. 권한은 전부 RLS(`admins`, `is_admin()`). 계정 만들기는 `../tools/monitor/USER-TODO.md`. 로컬: `npx serve -l 5188 -c serve.json` 후 `/admin/monitor`.
+- 관리자 기록 탐색: 로그인 직후 최근 활동에 변경·로그·작업·공지·AI 로그를 시간순으로 모으고, 시설별 전체 이력으로 이동한다. 변경 이력과 오류 로그는 상태를 먼저 보여 주고 근거·메타데이터를 펼쳐 읽는다. DB 반영 내역은 시설과 종류로 걸러 볼 수 있다.
 
 ## 숨김(unlisted) 시설 (2026-11-23, migration `tools/monitor/migrations/004_unlisted.sql`)
 - 사진·가격 모두 없던 시설 2,243건을 **삭제하지 않고** `onsen_facilities.unlisted=true`로 숨겼다(모니터링 참조 시설 6건은 제외). 공개 목록은 486건.

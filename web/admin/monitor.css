@@ -1,13 +1,13 @@
 /* 관리자 전용 스타일: 공개 사이트 CSS와 독립. 다크 모드는 theme-init.js 가 붙이는 data-theme 를 따른다. */
-:root { --bg:#eef1ee; --card:#fff; --ink:#1b2a2b; --ink2:#4a5a5a; --rule:#c7d0cb; --accent:#1d4a50; --on-accent:#fff; --bad:#9b1c1c; --bad-bg:#fbeaea; --good:#14663a; --warn:#7a5a00; --warn-bg:#f3e8c4; color-scheme: light; }
+:root { --bg:#f3f3ef; --card:#fffefa; --ink:#1c3030; --ink2:#4d6260; --rule:#c6d0ca; --accent:#254f4d; --on-accent:#fff; --bad:#9b1c1c; --bad-bg:#fbeaea; --good:#14663a; --warn:#755500; --warn-bg:#f3e8c4; color-scheme: light; }
 :root[data-theme="dark"] { --bg:#12191a; --card:#1b2627; --ink:#e8e0d4; --ink2:#b6c4c1; --rule:#3a4a4b; --accent:#7cc4c9; --on-accent:#0c1415; --bad:#ff9d9d; --bad-bg:#3a1c1c; --good:#7fd9a3; --warn:#e8c871; --warn-bg:#3a3118; color-scheme: dark; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; }
-.bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 8px 16px; background: var(--card); border-bottom: 1px solid var(--rule); }
+.bar { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 8px 16px; background: var(--card); border-bottom: 1px solid var(--rule); }
 .bar h1 { margin: 0; font-size: 18px; }
 .bar-end { display: flex; gap: 12px; align-items: center; }
 .who { font-size: 14px; color: var(--ink2); overflow-wrap: anywhere; }
-main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+main { max-width: 1320px; margin: 0 auto; padding: 18px 20px 56px; }
 h2 { font-size: 18px; margin: 0 0 12px; } h3 { font-size: 16px; margin: 16px 0 8px; }
 .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
 .narrow { max-width: 420px; margin: 24px auto; }
@@ -19,9 +19,11 @@ textarea { min-height: 88px; resize: vertical; }
 .btn.danger { color: var(--bad); }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
-.tabs button { flex: none; min-height: 44px; padding: 8px 16px; font: inherit; font-size: 15px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; }
-.tabs button[aria-selected="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.tabs { display: flex; flex-wrap: wrap; gap: 0 4px; margin-bottom: 22px; border-bottom: 1px solid var(--rule); }
+.tabs button { flex: none; min-height: 44px; padding: 8px 13px; font: inherit; font-size: 14px; color: var(--ink2); background: transparent; border: 0; border-bottom: 3px solid transparent; cursor: pointer; }
+.tabs button[data-group="history"], .tabs button[data-group="review"] { margin-left: 6px; }
+.tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+.tabs button:hover { color: var(--ink); background: var(--card); }
 .tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: end; margin-bottom: 12px; }
 .tools label { margin: 0; flex: 1 1 140px; max-width: 260px; }
 .tools .btn { flex: none; }
@@ -52,4 +54,33 @@ pre { margin: 4px 0; padding: 8px; font: 14px/1.45 ui-monospace, Consolas, monos
 .tag.bad { color: var(--bad); background: var(--bad-bg); } .tag.good { color: var(--good); } .tag.warn { color: var(--warn); background: var(--warn-bg); }
 .pager { display: flex; gap: 12px; align-items: center; margin-top: 12px; font-size: 14px; }
 a { color: var(--accent); overflow-wrap: anywhere; }
-@media (max-width: 600px) { main { padding: 12px; } .tools label { max-width: none; } .photo-item-layout { grid-template-columns: 1fr; } .photo-preview { max-width: 320px; } }
+.activity-intro { display:flex; justify-content:space-between; align-items:start; gap:16px; padding: 4px 0 20px; border-bottom:1px solid var(--rule); }
+.activity-intro h2 { font-size:26px; margin:0 0 4px; letter-spacing:-.03em; }
+.activity-intro p { margin:0; color:var(--ink2); max-width:66ch; }
+.activity-intro .btn { flex:none; white-space:nowrap; }
+.activity-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px 20px; padding:18px 0 8px; }
+.activity-controls label { margin:0; flex:0 1 260px; }
+.activity-switch, .quick-filters { display:flex; flex-wrap:wrap; gap:6px; }
+.activity-switch .btn, .quick-filters .btn { min-height:38px; padding:6px 12px; }
+.activity-switch .btn[aria-pressed="true"] { color:var(--on-accent); background:var(--accent); border-color:var(--accent); }
+.quick-filters { margin:0 0 14px; }
+.activity-list { border-top:1px solid var(--rule); }
+.activity-entry { display:grid; grid-template-columns:160px minmax(0,1fr); gap:18px; padding:18px 4px; border-bottom:1px solid var(--rule); }
+.activity-entry time { color:var(--ink2); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.activity-entry-main { min-width:0; }
+.activity-entry-heading { display:flex; flex-wrap:wrap; align-items:center; gap:6px 9px; }
+.activity-entry-heading strong { font-size:15px; font-weight:650; }
+.activity-entry-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:8px; }
+.activity-entry-actions .btn { min-height:34px; padding:4px 10px; }
+.activity-note, .record-preview { margin:7px 0 0; color:var(--ink); overflow-wrap:anywhere; }
+.activity-note { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; font-size:14px; }
+.record-item { padding:16px; margin:0 0 9px; background:var(--card); border:1px solid var(--rule); border-radius:6px; }
+.record-item:first-child { border-top:1px solid var(--rule); }
+.record-heading { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; }
+.record-heading strong { font-size:15px; }
+.record-facility { margin-top:5px; overflow-wrap:anywhere; }
+.record-preview { max-height:3.2em; overflow:hidden; font-size:14px; line-height:1.6; }
+.record-details { margin-top:10px; padding-top:10px; border-top:1px solid var(--rule); }
+.record-details summary { cursor:pointer; color:var(--accent); font-weight:600; }
+.record-details[open] summary { margin-bottom:10px; }
+@media (max-width: 600px) { main { padding: 12px; } .tabs { flex-wrap:nowrap; overflow-x:auto; margin-bottom:16px; } .tabs button { white-space:nowrap; } .tools label { max-width: none; } .photo-item-layout { grid-template-columns: 1fr; } .photo-preview { max-width: 320px; } .activity-entry { grid-template-columns:1fr; gap:3px; } .activity-controls label { flex:1 1 100%; } }
