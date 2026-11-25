@@ -75,3 +75,10 @@ update monitor_targets set enabled = false;
 update public.monitor_targets set interval_minutes = 360 where kind = 'notice' and interval_minutes = 1440;
 update public.monitor_targets set enabled = true, next_check_at = now() where kind = 'photo' and not enabled;
 ```
+
+## R6 전체 확대 + 완성도 규칙 (2026-11-25)
+- 공개(unlisted=false) 시설 486곳 중 공식 URL이 있는 315곳 전부를 감시한다(notice + price_hours). 사진 대상은 **공개 사진(onsen_photos)이 없는 시설만** 켠다(주 1회). 사진이 이미 있는 시설은 끄고, 새로 생긴 시설은 같은 규칙으로 시드한다.
+- 시설별 필수는 **숙박비**, 선택은 당일 입욕 요금, 사진, 최신 공지다. 지역별 현황은 `select * from monitor_coverage_by_pref order by facilities desc;` (migrations/009_coverage.sql, 되돌리기: `drop view public.monitor_coverage_by_pref;`).
+- 값이 자동으로 들어오는 경로(Actions + 외부 cron, 매시 19분): 가격/시간은 `AUTO_APPLY=strict`(공식 도메인·근거 문장·0.5~2배 범위, 다음 점검에서 같은 값이면 확정), 공지는 `AUTO_PUBLISH_NOTICES=on`(규칙 요약 + 날짜가 안 끝난 공지만), 사진은 후보로만 저장하고 라이선스 확인(verified/owned/commons)된 것만 공개한다.
+- 접근 원칙: robots.txt 준수, 호스트당 1.1초 간격, 차단/403/429는 재시도 없이 건너뜀. 봇 차단 우회는 하지 않는다. 막힌 시설은 `blocked:*`로 남고 제휴 API·시설 문의·공개 데이터로 채운다.
+- 한 번 실행 상한 `--limit 250`: 새 대상 때문에 due가 250을 넘으면 몇 시간에 걸쳐 소화된다(overdue 5% 기준은 확대 직후 48시간은 예외).
