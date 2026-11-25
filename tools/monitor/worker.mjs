@@ -242,12 +242,12 @@ export function summarizeNoticeRules(n, now = Date.now()) {
   if (!cat) return null;
   const refYear = (String(n.notice_date || '').match(/^(\d{4})/) || String(n.detected_at || '').match(/^(\d{4})/) || [])[1];
   let toks = ruleDates(txt, refYear ? +refYear : new Date(now + 9 * 3600000).getUTCFullYear());
-  if (toks.length > 1 && toks[0].idx < 3 && !/^s*(?:([^)]{0,3}))?s*(?:[~〜～-]|から|より)/.test(toks[0].tail)) toks = toks.slice(1); // a leading date is the posting date (2026/11/22 臨時休館のお知らせ 11/23)
+  if (toks.length > 1 && toks[0].idx < 3 && !/^\s*(?:\([^)]{0,3}\))?\s*(?:[~〜～\-]|から|より)/.test(toks[0].tail)) toks = toks.slice(1); // a leading date is the posting date (2026/11/22 臨時休館のお知らせ 11/23)
   let start = toks[0] || null, end = null;
   if (start) {
     const t2 = toks[1], gap = t2 ? txt.slice(start.idx + start.len, t2.idx) : '';
     if (t2 && /^\s*(?:\([^)]{0,3}\))?\s*(?:[~〜～\-]|から|より)\s*(?:\([^)]{0,3}\))?\s*$/.test(gap)) end = t2;
-    else { const dm = /^\s*(?:\([^)]{0,3}\))?\s*[~〜～\-]\s*(\d{1,2})\s*日/.exec(start.tail); if (dm) end = { t: Date.UTC(start.y, start.mo - 1, +dm[1]), mo: start.mo, d: +dm[1], y: start.y }; }
+    else { const dm = /^\s*(?:\([^)]{0,3}\))?\s*[~〜～\-]\s*(\d{1,2})(?:\s*日|(?![\d:月\/]))/.exec(start.tail); if (dm) end = { t: Date.UTC(start.y, start.mo - 1, +dm[1]), mo: start.mo, d: +dm[1], y: start.y }; }
   }
   const T = jstDay(now), fmt = (o, rel) => { const dd = `${String(o.mo).padStart(2, '0')}-${String(o.d).padStart(2, '0')}`; return rel && rel.y === o.y ? dd : `${o.y}-${dd}`; };
   const period = start ? (end ? `${fmt(start)} ~ ${fmt(end, start)}` : fmt(start)) : '';
@@ -1019,6 +1019,8 @@ async function selftest() {
     t('notice rules: closure range => summary + publish', a1 && a1.publish && a1.summary.startsWith('휴관·휴업 안내: 2026-12-01 ~ 12-04') && a1.summary.endsWith(RULE_TAG));
     const a2 = summarizeNoticeRules(N('【12/2~12/3】メンテナンスに伴う休館のお知らせ'), now0);
     t('notice rules: yearless dates take the detected year; maintenance label', a2 && a2.publish && a2.summary.includes('점검·공사 휴관·휴업 안내: 2026-12-02 ~ 12-03'));
+    const b1 = summarizeNoticeRules(N('12月21日(月)~12月25日(金) の期間、都合により臨時休業いたします。'), now0), b2 = summarizeNoticeRules(N('2027年 1/17~22 全館休業のお知らせ'), now0);
+    t('notice rules: leading range date kept; day-only range end (1/17~22)', b1 && b1.summary.includes('2026-12-21 ~ 12-25') && b2 && b2.summary.includes('2027-01-17 ~ 01-22'));
     const a3 = summarizeNoticeRules(N('【12/26~1/8】ランチビュッフェ営業休止のご案内'), now0), a4 = summarizeNoticeRules(N('2026/12/26 ~ 2027/1/8 休館'), now0);
     t('notice rules: restaurant/side-topic skipped; range across new year', a3 === null && a4 && a4.summary.includes('2026-12-26 ~ 2027-01-08'));
     const a5 = summarizeNoticeRules(N('2026/11/22(日) 臨時休館のお知らせ 11/23(月)'), now0), a6 = summarizeNoticeRules(N('2026年6月16日(金)を終日休館とさせていただきます。'), now0);
