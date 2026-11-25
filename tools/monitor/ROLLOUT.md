@@ -82,3 +82,4 @@ update public.monitor_targets set enabled = true, next_check_at = now() where ki
 - 값이 자동으로 들어오는 경로(Actions + 외부 cron, 매시 19분): 가격/시간은 `AUTO_APPLY=strict`(공식 도메인·근거 문장·0.5~2배 범위, 다음 점검에서 같은 값이면 확정), 공지는 `AUTO_PUBLISH_NOTICES=on`(규칙 요약 + 날짜가 안 끝난 공지만), 사진은 후보로만 저장하고 라이선스 확인(verified/owned/commons)된 것만 공개한다.
 - 접근 원칙: robots.txt 준수, 호스트당 1.1초 간격, 차단/403/429는 재시도 없이 건너뜀. 봇 차단 우회는 하지 않는다. 막힌 시설은 `blocked:*`로 남고 제휴 API·시설 문의·공개 데이터로 채운다.
 - 한 번 실행 상한 `--limit 250`: 새 대상 때문에 due가 250을 넘으면 몇 시간에 걸쳐 소화된다(overdue 5% 기준은 확대 직후 48시간은 예외).
+- **가격 추이(R6, migrations/010_price_history.sql):** `onsen_facilities.record.monitor.price`가 바뀔 때마다 트리거가 `price_history`에 한 줄을 남긴다(작업기·관리자 승인·일회성 검토·되돌리기 모두 같은 경로라 Actions/cron 수정 불필요). `select * from price_trend;`로 시설별 최신/직전 금액과 변동률(%)을 본다. 같은 값은 중복으로 쌓이지 않는다(시설, 종류, 금액, 확인일 유일).
