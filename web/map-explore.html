@@ -2,13 +2,16 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org https://cyberjapandata.gsi.go.jp; connect-src 'self' https://frncsllpkxrsgxyqsfwd.supabase.co https://open.er-api.com https://api.frankfurter.dev https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="desk-entry.js?v=20261125p"></script>
 <meta name="theme-color" content="#27151f"><meta name="robots" content="noindex">
 <title>일본 온천 지도 | 온천 한눈에</title>
-<link rel="stylesheet" href="vendor/leaflet.css"><link rel="stylesheet" href="map-explore.css?v=20261125ryokan">
-<script defer src="vendor/leaflet.js"></script><script defer src="vendor/japan-prefectures.js"></script><script defer src="i18n-data.js"></script><script defer src="map-explore.js?v=20261125ryokan"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<link rel="stylesheet" href="vendor/leaflet.css"><link rel="stylesheet" href="map-explore.css?v=20261125ryokan"><link rel="stylesheet" href="map-experience.css?v=20261125r"><link rel="stylesheet" href="atlas-focus.css?v=20261126c">
+<script defer src="vendor/leaflet.js"></script><script defer src="vendor/japan-prefectures.js"></script><script defer src="i18n-data.js"></script><script defer src="data.js"></script><script defer src="additional.js"></script><script defer src="survey.js"></script><script defer src="prefectures.js"></script><script defer src="ryokan-research.js"></script><script defer src="ryokan-types.js"></script><script defer src="pref-banner-photos.js?v=20261126b"></script><script defer src="map-explore.js?v=20261126c"></script>
 </head><body>
 <main id="explore-map" aria-label="일본 지도"></main>
-<div class="map-top"><a id="map-close" class="map-action" href="index.html" aria-label="사이트로 돌아가기">←</a><div class="map-heading"><span id="map-step"></span><h1 id="map-heading"></h1><p id="map-hint"></p></div><button id="map-back" class="map-action" type="button" hidden>←</button></div>
-<p id="map-status" class="sr-only" role="status" aria-live="polite"></p>
+<div class="map-top"><a id="map-close" class="map-action" href="index.html" aria-label="사이트로 돌아가기">×</a><div class="map-heading"><span id="map-step"></span><h1 id="map-heading"></h1><p id="map-hint"></p></div><button id="map-back" class="map-action" type="button" hidden>←</button></div><div class="map-picker"><label id="map-picker-label" for="map-picker-select"></label><select id="map-picker-select"></select></div>
+<p id="map-status" class="sr-only" role="status" aria-live="polite"></p><section id="onsen-banner" class="onsen-banner" role="dialog" aria-modal="true" aria-labelledby="banner-title" hidden><div class="banner-panel"><button class="banner-close" type="button" aria-label="닫기">×</button><div class="banner-copy"><p id="banner-kicker"></p><h2 id="banner-title"></h2><p class="banner-count"><strong id="banner-count-number">—</strong><span id="banner-count-label"></span></p><p id="banner-description"></p><a id="banner-link" href="index.html"></a></div><p class="banner-photo-note" id="banner-photo-note"></p></div></section>
 <noscript>지도를 보려면 JavaScript를 켜 주세요. <a href="index.html">사이트로 돌아가기</a></noscript>
 </body></html>

@@ -1,0 +1,7 @@
+Generated with the built-in image generation tool on 2026-11-25, then converted to WebP quality 84.
+onsen-entrance-v2.webp: photorealistic editorial ryokan entrance at autumn dusk; aged timber, lanterns, wet stone path, open central doorway, darker text space on left; no people, text or logos.
+onsen-room-v2.webp: photorealistic tatami room at autumn dusk; low empty walnut table, shoji, maple view, subdued lamp; no people, map, text or logos.
+onsen-bath-v2.webp: photorealistic outdoor stone onsen bath with autumn leaves and faint steam; generic atmospheric image, not a named prefecture or actual facility.
+These are generated visual scenes and do not document a real inn or bath.
+onsen-doors-closed-v3.webp: edited from onsen-entrance-v2.webp with the built-in image generation tool; central shoji doors closed, surrounding architecture retained. Used as two clipped sliding door leaves.
+onsen-table-close-v4.webp: edited from onsen-room-v2.webp with the built-in image generation tool; closer visitor's view of an empty walnut tabletop with the same autumn garden and shoji. Used behind the interactive 2.5D relief atlas.

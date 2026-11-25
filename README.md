@@ -38,7 +38,7 @@ web/                    정적 사이트(배포 대상)
   index.html ja.html en.html   언어별 진입 페이지
   site.js                      공용 렌더러(카드·필터·서랍·비교·가격 표시)
   i18n.js, i18n-data.js, locale-*.js, facility-translations.js   번역
-  db-loader.js                 Supabase 읽기, 폴백(내장 데이터), 60초 변경 확인
+  db-loader.js                 Supabase 읽기, 날짜가 표시되는 공개 스냅샷 폴백, 60초 변경 확인
   data.js, photo-assets.js, listed-ids.js, data/*.json   내장/폴백 데이터
   map.js, vendor/              지도(Leaflet, 일본 도도부현 경계)
   theme.css, onchun.css, stack.css, dark.css, ...   스타일
@@ -47,6 +47,7 @@ web/                    정적 사이트(배포 대상)
 tools/
   monitor/    감시 워커(worker.mjs), DB 마이그레이션, 운영 문서
   prices/ photos/ names/ fx/ geocode/   데이터 수집·정리
+  export-public-snapshot.mjs   익명 읽기 공개 데이터 스냅샷 재생성
   security/   배포 전 보안 점검(check.mjs)
   seo/        canonical·sitemap·robots 생성기
   debate/     설계 토론 기록(전문가 검토 보고서)
@@ -63,7 +64,7 @@ vercel.json                     보안 헤더·캐시
                                   Supabase(monitor_*, facility_changes, 공지, 사진)
                                                    │  RLS: 공개 읽기 / 관리자·서비스 전용 쓰기
         방문자 브라우저 ◀── REST(읽기 전용 공개 키) ◀──┘
-              │ 실패 시 내장 데이터로 폴백
+              │ 실패 시 공개 스냅샷으로 폴백(생성일 표시)
               ▼
         카드·비교·필터 (원본 값 우선, 감시 값은 별도 필드로만 보관)
 ```

@@ -916,8 +916,8 @@ async function refreshFx() {
 setInterval(() => { if (!document.hidden) refreshFx(); }, FX_EVERY);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - fxFetchedAt > FX_EVERY) refreshFx(); });
 
-// 저작자와 이용 조건을 확인한 사진만 순환합니다.
-const heroSlides = [PHOTOS.takaragawa, PHOTOS.noboribetsu, PHOTOS.tokachi];
+// 입장 장면과 같은 계절·빛으로 첫 탐색 화면을 잇는다. 특정 시설 사진으로 소개하지 않는다.
+const heroSlides = [{local:'images/onsen-bath-v2.webp'}];
 let heroIndex = 0;
 let heroPaused = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // 다른 사진으로 바꿀 때만 잠깐 숨겼다가 불러온 뒤 서서히 보입니다.
@@ -926,27 +926,36 @@ heroImg.addEventListener('load', () => heroImg.classList.remove('swap'));
 heroImg.addEventListener('error', () => heroImg.classList.remove('swap'));
 function showHero() {
   const slide = heroSlides[heroIndex];
-  const next = shotUrl(slide.shots[0], 960);
+  const next = slide.local || shotUrl(slide.shots[0], 960);
   heroImg.hidden = false;
   if (heroImg.getAttribute('src') !== next) {
     heroImg.classList.add('swap');
     heroImg.src = next;
     if (heroImg.complete && heroImg.naturalWidth) requestAnimationFrame(() => heroImg.classList.remove('swap'));
   }
-  $('#heroCredit').innerHTML = UI.photoLine(UI.hero.caps ? UI.hero.caps[heroIndex] : slide.cap) + photoCredit(slide.shots[0]);
+  if (slide.local) $('#heroCredit').textContent = {ko:'여행 분위기를 담은 연출 이미지',ja:'旅の雰囲気を表すイメージ',en:'Atmospheric image, not a specific facility'}[LANG];
+  else $('#heroCredit').innerHTML = UI.photoLine(UI.hero.caps ? UI.hero.caps[heroIndex] : slide.cap) + photoCredit(slide.shots[0]);
+  $('#heroCredit').hidden = false;
   $('#heroPause').textContent = heroPaused ? UI.hero.play : UI.hero.pause;
   $('#heroPause').setAttribute('aria-label', heroPaused ? UI.hero.playAria : UI.hero.pauseAria);
 }
+document.querySelector('.hero-controls').hidden = heroSlides.length < 2;
 $('#heroPrev').addEventListener('click', () => { heroIndex = (heroIndex + heroSlides.length - 1) % heroSlides.length; showHero(); });
 $('#heroNext').addEventListener('click', () => { heroIndex = (heroIndex + 1) % heroSlides.length; showHero(); });
 $('#heroPause').addEventListener('click', () => { heroPaused = !heroPaused; showHero(); });
 showHero();
-setInterval(() => { if (!heroPaused && !document.hidden && !document.querySelector('.hero').contains(document.activeElement)) { heroIndex = (heroIndex + 1) % heroSlides.length; showHero(); } }, 8000);
+if (heroSlides.length > 1) setInterval(() => { if (!heroPaused && !document.hidden && !document.querySelector('.hero').contains(document.activeElement)) { heroIndex = (heroIndex + 1) % heroSlides.length; showHero(); } }, 8000);
 
 // db-loader가 60초 점검에서 바뀐 행을 받으면 호출한다. 시설 목록을 제자리에서 다시 만들고, 열린 서랍의 스크롤·필터·페이지는 그대로 둔다.
 window.onsenRefresh = () => {
   const d = $('#detail'), top = d.scrollTop, y = scrollY;
   FAC.splice(0, FAC.length, ...buildFac());
+  if (state.sel && !FAC.some(f => f.id === state.sel)) {
+    state.sel = state.link = '';
+    const note = $('#catalog-state');
+    note.textContent = {ko:'보고 있던 시설은 현재 공개 목록에서 제외되었습니다.',ja:'表示中の施設は現在公開一覧にありません。',en:'The facility you were viewing is no longer in the public catalog.'}[LANG];
+    note.hidden = false;
+  }
   render();
   d.scrollTop = top; if (scrollY !== y) scrollTo(scrollX, y);
 };

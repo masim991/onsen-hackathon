@@ -330,7 +330,7 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
 </header>
 
 <section class="hero" aria-label="${U.hero.aria}">
-  <img id="heroImg" src="images/gunma.jpg" alt="" width="960" height="540">
+  <img id="heroImg" src="images/onsen-bath-v2.webp" alt="" width="960" height="540">
   <div class="hero-txt">
     <p class="eyebrow">${U.hero.eyebrow}</p>
     <h1>${U.brand}</h1>
@@ -365,7 +365,7 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
       <summary>${ic('filter')}${R.title}<span id="activeCount" class="badge"></span></summary>
       <div class="rail-top"><p id="railHint"></p><button type="reset" class="link">${R.clear}</button></div>
       <section class="fbox">
-        <h3>${ic('pin')}${R.map}</h3><p class="map-help">${R.mapHelp}</p><div class="map-panel"><div id="prefMap" aria-label="${R.mapAria}"></div><p id="mapStatus" class="map-help" role="status">${R.mapLoading}</p></div>
+        <p class="map-help">${R.mapHelp}</p><div class="map-panel"><div id="prefMap" aria-label="${R.mapAria}"></div><p id="mapStatus" class="map-help" role="status">${R.mapLoading}</p></div>
         <select name="pref" aria-label="${R.prefAria}" id="prefSel"></select>
         <select name="region" aria-label="${R.areaAria}" id="regionSel"></select>
       </section>
@@ -410,6 +410,7 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
           <select id="sort"><option value="">${U.results.byName}</option><option value="price">${U.results.byPrice}</option><option value="open">${U.results.byOpen}</option></select>
         </label>
       </div>
+      <p id="catalog-state" class="catalog-state" role="status" hidden></p>
       <p id="resultSummary" class="rsum" role="status" aria-live="polite"></p>
       <p id="npNote" class="np-note" hidden>${U.np.note}</p>
       <p class="rich-row"><button type="button" class="link" id="cmpBtn" aria-haspopup="dialog" hidden></button><button type="button" class="link" id="photoOnly" aria-pressed="false"></button><button type="button" class="link" id="priceOnly" aria-pressed="false"></button></p>

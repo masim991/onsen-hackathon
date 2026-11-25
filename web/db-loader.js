@@ -2,7 +2,16 @@
   const project = 'https://frncsllpkxrsgxyqsfwd.supabase.co';
   const key = 'sb_publishable_7rJJBUzpz-WimUPB6eSOZg_cz4K_fGW';
   const lang = document.documentElement.lang.slice(0, 2);
-  const scripts = ['site.js?v=20270105','map.js?v=20270105','language.js?v=20270105','stack-list.js?v=20270105','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
+  const catalogState = document.getElementById('catalog-state');
+  function showCatalogState(local, generated='') {
+    if (!catalogState) return;
+    catalogState.hidden = !local;
+    if (local) {
+      const date = generated && !Number.isNaN(Date.parse(generated)) ? new Date(generated).toLocaleDateString({ko:'ko-KR',ja:'ja-JP',en:'en-US'}[lang] || 'en-US') : '';
+      catalogState.textContent = {ko:`저장된 자료${date ? ` (${date} 기준)` : ''}를 표시하고 있습니다. 연결이 복구되면 갱신됩니다.`,ja:`保存済みの資料${date ? `（${date}時点）` : ''}を表示中です。接続が戻ると更新します。`,en:`Showing saved data${date ? ` from ${date}` : ''}. It will update when the connection returns.`}[lang] || 'Showing saved data.';
+    }
+  }
+  const scripts = ['site.js?v=20261125r','map.js?v=20270105','language.js?v=20270105','stack-list.js?v=20270105','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
   // 보안: DB 값은 innerHTML로 렌더링되므로 수신 시점에 HTML 이스케이프 + URL 스킴(http/https) 검증
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clean = v => typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map(clean) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)])) : v;
@@ -28,6 +37,11 @@
     return body;
   };
   const readNotices = () => rest(NOTICE_Q);
+  const readRevision = async () => {
+    const rows = await rest('onsen_catalog_revision?select=revision&id=eq.true&limit=1');
+    if (rows.length !== 1 || !Number.isSafeInteger(rows[0].revision)) throw new Error('Invalid catalog revision');
+    return rows[0].revision;
+  };
   function setNotices(rows) {
     const map = new Map();
     for (const n of rows || []) {
@@ -37,15 +51,22 @@
     }
     window.ONSEN_NOTICES = map;
   }
-  async function readCatalog() {
-    // 시설과 사진은 서로 독립이라 동시에 받는다. 사진만 실패하면 로컬 사진을 쓴다.
-    const [rows, photos, notices] = await Promise.all([
-      readRows('onsen_facilities', 'id.asc', '&unlisted=eq.false').catch(() => readRows('onsen_facilities', 'id.asc')), // 숨김 열이 없는 옛 DB에서도 동작
-      readRows('onsen_photos', 'facility_id.asc,sort_order.asc,image_key.asc').catch(error => { console.warn('Photo catalog unavailable; using local photos.', error); return null; }),
-      readNotices().catch(() => null) // 공지는 덤: 실패해도 화면은 그대로
-    ]);
-    if (!rows.length) throw new Error('Empty catalog');
-    return {rows, photos, notices};
+  async function readCatalog(strict=false) {
+    // 변경 중간에 여러 테이블을 읽으면 서로 다른 버전이 섞일 수 있어 앞뒤 버전을 비교한다.
+    for (let attempt=0; attempt<2; attempt++) {
+      const before = await readRevision().catch(() => null);
+      const [rows, photos, notices] = await Promise.all([
+        readRows('onsen_facilities', 'id.asc', '&unlisted=eq.false'),
+        readRows('onsen_photos', 'facility_id.asc,sort_order.asc,image_key.asc').catch(error => { console.warn('Photo catalog unavailable; using local photos.', error); return null; }),
+        readNotices().catch(() => null)
+      ]);
+      if (!rows.length) throw new Error('Empty catalog');
+      if (strict && (photos === null || notices === null)) throw new Error('Incomplete catalog refresh');
+      const after = await readRevision().catch(() => null);
+      if (before === after && after !== null) return {rows, photos, notices, revision:after};
+      if (before === null && after === null) return {rows, photos, notices, revision:null};
+      if (attempt === 1) return {rows, photos, notices, revision:null};
+    }
   }
   function applyCatalog({rows, photos, notices}, partial) {
     if (notices) setNotices(notices);
@@ -84,6 +105,7 @@
       }
     }
     document.documentElement.dataset.catalog = 'supabase';
+    showCatalogState(false);
   }
   // 같은 출처의 보조 JSON(이름 교정·시설별 덮어쓰기·공식 사이트 가격)은 DB 응답과 동시에 받고, 실패해도 없는 것으로 친다.
   const jget = p => fetch(p, {cache:'no-cache', signal:AbortSignal.timeout(8000)}).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -96,41 +118,29 @@
     for (const [id, v] of Object.entries(over || {})) if (okId(id) && byId.has(id) && v && v.hp === null) byId.get(id).hp = '';
     window.ONSEN_PRICES = {items: prices?.items || {}, stats: stats?.byPref || {}};
   }
-  // 변경 감지: Realtime(웹소켓)은 wss 호스트 + 클라이언트 라이브러리가 필요해 CSP/무의존 원칙과 맞지 않아, 열린 동안 60초마다 가벼운 REST 두 건만 확인한다.
-  // 시각이 바뀐 경우에만 바뀐 행을 다시 받아 제자리에서 다시 그린다. shortcut: 최신 공지 1건만 비교하므로 오래된 공지의 승인 취소는 새로고침 때 반영, Realtime은 나중에.
-  const PROBE_N = 'facility_notices?select=id,detected_at&published=eq.true&order=detected_at.desc&limit=1';
-  const PROBE_F = 'onsen_facilities?select=id,updated_at&unlisted=eq.false&order=updated_at.desc&limit=1';
-  const seen = {n: undefined, f: undefined};
+  // 시설·사진·공지의 모든 변경은 DB 트리거가 한 행의 revision에 반영한다.
+  const seen = {revision: undefined};
   async function poll() {
     if (document.hidden || seen.busy) return;
     seen.busy = true;
     try {
-      const [pn, pf] = await Promise.all([rest(PROBE_N).catch(() => null), rest(PROBE_F).catch(() => null)]);
-      let changed = false;
-      if (pn) {
-        const v = pn[0] ? `${pn[0].id}@${pn[0].detected_at}` : '';
-        if (seen.n === undefined) seen.n = v;
-        else if (v !== seen.n) { seen.n = v; setNotices(await readNotices()); changed = true; }
-      }
-      if (pf && pf[0] && typeof pf[0].updated_at === 'string') {
-        const v = pf[0].updated_at;
-        if (seen.f === undefined) seen.f = v;
-        else if (v !== seen.f) {
-          const rows = await rest(`onsen_facilities?select=*&unlisted=eq.false&updated_at=gt.${encodeURIComponent(seen.f)}&order=updated_at.asc&limit=1000`);
-          seen.f = v;
-          if (rows.length) { applyCatalog({rows, photos:null}, true); changed = true; }
+      const revision = await readRevision();
+      if (document.documentElement.dataset.catalog === 'local' || seen.revision === undefined || revision !== seen.revision) {
+        if (document.documentElement.dataset.catalog !== 'local') {
+          await new Promise(resolve => setTimeout(resolve, Math.random()*30000));
+          if (document.hidden) return;
         }
-      } else if (pf && seen.f === undefined) seen.f = '';
-      if (changed && window.onsenRefresh) window.onsenRefresh();
+        const catalog = await readCatalog(true);
+        applyCatalog(catalog, false);
+        applyAux(await AUX);
+        seen.revision = catalog.revision === null ? undefined : catalog.revision;
+        if (window.onsenRefresh) window.onsenRefresh();
+      }
     } catch (error) { console.warn('Change check failed.', error); }
     finally { seen.busy = false; }
   }
-  // 기준값은 처음에 받은 카탈로그에서 얻는다(추가 요청 없음). 받지 못했으면 첫 poll 이 기준값을 잡는다.
-  function seedSeen({rows, notices}) {
-    if (notices) seen.n = notices[0] ? `${notices[0].id}@${notices[0].detected_at}` : '';
-    const ts = rows.map(r => r.updated_at).filter(v => typeof v === 'string');
-    if (ts.length) seen.f = ts.reduce((a, b) => a > b ? a : b);
-  }
+  // 최초 응답의 버전을 기준으로 삼는다. 버전 조회가 실패했으면 다음 점검에서 전체를 갱신한다.
+  function seedSeen({revision}) { if (Number.isSafeInteger(revision)) seen.revision = revision; }
   // 탭이 숨겨지면 타이머를 멈추고, 다시 보이면 즉시 한 번 확인한 뒤 60초 간격을 재개한다.
   let timer = 0;
   function startPolling() {
@@ -147,8 +157,16 @@
     try { const data=await readCatalog();applyCatalog(data);seedSeen(data); }
     catch (error) {
       document.documentElement.dataset.catalog = 'local'; console.warn('Supabase catalog unavailable; using local data.',error);
-      // 폴백에서도 숨긴(unlisted) 시설은 보이지 않게: 공개 id 목록에 있는 번들 기록만 남긴다(목록을 못 받으면 그대로 둔다)
-      try { await loadScript('listed-ids.js?v=20270105'); const ok = new Set(window.LISTED_IDS.map(String)); for (let i=RAW.length-1; i>=0; i--) if (!ok.has(String(RAW[i].id))) RAW.splice(i,1); } catch {}
+      const snapshot = await jget('data/catalog-snapshot.json');
+      if (Array.isArray(snapshot?.rows) && snapshot.rows.length >= 400 && Array.isArray(snapshot.photos) && Array.isArray(snapshot.notices)) {
+        applyCatalog(snapshot, false);
+        document.documentElement.dataset.catalog = 'local';
+        showCatalogState(true, snapshot.generated);
+      } else {
+        showCatalogState(true);
+        // 저장된 공개 카탈로그마저 없을 때만 작은 번들 목록으로 돌아간다.
+        try { await loadScript('listed-ids.js?v=20270105'); const ok = new Set(window.LISTED_IDS.map(String)); for (let i=RAW.length-1; i>=0; i--) if (!ok.has(String(RAW[i].id))) RAW.splice(i,1); } catch {}
+      }
     }
     applyAux(await AUX);
     await locale;

@@ -686,6 +686,9 @@ html,body { background:var(--washi); }
 }
 
 .card-credit[hidden],.hero .credit[hidden],figcaption .by[hidden]{display:none!important}
+.catalog-state{margin:8px 0 14px;padding:10px 14px;background:#f5e9cc;border-left:3px solid #a76c3b;color:#51432d;font-size:14px;line-height:1.5}
+.catalog-state[hidden]{display:none}
+.hero-controls[hidden]{display:none!important}
 
 /* 공식 공지(승인된 것만 서랍에 표시). 공지가 없으면 이 구역 자체가 그려지지 않는다. */
 .d-notice { margin-top: 14px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--rule-soft); border-radius: var(--r-sm); font-size: 14px; }

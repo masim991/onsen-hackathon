@@ -10,6 +10,12 @@
   const url=v=>{try{const u=new URL(v);return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}};
   const safeLink=(v,label)=>url(v)?`<a href="${esc(url(v))}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'';
   document.documentElement.lang=lang;document.querySelector('header nav')?.before(window.onsenTheme.button({ko:'다크 모드',ja:'ダークモード',en:'Dark mode'}[lang]));document.title=t.title;$('title').textContent=t.title;$('lead').textContent=t.lead;$('policyTitle').textContent=t.policyTitle;$('policy').textContent=t.policy;$('general').textContent=t.general;$('heroTitle').textContent=t.hero;$('facilitiesTitle').textContent=t.facilities;$('searchLabel').textContent=t.search;$('search').placeholder=t.search;$('status').textContent=t.loading;$('home').textContent=t.home;$('back').textContent=t.back;$('footer').textContent=t.foot;$('home').href=$('back').href={ko:'index.html',ja:'ja.html',en:'en.html'}[lang];
+  const mapCredit={
+    ko:['일본 지도와 지형 데이터','현 경계는 지구지도 일본의 자료를 dataofjapan/land가 변환한 파일을 사용합니다. 지도 동작에는 Leaflet을 사용합니다. 원본 이용 조건은 아래 링크에서 확인할 수 있습니다.'],
+    ja:['日本地図と地形データ','都道府県の境界は、地球地図日本の資料を dataofjapan/land が変換したファイルです。地図の操作には Leaflet を使用しています。原本の利用条件は以下をご確認ください。'],
+    en:['Japan map and geographic data','Prefecture boundaries come from Global Map Japan data converted by dataofjapan/land. Map interaction uses Leaflet. Review the original usage terms through the links below.']
+  }[lang];
+  $('mapCreditTitle').textContent=mapCredit[0];$('mapCreditText').textContent=mapCredit[1];
   function safeShotInfo(shot,caption){
     const [key,author,license,meta={}]=shot, original=meta.source||`https://commons.wikimedia.org/wiki/File:${key.split('/').pop()}`;
     const m=String(license||'').match(/^CC BY(-SA)? ([\d.]+)( JP)?$/), terms=meta.terms||(m?`https://creativecommons.org/licenses/by${m[1]?'-sa':''}/${m[2]}/${m[3]?'jp/':''}`:'');
@@ -19,6 +25,21 @@
     return `<li>${esc(description)} <span class="source-links">${safeLink(original,t.original)}${terms?' · '+safeLink(terms,t.terms):''}</span></li>`;
   }
   $('heroSources').innerHTML=['takaragawa','noboribetsu','tokachi'].map((key,i)=>{const shot=PHOTOS[key]?.shots?.[0];return shot?`<div class="entry"><h3>${esc(t.heroNames[i])}</h3><ul>${safeShotInfo(shot,'')}</ul></div>`:''}).join('');
+  $('bannerSourcesTitle').textContent={ko:'지도 배너의 시설 사진',ja:'地図バナーの施設写真',en:'Map banner property photographs'}[lang];
+  for(const [pref,photo] of Object.entries(window.PREF_BANNER_PHOTOS||{})){
+    const name=lang==='ja'?photo.nameJa:(lang==='en'?photo.nameEn||photo.nameJa:photo.nameKo)||photo.nameJa;
+    const role={ko:'시설 사진',ja:'施設の写真',en:'Property photograph'}[lang];
+    const entry=document.createElement('div');entry.className='entry';
+    const h=document.createElement('h3');h.textContent=`${name} · ${pref}`;entry.append(h);
+    const meta=document.createElement('p');meta.className='meta';meta.textContent=`${role} · ${t.author}: ${photo.author} · ${t.license}: ${photo.license} · ${t.modified}`;entry.append(meta);
+    const links=document.createElement('p');links.className='source-links';
+    for(const [href,label] of [[photo.source,t.original],[photo.licenseUrl,t.terms]]){
+      const safe=url(href);if(!safe)continue;
+      if(links.childNodes.length)links.append(document.createTextNode(' · '));
+      const a=document.createElement('a');a.href=safe;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label;links.append(a);
+    }
+    entry.append(links);$('bannerSources').append(entry);
+  }
   const root='https://frncsllpkxrsgxyqsfwd.supabase.co', key='sb_publishable_7rJJBUzpz-WimUPB6eSOZg_cz4K_fGW';
   async function getAll(table,order){let rows=[];for(let offset=0;;offset+=1000){const res=await fetch(`${root}/rest/v1/${table}?select=*&order=${order}&offset=${offset}&limit=1000`,{headers:{apikey:key,Authorization:`Bearer ${key}`},signal:AbortSignal.timeout(8000)});if(!res.ok)throw Error('Catalog unavailable');const batch=await res.json();rows.push(...batch);if(batch.length<1000)return rows;}}
   function safeRelated(r) {

@@ -1,0 +1,176 @@
+/* The entrance and room share one quiet photographic light treatment. */
+#intro{--ink:#f4eee3;background:#1d211c;font-family:"Gowun Dodum","Yu Mincho",serif}
+#intro .in-architecture{width:100%;height:100%;left:0;top:0;transform:none;background:url(images/onsen-entrance-v2.webp) center/cover no-repeat}
+#intro .in-portal,#intro .in-brush,#intro .in-desk,#intro .in-caption{display:none}
+#intro .in-room{left:0;top:0;width:100%;height:100%;background:url(images/onsen-room-v2.webp) center/cover no-repeat;transform:scale(1.04);transition:opacity .9s ease,transform 2s cubic-bezier(.22,1,.36,1)}
+#intro.inside .in-room,#intro.at-desk .in-room{transform:scale(1);opacity:1}
+#intro .in-shade{background:linear-gradient(90deg,rgba(9,15,13,.83),rgba(9,15,13,.22) 57%,rgba(9,15,13,.08)),linear-gradient(0deg,rgba(7,12,10,.32),transparent 45%)}
+#intro header{padding:clamp(20px,3vw,42px) clamp(24px,5vw,76px)}
+#intro header b{font-size:16px;letter-spacing:.01em}
+#intro .in-content{left:clamp(26px,8vw,130px);max-width:620px;top:55%}
+#intro h1{font-family:"Gowun Dodum","Yu Mincho",serif;font-size:clamp(35px,4.4vw,70px);letter-spacing:-.055em;line-height:1.28;text-shadow:0 2px 24px #0009}
+#intro h1 span{color:#f0e6d7}
+#intro .in-content p{font-size:clamp(14px,1.1vw,17px);color:#e6ddd0;max-width:42ch;margin:20px 0 30px}
+#intro .in-cta{background:#ede3d2;color:#2b2a23;border:1px solid #ede3d2;box-shadow:none;gap:42px;padding:15px 21px;transition:background .25s,transform .25s}
+#intro .in-cta:hover{background:#fff8eb;transform:translateY(-2px)}
+#intro .in-cta span{font-family:Arial,sans-serif;font-size:20px}
+#intro nav a{color:#f2e8d9}
+#intro .in-leaves i{width:calc(11px + var(--i)*1px);color:#a5683d;opacity:.72;animation-duration:calc(18s + var(--i)*1.4s)}
+#intro .in-leaves i:nth-child(3n){color:#875438}
+#intro.approaching .in-world{transform:scale(1.12);transition-duration:2.5s}
+#intro.inside .in-world{transform:scale(1.18);filter:brightness(.68)}
+#intro .in-skip{background:#1d211ce8;border-color:#bfb4a1}
+@media(max-width:700px){
+  #intro .in-architecture{background-position:60% center}
+  #intro .in-room{background-position:50% center}
+  #intro .in-shade{background:linear-gradient(0deg,rgba(8,14,11,.86),rgba(8,14,11,.27) 72%)}
+  #intro header{padding:20px 22px;flex-direction:row;align-items:flex-start;gap:8px}
+  #intro nav{flex-wrap:wrap;justify-content:flex-end}
+  #intro nav a{padding:7px 5px;font-size:12px}
+  #intro .in-content{left:26px;right:26px;top:auto;bottom:12vh;transform:none}
+  #intro h1{font-size:clamp(33px,8vw,48px)}
+  #intro .in-content p{margin:16px 0 22px}
+}
+@media(prefers-reduced-motion:reduce){#intro .in-leaves{display:none}#intro .in-room{transition:none}}
+
+/* Two photographic door leaves share the entrance camera's image coordinates. */
+#intro .in-world{inset:auto;left:50%;top:50%;width:max(100vw,177.12vh);height:max(56.46vw,100vh);transform:translate(-50%,-50%);transform-origin:66.5% 58%;transition:opacity .4s ease;will-change:transform,opacity}
+#intro .in-architecture{background-size:100% 100%}
+#intro .in-door{position:absolute;inset:0;width:100%;height:100%;border:0;box-shadow:none;background:url(images/onsen-doors-closed-v3.webp) center/100% 100% no-repeat;transition:transform 1.15s cubic-bezier(.48,.02,.2,1),opacity .38s .34s;will-change:transform;pointer-events:none}
+#intro .in-door::after{display:none}
+#intro .in-door-left{clip-path:polygon(55.3% 37%,66.5% 37%,66.5% 74%,55.3% 74%)}
+#intro .in-door-right{clip-path:polygon(66.5% 37%,77.7% 37%,77.7% 74%,66.5% 74%)}
+#intro.approaching .in-world{transform:translate(-50%,-50%)}
+#intro.approaching .in-door{opacity:0}
+#intro.approaching .in-door-left{transform:translateX(-8.8%)}
+#intro.approaching .in-door-right{transform:translateX(8.8%)}
+#intro.walking .in-world,#intro.inside .in-world{animation:walk-through 2.25s cubic-bezier(.42,.08,.22,1) both}
+#intro.inside .in-world{opacity:0}
+@keyframes walk-through{
+  0%{transform:translate(-50%,-50%) scale(1)}
+  28%{transform:translate(-50%,-49.6%) scale(1.13)}
+  52%{transform:translate(-50%,-50.4%) scale(1.36)}
+  75%{transform:translate(-50%,-49.8%) scale(1.76)}
+  100%{transform:translate(-50%,-50%) scale(2.45)}
+}
+#intro .in-threshold{position:absolute;inset:0;z-index:4;background:#0b100c;opacity:0;pointer-events:none;transition:opacity .46s cubic-bezier(.55,0,.2,1)}
+#intro.threshold .in-threshold{opacity:1}
+#intro.settling .in-threshold{opacity:0;transition-duration:.85s}
+#intro .in-room{transform:scale(1.08);transform-origin:50% 72%;z-index:1;transition:opacity .25s ease,transform 1.5s cubic-bezier(.16,1,.3,1)}
+#intro.inside .in-room{opacity:1;transform:scale(1.045)}
+#intro.settling .in-room{transform:scale(1)}
+#intro.approaching .in-shade{opacity:0;transition:opacity .9s}
+#intro.walking .in-leaves{opacity:0;transition:opacity .5s}
+@media(max-width:700px){#intro .in-architecture{background-position:center}}
+@media(max-width:700px) and (orientation:portrait){#intro .in-world{left:calc(50% - 29.2vh)}}
+@media(prefers-reduced-motion:reduce){#intro .in-world,#intro .in-door,#intro .in-room,#intro .in-threshold{animation:none!important;transition:none!important}}
+
+/* Keep the shoji leaves inside the doorway; let the eye cross the threshold without a long photographic zoom. */
+#intro .in-door-mask{position:absolute;inset:0;overflow:hidden;clip-path:polygon(55.3% 37%,77.7% 37%,77.7% 74%,55.3% 74%)}
+#intro .in-door{transition:transform 1.02s cubic-bezier(.35,.02,.18,1);opacity:1}
+#intro.approaching .in-door{opacity:1}
+#intro.approaching .in-door-left{transform:translateX(-11.25%)}
+#intro.approaching .in-door-right{transform:translateX(11.25%)}
+#intro.walking .in-world,#intro.inside .in-world{animation:walk-through .95s cubic-bezier(.4,0,.2,1) both}
+@keyframes walk-through{0%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-50%) scale(1.19)}}
+#intro .in-threshold{background:#181a14;transition:opacity .26s ease}
+#intro.settling .in-threshold{transition-duration:.7s}
+#intro .in-room{transform:scale(1.015);transition:opacity .28s ease,transform .85s ease}
+#intro.inside .in-room,#intro.settling .in-room{transform:scale(1)}
+
+/* Visitor sequence: take two small steps, slide the door, then cross the sill. */
+#intro.walking .in-content,#intro.walking header{opacity:0;pointer-events:none}
+#intro.walking .in-world{animation:walk-to-door 1.55s cubic-bezier(.32,0,.22,1) both}
+#intro.crossing .in-world,#intro.crossing.inside .in-world{animation:cross-door .95s cubic-bezier(.44,0,.22,1) both}
+@keyframes walk-to-door{
+  0%{transform:translate(-50%,-50%) scale(1)}
+  42%{transform:translate(-50%,-49.7%) scale(1.15)}
+  68%{transform:translate(-50%,-50.2%) scale(1.24)}
+  100%{transform:translate(-50%,-50%) scale(1.36)}
+}
+@keyframes cross-door{
+  0%{transform:translate(-50%,-50%) scale(1.36)}
+  48%{transform:translate(-50%,-49.7%) scale(1.64)}
+  100%{transform:translate(-50%,-50%) scale(2.02)}
+}
+
+/* Align the photographic doorway to the visitor's central sightline. */
+#intro .in-world{left:calc(50% - max(24.75vw,29.22vh));width:max(150vw,177.12vh);height:max(84.69vw,100vh);transform-origin:66.5% 58%}
+#intro .in-shade{background:linear-gradient(90deg,#0b100bb5,transparent 49%,#0b100b57),linear-gradient(0deg,#0b100b80,transparent 55%)}
+#intro.walking .in-world{animation:walk-to-door 1.42s cubic-bezier(.28,0,.22,1) both}
+#intro.crossing .in-world{animation:cross-door .86s cubic-bezier(.35,0,.2,1) both}
+#intro.inside .in-world{opacity:0;transition:opacity .24s ease}
+#intro .in-room{opacity:0;transform:scale(1.06);transform-origin:50% 76%;filter:brightness(.76);transition:opacity .38s .16s ease,transform 1.65s cubic-bezier(.2,.6,.2,1),filter 1.2s ease}
+#intro.inside .in-room{opacity:1;transform:scale(1.06);filter:brightness(1)}
+#intro.at-desk .in-room{transform:scale(1.42) translateY(-2.5%);filter:brightness(.9) blur(1.5px)}
+#intro .in-threshold{background:#241e16;transition:opacity .22s ease}
+@keyframes walk-to-door{
+  0%{transform:translate(-50%,-50%) scale(1)}
+  34%{transform:translate(-50%,-49.8%) scale(1.12)}
+  69%{transform:translate(-50%,-50.15%) scale(1.25)}
+  100%{transform:translate(-50%,-50%) scale(1.38)}
+}
+@keyframes cross-door{
+  0%{transform:translate(-50%,-50%) scale(1.38)}
+  100%{transform:translate(-50%,-50%) scale(2.05)}
+}
+@media(max-width:700px) and (orientation:portrait){#intro .in-world{left:calc(50% - 29.22vh)}}
+@media(prefers-reduced-motion:reduce){#intro .in-room{filter:none!important}}
+
+/* Match the last entrance frame to the first atlas frame on the same table. */
+#intro.crossing.inside .in-world{animation:cross-door .86s cubic-bezier(.35,0,.2,1) both}
+#intro .in-table{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background-image:linear-gradient(0deg,#17120c63,transparent 50%),url(images/onsen-table-close-v4.webp);background-position:center;background-size:cover;filter:brightness(.78) blur(1.6px);transform:scale(1.015);transition:opacity .62s cubic-bezier(.2,.7,.2,1)}
+#intro.at-desk .in-table{opacity:1}
+#intro.at-desk .in-room{filter:brightness(.9)}
+#intro .in-folded-atlas{position:absolute;z-index:7;left:14%;top:36%;width:72%;height:57%;box-sizing:border-box;opacity:0;pointer-events:none;border:9px solid #dac8a4;border-bottom-color:#aa8d65;background:radial-gradient(ellipse at 48% 22%,#eee0ba,#d4c4a2 70%,#baa783);box-shadow:0 2px 0 #9e805a,0 8px 0 #796040,0 15px 0 #4b3b2b,14px 29px 29px #100d0abd,0 0 0 1px #6f5334;transform:perspective(1500px) rotateX(14deg) rotateZ(-1deg) translateY(10px);transform-origin:50% 75%;transition:opacity .55s .15s ease,transform .75s cubic-bezier(.2,.7,.2,1)}
+#intro .in-folded-atlas::before{content:'';position:absolute;top:0;bottom:0;left:37.5%;width:25%;background:linear-gradient(90deg,#ded0af,#e7dab9 8%,#d3c3a0 96%,#b7a582);border-inline:1px solid #a38c68;box-shadow:4px 8px 18px #2c21147d,inset 3px 0 12px #fff7dc66}
+#intro .in-folded-atlas::after{content:'日本温泉案内';position:absolute;top:14%;left:46%;writing-mode:vertical-rl;font:400 clamp(16px,2vw,28px)/1.3 'Yu Mincho','Gowun Batang',serif;letter-spacing:.18em;color:#6f654e}
+#intro.at-desk .in-folded-atlas{opacity:1;transform:perspective(1500px) rotateX(14deg) rotateZ(-1deg)}
+@media(max-width:700px){#intro .in-folded-atlas{left:3%;top:35%;width:94%;height:59%;border-width:5px;transform:perspective(1100px) rotateX(8deg) rotateZ(-.5deg)}#intro.at-desk .in-folded-atlas{transform:perspective(1100px) rotateX(8deg) rotateZ(-.5deg)}}
+#intro.threshold .in-threshold{opacity:0}
+@media(min-width:701px){#intro .in-content{max-width:390px}#intro h1{font-size:clamp(35px,3.8vw,62px)}}
+@media(prefers-reduced-motion:reduce){#intro .in-table{transition:none!important}}
+
+/* Light escapes through the opened shoji, then settles on the floor. */
+#intro .in-spill{position:absolute;z-index:2;left:55.3%;top:37%;width:22.4%;height:37%;pointer-events:none;opacity:0;background:radial-gradient(ellipse 67% 90% at 50% 45%,#ffe4ae9c 0%,#e5ac642b 58%,transparent 83%);mix-blend-mode:screen;transition:opacity .85s cubic-bezier(.2,.65,.2,1)}
+#intro .in-spill::after{content:'';position:absolute;left:-35%;right:-35%;top:88%;height:58%;background:radial-gradient(ellipse at 50% 0%,#f2c77e66,transparent 72%);transform:scaleY(.65);transform-origin:top}
+#intro.approaching .in-spill{opacity:.38}
+#intro.crossing .in-spill{opacity:.24}
+#intro.inside .in-spill{opacity:0}
+
+/* The last entrance frame and the first atlas frame use one horizontal board. */
+#intro .in-folded-atlas{left:5%;top:34%;width:90%;height:65%;transform:perspective(1600px) rotateX(5deg) translateY(10px)}
+#intro.at-desk .in-folded-atlas{transform:perspective(1600px) rotateX(5deg)}
+@media(max-width:700px){#intro .in-folded-atlas{left:1%;top:32%;width:98%;height:65%;transform:perspective(1100px) rotateX(4deg)}#intro.at-desk .in-folded-atlas{transform:perspective(1100px) rotateX(4deg)}}
+@media(prefers-reduced-motion:reduce){#intro .in-spill{display:none}}
+
+/* One room remains visible from the opening doorway to the tabletop. */
+#intro .in-door-preview{position:absolute;z-index:1;left:55.3%;top:37%;width:22.4%;height:37%;background:url(images/onsen-table-close-v4.webp) 63% 0/356% auto no-repeat;box-shadow:inset 0 0 34px 8px #1a110ab3,inset 0 -30px 30px -10px #1a110a99;filter:brightness(.8) saturate(.88);pointer-events:none}
+#intro .in-door-preview::after{content:'';position:absolute;left:0;right:0;bottom:0;height:7%;background:linear-gradient(#4a3320,#2b1c12);box-shadow:0 -5px 12px #1a110a66}
+#intro .in-door-mask{z-index:3;mask-image:linear-gradient(90deg,transparent 55.15%,#000 55.5%,#000 77.5%,transparent 77.85%)}
+#intro .in-room{display:none}
+#intro .in-table{background-size:auto 132%;background-position:50% 41%;transform:scale(1);transition:opacity .72s cubic-bezier(.2,.7,.2,1)}
+#intro.inside .in-table{opacity:1}
+#intro .in-folded-atlas{left:10%;top:37%;width:80%;height:52%;transform:perspective(1250px) rotateX(16deg) translateY(10px)}
+#intro.at-desk .in-folded-atlas{transform:perspective(1250px) rotateX(16deg)}
+@media(max-width:700px){#intro .in-table{background-size:auto 130%;background-position:50% 43%}#intro .in-folded-atlas{left:5%;top:35%;width:90%;height:54%;border-width:5px;transform:perspective(950px) rotateX(14deg)}#intro.at-desk .in-folded-atlas{transform:perspective(950px) rotateX(14deg)}}
+#intro .in-door-preview{mask-image:linear-gradient(90deg,transparent,#000 2%,#000 98%,transparent);filter:brightness(.78) saturate(.86) drop-shadow(0 0 5px #1a110a99)}
+#intro .in-door-mask{filter:drop-shadow(0 0 5px #1a110a99)}
+#intro .in-table{transform-origin:62% 14%;transform:scale(1.48);transition:opacity .72s cubic-bezier(.2,.7,.2,1),transform 1.3s cubic-bezier(.2,.7,.2,1)}
+#intro.at-desk .in-table{transform:scale(1)}
+@media(prefers-reduced-motion:reduce){#intro .in-table{transform:none!important;transition:none!important}}
+
+/* The room drifts more slowly than the doorway while the visitor crosses the sill. */
+#intro .in-door-preview{background-image:none;overflow:hidden}
+#intro .in-door-preview::before{content:"";position:absolute;inset:-2%;background:url(images/onsen-table-close-v4.webp) 63% 0/342% auto no-repeat;transform-origin:50% 48%;will-change:transform}
+#intro.walking .in-door-preview::before{animation:room-depth 3.1s cubic-bezier(.32,0,.2,1) both}
+@keyframes room-depth{0%{transform:scale(1)}100%{transform:scale(.95)}}
+#intro .in-threshold{background:linear-gradient(0deg,#21180de0,transparent 42%);opacity:0;transition:opacity .38s ease}
+#intro.crossing .in-threshold{opacity:.46}
+#intro.inside .in-threshold{opacity:.24}
+#intro.at-desk .in-threshold{opacity:0}
+@media(prefers-reduced-motion:reduce){#intro .in-door-preview::before{animation:none!important}#intro .in-threshold{opacity:0!important}}
+
+/* Keep the invitation in complete phrases across the doorway crop. */
+#intro h1{word-break:keep-all;text-wrap:balance}
+@media(min-width:701px){#intro .in-content{max-width:min(600px,44vw)}}

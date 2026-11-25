@@ -41,7 +41,7 @@
 
 ## 숨김(unlisted) 시설 (2026-11-23, migration `tools/monitor/migrations/004_unlisted.sql`)
 - 사진·가격 모두 없던 시설 2,243건을 **삭제하지 않고** `onsen_facilities.unlisted=true`로 숨겼다(모니터링 참조 시설 6건은 제외). 공개 목록은 486건.
-- 익명/로그인 사용자의 RLS는 `not unlisted`만 읽게 하고(`onsen_photos`도 따라감), 관리자(`is_admin()`)와 service role은 전부 읽는다. `db-loader.js`는 `unlisted=eq.false`를 추가로 건다(열이 없는 옛 DB면 조건 없이 재시도). DB 로드 성공 시 숨긴 시설의 번들(data.js) 기록은 RAW에서 제거된다. DB 실패로 로컬 폴백을 쓸 때는 `listed-ids.js`(공개 486건 id, 2026-11-23 시점)에 든 번들 기록만 남긴다. 숨김을 풀거나 시설을 더 숨기면 이 파일도 다시 만들어야 한다: `select id from onsen_facilities where not unlisted order by id`를 `window.LISTED_IDS=[...]`로 저장(오래돼도 폴백에서 덜 보일 뿐 숨긴 시설이 새지는 않는다).
+- 익명/로그인 사용자의 RLS는 `not unlisted`만 읽게 하고(`onsen_photos`도 따라감), 관리자(`is_admin()`)와 service role은 전부 읽는다. `db-loader.js`는 `unlisted=eq.false`를 추가로 건다(열이 없는 옛 DB면 조건 없이 재시도). DB 로드 성공 시 숨긴 시설의 번들(data.js) 기록은 RAW에서 제거된다. DB 실패 시 `data/catalog-snapshot.json`의 공개 시설·사진·공지를 생성일 안내와 함께 읽는다. 배포 전 `node tools/export-public-snapshot.mjs`로 다시 생성한다. 스냅샷도 실패하면 `listed-ids.js`의 번들 기록만 남긴다.
 - 목록 건수 참고: 도도부현을 주소로 열면 기본 조건 '숙박 가능'이 켜져 있어 전체 시설 수보다 적게 나온다(북해도 42곳 중 32). 조건을 해제하면 전체가 나온다(정상 동작).
 - 다크 모드 히어로: 사진 위 글자는 `cover-upgrade.css`(투명 바탕·흰 글자)가 정한다. `dark.css`에서 `.hero-txt`에 바탕/글자색을 주면 사진 위에 어두운 상자가 생기니 주지 말 것.
 - 되돌리기: `tools/cleanup/unhide.sql`(로컬 전용·저장소 미포함, 숨긴 id 목록으로 `unlisted=false`). 일부만: `update onsen_facilities set unlisted=false where id in (...)`. 백업: `tools/cleanup/backup/onsen_facilities-before-hide-20261123.json`.
