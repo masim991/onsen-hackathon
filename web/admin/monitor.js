@@ -270,6 +270,36 @@
     return {node: el('div', {}, recentAuto(v.run), el('p', {class: 'msg'}, '흐름: 대기 → 승인 → 반영됨(워커) → 되돌림. 승인하면 다음 워커 실행 때 시설 데이터(record.monitor)에 반영됩니다. 원본 필드는 바뀌지 않습니다.'), v.node), run: v.run};
   }
 
+  // 이미 DB에 반영된 변경과 공개 공지를 한 화면에서 확인한다.
+  async function viewApplied() {
+    const root = el('div', {}), status = msgBox(), content = el('div', {});
+    const refresh = el('button', {type: 'button', class: 'btn', on: {click: () => load()}}, '새로고침');
+    root.append(el('h2', {}, 'DB 반영 내역'), el('p', {class: 'msg'}, '시설에 반영된 가격·시간과 공개된 공지를 최근 순으로 확인합니다. 웹 화면에는 다음 갱신 시 반영됩니다.'), refresh, status, content);
+    async function load() {
+      say(status, '불러오는 중…');
+      try {
+        const [changes, notices] = await Promise.all([
+          api('facility_changes?select=id,facility_id,field,old_value,new_value,evidence,source_url,status,created_at,applied_at&status=in.(applied,auto_applied)&order=created_at.desc&limit=100'),
+          api('facility_notices?select=id,facility_id,title,summary_ko,source_url,notice_date,detected_at&published=eq.true&order=detected_at.desc&limit=100')
+        ]);
+        const ids = [...new Set(changes.data.map(c => c.facility_id).filter(id => /^[\w-]{1,80}$/.test(id)))];
+        const facilities = ids.length ? (await api(`onsen_facilities?select=id,record&id=in.(${ids.map(encodeURIComponent).join(',')})`)).data : [];
+        const current = new Map(facilities.map(f => [f.id, f.record?.monitor || {}]));
+        const matches = c => { const v = current.get(c.facility_id)?.[c.field]; return !!v && (c.status === 'applied' ? String(v.change_id) === String(c.id) : v.quote === c.evidence && v.source_url === c.source_url); };
+        const rows = [
+          ...changes.data.map(c => ({time:c.applied_at || c.created_at, kind:c.field === 'price' ? '가격' : '시간', state:matches(c) ? '현재 적용' : '이력 · 현재 값 다름', fid:c.facility_id, title:pretty(c.new_value), previous:c.old_value == null ? '' : pretty(c.old_value), evidence:c.evidence, url:c.source_url})),
+          ...notices.data.map(n => ({time:n.detected_at, kind:'공지', fid:n.facility_id, title:n.title, evidence:n.summary_ko, url:n.source_url}))
+        ].sort((a,b) => Date.parse(b.time) - Date.parse(a.time));
+        content.replaceChildren(...(rows.length ? rows.map(r => el('article', {class:'item'},
+          el('div', {}, tag(r.kind, 'good'), ' ', r.state ? tag(r.state, r.state === '현재 적용' ? 'good' : 'warn') : null, ' ', el('strong', {}, r.fid), ' · ', when(r.time)),
+          el('p', {}, r.title || '-'), r.previous ? el('p', {class:'meta'}, '이전 값: ', r.previous) : null,
+          el('p', {class:'meta'}, r.evidence || '근거 없음'), el('p', {class:'meta'}, '출처: ', link(r.url)))) : [el('p', {class:'msg'}, '반영된 내역이 없습니다.')]));
+        say(status, `최근 가격·시간 ${changes.data.length}건, 공지 ${notices.data.length}건 (각 최대 100건)`);
+      } catch (e) { say(status, e.message, 'err'); }
+    }
+    await load(); return root;
+  }
+
   // ---- 탭: 이미지 ----
   function viewPhotos() {
     return listView({
@@ -366,7 +396,7 @@
   }
 
   // ---- 탭 틀 ----
-  const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi], ['ailogs', 'AI 로그', viewAiLogs], ['approvals', '로고·사진 승인', viewApprovals]];
+  const TABS = [['overview', '현황', viewOverview], ['jobs', '대기열', viewJobs], ['notices', '공지', viewNotices], ['changes', '변경 이력', viewChanges], ['applied', 'DB 반영 내역', viewApplied], ['photos', '이미지', viewPhotos], ['logs', '오류 로그', viewLogs], ['ai', 'AI 사용량', viewAi], ['ailogs', 'AI 로그', viewAiLogs], ['approvals', '로고·사진 승인', viewApprovals]];
   // 하트비트 배너(워커 실행 끝에 monitor_logs result='heartbeat'). 최신 하트비트가 실패이거나, 정상 하트비트가 3시간보다 오래되면 빨간 배너. 규칙은 tools/monitor/worker.mjs heartbeatState 와 같다.
   async function heartbeatBanner() {
     let b = $('hbBanner');

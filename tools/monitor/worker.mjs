@@ -195,12 +195,14 @@ export function decideApply({ level, field, cand, jobUrl, assoc, known, wild, va
 // AUTO_PUBLISH_NOTICES = off (default) | on (needs ANTHROPIC_API_KEY for summary_ko). On: publish only a summarised, recent-or-important, non-junk notice.
 const NOTICE_JUNK = /レストラン|メニュー|ランチ|ディナー|ブッフェ|ビュッフェ|フェア|会席|コース料理|イベント|開催|限定|求人|採用|ブログ|YouTube|動画|マガジン|撮影|リニューアル|新商品/;
 const NOTICE_KEY = /休業|休館|臨時|営業時間|料金|値上|改定|メンテナンス|営業再開/;
-export function shouldPublish(n, now = Date.now()) {
+export function shouldPublish(n, now = Date.now(), jobUrl = n.source_url) {
   if (process.env.AUTO_PUBLISH_NOTICES !== 'on' || !n.summary_ko) return false;
+  let source; try { source = new URL(n.source_url); } catch { return false; }
+  if (source.protocol !== 'https:' || !bare(jobUrl) || bare(jobUrl) !== bare(n.source_url)) return false;
   const txt = n.title + ' ' + n.original_excerpt;
   if (NOTICE_JUNK.test(txt) && !/休業|休館|臨時休/.test(txt)) return false;
   const t = n.notice_date ? Date.parse(n.notice_date) : NaN;
-  return NOTICE_KEY.test(txt) || (Number.isFinite(t) && t >= now - 30 * DAY && t <= now + 30 * DAY);
+  return NOTICE_KEY.test(txt) && Number.isFinite(t) && t >= now - 30 * DAY && t <= now;
 }
 const PRICE_ORDER = ['per-person-2meals', 'per-person-1meal', 'per-person-room-only', 'per-person', 'room'];
 export function bestPrice(cands) {
@@ -469,7 +471,7 @@ async function jobNotice(job, sink) {
     if (known.notices.has(it.hash)) continue;
     const ai = await summarize(it.excerpt, job.facility_id, sink);
     const row = { facility_id: job.facility_id, source_url: it.url, content_hash: it.hash, title: it.title, notice_date: it.date, original_excerpt: it.excerpt, summary_ko: ai.summary, detected_at: nowIso() };
-    const noticeId = await sink.addNotice({ ...row, published: shouldPublish(row) });
+    const noticeId = await sink.addNotice({ ...row, published: shouldPublish(row, Date.now(), job.url) });
     if (ai.row) await sink.addAiLog({ ...ai.row, notice_id: noticeId ?? null }).catch((e) => log('warn', { facility_id: job.facility_id, result: 'ai_log_failed', error_cause: errText(e).slice(0, 80) }));
     known.notices.add(it.hash); added++;
   }
@@ -988,11 +990,12 @@ async function selftest() {
   mem.changes.length = 0; mem.snaps.clear();
   await jobPriceHours(job, stub({ dayH: '9:00～21:00', monitor: { price: { minYen: 12000 } } }));
   t('policy: equal to stored => no change rows', mem.changes.length === 0);
-  const n0 = { title: '臨時休業のお知らせ', original_excerpt: '臨時休業', notice_date: null, summary_ko: '임시 휴업' };
+  const n0 = { title: '臨時休業のお知らせ', original_excerpt: '臨時休業', notice_date: '2026-11-20', summary_ko: '임시 휴업', source_url: 'https://e.com/news' };
   process.env.AUTO_PUBLISH_NOTICES = 'on';
-  t('notice publish: closure + summary => yes; no summary / junk / old plain news => no', shouldPublish(n0) && !shouldPublish({ ...n0, summary_ko: null }) && !shouldPublish({ ...n0, title: '伊勢海老会席フェア', original_excerpt: 'ディナーメニュー', notice_date: '2026-11-20' }) && !shouldPublish({ title: 'お知らせ', original_excerpt: 'ホームページ公開', notice_date: '2026-01-01', summary_ko: 'x' }, Date.parse('2026-11-23')) && shouldPublish({ title: 'お知らせ', original_excerpt: '新しい貸切風呂', notice_date: '2026-11-20', summary_ko: 'x' }, Date.parse('2026-11-23')));
+  const nt = Date.parse('2026-11-23');
+  t('notice publish: dated official HTTPS and summary only', shouldPublish(n0, nt, 'https://e.com/') && !shouldPublish({ ...n0, summary_ko: null }, nt) && !shouldPublish({ ...n0, notice_date: null }, nt) && !shouldPublish({ ...n0, source_url: 'https://other.com/news' }, nt, 'https://e.com/') && !shouldPublish({ ...n0, source_url: 'http://e.com/news' }, nt) && !shouldPublish({ ...n0, notice_date: '2025-01-01' }, nt) && !shouldPublish({ ...n0, title: '新しい貸切風呂', original_excerpt: 'ご案内' }, nt));
   delete process.env.AUTO_PUBLISH_NOTICES;
-  t('notice publish: default off', !shouldPublish(n0));
+  t('notice publish: default off', !shouldPublish(n0, nt));
   const ch = (o) => ({ id: 1, facility_id: 'f1', field: 'price', status: 'approved', source_url: 'https://e.com/p', evidence: '[테스트] 1泊2食 12,345円', created_at: '2026-11-20T00:00:00Z', new_value: { kind: 'per-person-2meals', minYen: 12345, unit: 'person/night' }, ...o });
   const why = (o) => validateChange(ch(o), Date.parse('2026-11-22')).cause;
   t('validate ok price', validateChange(ch({}), Date.parse('2026-11-22')).val?.checked === '2026-11-20');

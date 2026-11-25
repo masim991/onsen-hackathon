@@ -15,8 +15,8 @@ jobs:
     env:
       HAS_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
       - name: Skip when the service key secret is not registered yet
@@ -31,7 +31,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AUTO_APPLY: ${{ vars.AUTO_APPLY || 'strict' }}
-          AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'off' }}
+          AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'on' }}
           AI_MAX_IMAGES: ${{ vars.AI_MAX_IMAGES || '20' }}
       - name: Report failure
         if: failure()
