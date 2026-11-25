@@ -91,6 +91,23 @@ const makeFacility = (r) => {
 };
 const buildFac = () => { RAW.forEach((r) => { if (r.a && r['area_' + LANG]) AREA[r.a] = r['area_' + LANG]; }); return RAW.map(makeFacility); };
 const FAC = buildFac();
+// 시설 요금이 없는 숙박 카드에 보여 주는 "지역 참고가": 같은 도도부현(3곳 이상) → 같은 지방(3곳 이상) → 전국의 확인된 숙박 요금 중앙값.
+// 시설 자신의 요금처럼 보이지 않게 문구로 분리하고(UI.refStay), 정렬·예산 필터·비교표에는 쓰지 않는다. 조건(식사 포함 여부 등)은 시설마다 다르다.
+let refCache = null;
+const medianOf = (a) => { const s = a.slice().sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2); };
+function refStay(f) {
+  if (f.stay === 'n' || f.stayPrice != null || !UI.refStay) return null;
+  if (!refCache || refCache.n !== FAC.length || refCache.sig !== FAC.filter((x) => x.stayPrice != null).length) {
+    const priced = FAC.filter((x) => x.stay !== 'n' && x.stayPrice != null);
+    const by = (key) => { const m = new Map(); priced.forEach((x) => { if (!m.has(x[key])) m.set(x[key], []); m.get(x[key]).push(x.stayPrice); }); return m; };
+    refCache = { n: FAC.length, sig: priced.length, pref: by('pref'), region: by('region'), all: priced.map((x) => x.stayPrice) };
+  }
+  const p = refCache.pref.get(f.pref), r = refCache.region.get(f.region);
+  const [pool, scope] = p && p.length >= 3 ? [p, 'pref'] : r && r.length >= 3 ? [r, 'region'] : [refCache.all, 'all'];
+  return pool.length >= 3 ? { yen: Math.round(medianOf(pool) / 100) * 100, n: pool.length, scope } : null;
+}
+const refText = (f) => { const x = refStay(f); return x ? UI.refStay(moneyText(x.yen), x.n, x.scope) : ''; };
+const refLine = (f) => { const t = refText(f); return t ? `<p class="price ref"><small>${t}</small></p>` : ''; };
 
 const LABEL = UI.label;
 const NO_LIMIT = 101000; // 예산 슬라이더의 오른쪽 끝 = 제한 없음
@@ -305,7 +322,7 @@ const PREF_SHORT = (() => {
 const prefChip = (f) => escQ(PREF_SHORT[f.pref] || Array.from(unesc(f.prefName)).slice(0, 3).join(''));
 function compactCard(f) {
   const sel = state.sel === f.id;
-  const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
+  const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, refText(f), UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
   return `
   <article class="card nophoto-card${sel ? ' sel' : ''}" data-id="${f.id}">
     <span class="np-chip" aria-hidden="true">${ic('onsen')}<b>${prefChip(f)}</b></span>
@@ -335,7 +352,7 @@ function card(f) {
     </div>
     <div class="side">
       ${heart(f)}
-      <div class="prices">${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${stayNp(f) ? UI.noStayPrice : UI.noPrice}</small></p>` : ''}${dayShown(f) ? `<p class="price day"><small>${UI.dayPriceLabel}</small>${money(f.dayPrice)}</p>` : ''}</div>
+      <div class="prices">${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${stayNp(f) ? UI.noStayPrice : UI.noPrice}</small></p>${refLine(f)}` : ''}${dayShown(f) ? `<p class="price day"><small>${UI.dayPriceLabel}</small>${money(f.dayPrice)}</p>` : ''}</div>
     </div>
   </article>`;
 }

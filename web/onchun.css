@@ -334,3 +334,7 @@ dialog.cmp::backdrop { background: rgb(8 14 20 / .6); }
 :root[data-theme="dark"] .trust { border-top-color: #516b62; }
 :root[data-theme="dark"] .trust b { color: #a9d8d5; }
 :root[data-theme="dark"] .results .bar { border-bottom-color: #688e83; }
+
+/* 지역 참고가(R6): 시설 자신의 요금이 아니라는 점이 한눈에 보이게 작고 흐리게, 시설 요금과 같은 굵기를 쓰지 않는다. */
+.card .price.ref { margin-top: 2px; }
+.card .price.ref small { display: block; font-size: 12px; line-height: 1.4; font-style: italic; opacity: .78; }
