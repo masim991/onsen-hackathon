@@ -56,9 +56,9 @@
 
 ## SEO·신뢰 페이지·배포 헤더 (D 패키지)
 - **도메인은 한 곳에서만 정한다**: `SITE_URL=https://실제도메인 node tools/seo/gen.mjs` (PowerShell: ` $env:SITE_URL='https://...'; node tools/seo/gen.mjs`). 이 스크립트가 `index/ja/en.html`의 `<!-- seo:head -->`·`<!-- seo:noscript -->` 블록(title, description, canonical, hreflang, OG, Twitter, noscript), `sitemap.xml`, `robots.txt`를 다시 쓴다. 결과 파일을 커밋해 배포한다(빌드 단계 없음). 블록 안은 손으로 고치지 않는다(문구는 gen.mjs의 `C` 표).
-- **TODO(owner)**: 배포 도메인이 아직 없다. `SITE_URL` 미설정이면 canonical/hreflang/og:url/og:image는 넣지 않고 sitemap은 `SITE_URL_NOT_SET.invalid` 자리표시자를 쓴다(잘못된 도메인을 알리지 않기 위함). 도메인 확정 후 위 명령을 한 번 실행한다.
+- **현재 배포 주소**: GitHub Pages `https://masim991.github.io/onsen-hackathon/`. `.github/workflows/pages.yml`이 `main` 푸시 시 `SITE_URL`을 지정하고 SEO 파일을 생성해 `web/`을 배포한다. 주소를 바꾸면 워크플로 설정도 갱신한다.
 - **TODO(owner)**: 실제 문의 이메일/양식이 없다. `web/legal/contact*.html`은 '창구 준비 중'으로 안내한다. 정하면 `tools/seo/legal.mjs`의 contact 문구를 고치고 `node tools/seo/legal.mjs`로 9개 페이지를 다시 만든다. 약관·개인정보·제휴 표기('현재 제휴 수수료 없음')는 정식 공개 전 법률 검토와 오너 확인이 필요하다.
 - **JSON-LD(WebSite)**: `SEO_JSONLD=1` 로 gen.mjs를 실행하면 넣는다. 단 inline `<script>` 라서 `tools/security/check.mjs`의 f-csp 검사(183행 부근)가 `type="application/ld+json"` 을 예외로 허용해야 통과한다. 그 한 줄 수정 후 켠다(데이터 블록이라 CSP 실행 위험 없음).
 - 정책 페이지: `web/legal/{terms,privacy,contact}{,-ja,-en}.html`(`tools/seo/legal.mjs` 생성, 인라인 style만 사용). 푸터가 링크한다(모달 제거).
 - 폴링(db-loader): 기준값은 처음 받은 카탈로그에서 얻고(추가 요청 없음), 탭이 숨겨지면 60초 타이머를 멈추며 다시 보이면 즉시 1회 확인 후 재개한다.
-- 캐시(vercel.json): js/css `max-age=0, must-revalidate`, html·json 300초, 이미지 1일+SWR(파일명 끝에 8자리 이상 16진 해시가 있는 이미지만 1년 immutable), robots/sitemap 1시간. 히어로 preload는 실제 사용하는 로컬 `images/gunma.jpg`로 바꿨다(기존 Wikimedia 주소는 쓰이지 않아 낭비였음).
+- 캐시(vercel.json): js/css `max-age=0, must-revalidate`, html·json 300초, 이미지 1일+SWR(파일명 끝에 8자리 이상 16진 해시가 있는 이미지만 1년 immutable), robots/sitemap 1시간. 이 HTTP 헤더는 GitHub Pages에는 적용되지 않는다.

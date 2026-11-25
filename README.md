@@ -1,108 +1,96 @@
 # 온천 한눈에 (温泉ひとめぐり / Onsen at a Glance)
 
-일본 온천 숙소·당일 온천을 **찾고, 비교하고, 공식 사이트로 이동**하는 3개 국어(한국어·일본어·영어) 정보 사이트입니다.
-예약 대행이 아니라 "정확한 정보를 보고 본 예약처로 가는 길"을 만드는 것이 목표입니다.
+일본의 온천 숙소와 당일 입욕 시설을 한국어·일본어·영어로 탐색하고 비교한 뒤 공식 사이트에서 자세한 정보를 확인하는 정적 웹사이트입니다. 예약이나 결제는 받지 않습니다.
 
-> 상태: 개발 중(해커톤 프로젝트에서 출발). 가격·사진 등 일부 정보는 아직 비어 있고, 비어 있는 값은 추측하지 않고 "미공개/확인되지 않음"으로 표시합니다.
+**공개 사이트:** https://masim991.github.io/onsen-hackathon/
+**상태:** 개발 중. 가격·사진·영업 정보가 없는 시설은 추정값 대신 미확인 상태로 표시합니다.
 
-## 주요 기능
-- **탐색:** 도도부현 지도(Leaflet)·검색·필터(지역, 숙박/당일, 예산, 온천 특성), 가격순 정렬, 찜.
-- **비교:** 여러 시설을 비교 창(`<dialog>`)에서 표로 비교. 모든 시설이 "확인되지 않음"인 행은 한 줄로 접힘.
-- **가격 표시 규칙:** 숙박 요금과 당일 입욕 요금을 분리해 표시하고, 확인일·기준·출처를 함께 보여줍니다. 엔화는 실시간 환율로 원화/달러 환산(열 때 갱신, 이후 1시간마다).
-- **공식 사이트 바로가기:** 모든 카드에서 한 번에 공식 사이트로 이동. 결제는 사이트에서 받지 않습니다.
-- **3개 국어:** `index.html`(ko) · `ja.html` · `en.html`, 공용 렌더러와 번역 사전.
-- **다크 모드, 모바일 우선 레이아웃, 접근성(서랍 포커스·키보드·`prefers-reduced-motion`).**
-- **운영자용 모니터링(`/admin/monitor`):** 공식 사이트의 공지·가격·영업시간 변화를 자동 감시하고, 변경 이력·공지·사진 승인을 관리자 화면에서 처리.
+## 현재 구현된 경험
 
-## 사용한 언어와 프로그램
+- **료칸 입장:** 정면의 미닫이문을 열고 다다미방 좌탁으로 들어가는 도입 화면. 단풍·조명·카메라 이동을 겹쳐 공간감을 표현합니다. `?nointro`로 건너뛸 수 있습니다.
+- **지도 탐색:** 좌탁 위 종이가 펼쳐지는 연출 뒤 일본 지방과 도도부현을 선택합니다. 현에 마우스를 올리면 지도가 반응하고, 선택하면 해당 지역의 시설 수와 사진 배너가 나타납니다. 지도는 `map-explore.html`에 있으며 Leaflet과 일본 현 경계 데이터를 사용합니다.
+- **온천 검색:** 지역·숙박/당일 입욕·가격·온천 특성 필터, 이름 검색, 가격순 정렬, 즐겨찾기와 여러 시설 비교. 상세 화면에는 공식 사이트, 확인된 가격의 기준·확인일·출처, 공지가 표시됩니다.
+- **다국어·접근성:** 한국어(`index.html`), 일본어(`ja.html`), 영어(`en.html`). 모바일 레이아웃, 키보드 조작, 포커스 복귀, 다크 모드와 `prefers-reduced-motion`을 지원합니다.
+- **데이터 폴백:** Supabase 읽기에 실패하면 생성일이 표시되는 공개 카탈로그 스냅샷을 사용하고, 그것도 실패하면 번들에 포함된 공개 시설 데이터를 사용합니다.
+- **운영자 화면:** `/admin/monitor.html`에서 로그인 후 감시 현황, 작업 대기열, 공지, 변경 이력, 가격 반영, 이미지와 승인 대상을 확인합니다. 이미지 탭과 승인 탭에서 사진 미리보기를 볼 수 있습니다.
 
-| 구분 | 사용한 것 | 용도 |
-|---|---|---|
-| 웹 프런트엔드 | **HTML5, CSS3, JavaScript(순수 JS, 프레임워크·번들러 없음)** | 정적 사이트. 빌드 단계 없이 `web/` 폴더를 그대로 배포 |
-| 서버·도구 | **Node.js 24 (ESM, `.mjs`)** | 모니터링 워커, 가격·사진·환율·이름 정리 스크립트, 보안 점검, SEO 생성기 |
-| 데이터베이스 | **PostgreSQL (Supabase)**, SQL | 시설·사진·공지·변경 이력·감시 대상 저장, 접근 제한(RLS) |
-| 백엔드 서비스 | **Supabase** (Postgres, REST API, Auth, RLS) | 공개 카탈로그 읽기 + 관리자 전용 쓰기 |
-| 호스팅 | **Vercel** 정적 호스팅 설정(`vercel.json`) | 보안 헤더(CSP 등), 캐시 규칙 |
-| 자동화 | **GitHub Actions** (YAML), 외부 cron(워크플로 호출) | 30~60분 주기 모니터링 실행 |
-| 지도 | **Leaflet** (`web/vendor`에 포함), 국토지리원(GSI) 타일 | 도도부현 선택 지도 |
-| 사진 | Wikimedia Commons(라이선스 확인분), 로컬 이미지 | 저작자·라이선스 표기와 함께 사용 |
-| 글꼴 | Google Fonts: Gowun Dodum, Klee One, Gaegu | 한국어·일본어·손글씨 표제 |
-| 환율 | open.er-api.com, frankfurter.dev 등 공개 API(중앙값) | 엔 → 원/달러 환산 |
-| 로컬 개발 | `npx serve`, 브라우저 개발자도구 | 빌드 없이 `web/` 서빙 |
-| AI 개발 도구 | Claude Code(코드 작성·검토·전문가 토론) | 개발 보조. 서비스 런타임에는 AI API 키가 필요하지 않음 |
+화면의 지도·문 열림·종이 펼침은 브라우저의 이미지, CSS 애니메이션 및 지도 상호작용으로 구현했습니다. 실제 3D 메시 장면은 사용하지 않습니다.
 
-## 구조
+## 데이터와 운영
 
+```text
+공식 사이트 ──▶ GitHub Actions 감시 워커 ──▶ Supabase(PostgreSQL, Auth, RLS)
+                                                 │ REST 공개 읽기
+GitHub Pages(web/) ──▶ 방문자 브라우저 ◀────────────┘
+                       └─ DB 장애 시 번들된 공개 스냅샷 사용
 ```
-web/                    정적 사이트(배포 대상)
-  index.html ja.html en.html   언어별 진입 페이지
-  site.js                      공용 렌더러(카드·필터·서랍·비교·가격 표시)
-  i18n.js, i18n-data.js, locale-*.js, facility-translations.js   번역
-  db-loader.js                 Supabase 읽기, 날짜가 표시되는 공개 스냅샷 폴백, 60초 변경 확인
-  data.js, photo-assets.js, listed-ids.js, data/*.json   내장/폴백 데이터
-  map.js, vendor/              지도(Leaflet, 일본 도도부현 경계)
-  theme.css, onchun.css, stack.css, dark.css, ...   스타일
-  admin/                       관리자 화면(로그인 필요, 검색엔진 차단)
-  legal/                       약관·개인정보·문의 페이지(3개 국어)
+
+- [감시 워크플로](.github/workflows/monitor.yml)는 정기 실행과 수동 실행을 지원합니다. 공식 사이트의 공지·가격·영업시간·사진 후보를 수집하며, 서비스 키가 등록되지 않으면 실행을 건너뜁니다.
+- 가격과 영업시간의 감시 결과는 원본 시설 필드를 덮어쓰지 않고 `record.monitor`에 보관합니다. 확인된 변경은 정책에 따라 반영하고 이력·되돌리기를 관리합니다. 가격 변동은 DB의 이력과 추이 뷰에 기록됩니다.
+- 시설의 휴업·영업시간·가격 관련 공지 중 날짜와 공식 출처 등 조건을 만족하는 것은 키 없는 규칙 기반 한국어 요약으로 자동 공개할 수 있습니다. 그 밖의 공지는 관리자 화면에서 요약·검토·공개할 수 있습니다.
+- 사진 분류는 기본적으로 키 없는 규칙 기반 방식입니다. **분류 결과나 `verified` 표기만으로 재게시 허가가 증명되지는 않습니다.** 공개 전 출처와 이용 조건을 확인하고, 관리자 화면에서 공개 상태를 관리합니다. 사진·지도 자료의 출처는 사이트의 자료 출처 페이지에 표시합니다.
+- 브라우저에는 Supabase 공개 읽기 키만 사용합니다. 관리자 쓰기는 인증과 RLS로 제한하며, 서비스 키는 GitHub Secrets에서만 사용합니다.
+
+자세한 운영 절차와 데이터 구조는 [모니터링 문서](tools/monitor/README.md), [배포 운영 문서](tools/monitor/ROLLOUT.md), [웹 코드 안내](web/README.md)를 참고하세요.
+
+## 기술 구성
+
+| 영역 | 사용 기술 |
+| --- | --- |
+| 웹 화면 | HTML, CSS, 순수 JavaScript (번들러 없음) |
+| 지도 | 로컬 Leaflet, 일본 현 경계 데이터, 국토지리원 지도 타일 |
+| 데이터·인증 | Supabase PostgreSQL, REST API, Auth, RLS |
+| 수집·생성 도구 | Node.js 24 ESM, SQL |
+| 배포·자동화 | GitHub Pages, GitHub Actions |
+| 선택적 호스팅 설정 | `vercel.json`의 보안·캐시 헤더 |
+
+```text
+web/                         GitHub Pages 배포 대상
+  index.html, ja.html, en.html  언어별 시작 페이지
+  intro.js, experience.css     료칸 진입 연출
+  map-explore.html/js          지방·현 선택 및 온천 배너
+  site.js, db-loader.js        시설 UI와 DB/스냅샷 읽기
+  admin/monitor.html/js        운영자 화면과 이미지 미리보기
+  data/, images/, vendor/      데이터·사진·지도 라이브러리
 tools/
-  monitor/    감시 워커(worker.mjs), DB 마이그레이션, 운영 문서
-  prices/ photos/ names/ fx/ geocode/   데이터 수집·정리
-  export-public-snapshot.mjs   익명 읽기 공개 데이터 스냅샷 재생성
-  security/   배포 전 보안 점검(check.mjs)
-  seo/        canonical·sitemap·robots 생성기
-  debate/     설계 토론 기록(전문가 검토 보고서)
-.github/workflows/monitor.yml   모니터링 실행
-vercel.json                     보안 헤더·캐시
+  monitor/                     감시 워커, SQL 마이그레이션, 운영 문서
+  seo/gen.mjs                  canonical·다국어 링크·사이트맵 생성
+  security/check.mjs           보안·라이선스 점검
+  export-public-snapshot.mjs   공개 데이터 폴백 생성
+.github/workflows/
+  pages.yml                    main 푸시 시 GitHub Pages 배포
+  monitor.yml                  감시 워커 정기·수동 실행
 ```
 
-## 데이터 흐름
+## 로컬 실행과 점검
 
-```
-공식 사이트 ──(robots 준수, 호스트당 1.1초 간격)──▶ 모니터링 워커(GitHub Actions)
-                                                   │ 변경 감지·분류·규칙 기반 사진 분류
-                                                   ▼
-                                  Supabase(monitor_*, facility_changes, 공지, 사진)
-                                                   │  RLS: 공개 읽기 / 관리자·서비스 전용 쓰기
-        방문자 브라우저 ◀── REST(읽기 전용 공개 키) ◀──┘
-              │ 실패 시 공개 스냅샷으로 폴백(생성일 표시)
-              ▼
-        카드·비교·필터 (원본 값 우선, 감시 값은 별도 필드로만 보관)
-```
-
-- 감시 값은 `record.monitor` 아래에만 저장하고 원본 필드를 덮어쓰지 않습니다. 확실한 값은 설정(`AUTO_APPLY`)에 따라 자동 반영되며 되돌릴 수 있습니다.
-- 공지는 비공개로 저장되고 관리자가 한국어 요약을 확인해 공개합니다.
-- 사진은 라이선스가 확인된 출처만 공개 후보가 되고, 로고는 항상 관리자 승인 대기입니다.
-
-## 로컬에서 실행
+Node.js 24가 필요합니다. 저장소 루트에서:
 
 ```powershell
 cd web
 npx serve -l 5188 -c serve.json
 ```
 
-브라우저에서 `http://localhost:5188/?nointro` (도입 화면 생략). 일본어/영어는 `/ja`, `/en`.
+`http://localhost:5188/`에서 도입 화면을 확인할 수 있습니다. 곧바로 검색 화면을 보려면 `http://localhost:5188/?nointro`를 엽니다. 관리자 화면은 `/admin/monitor.html`이며 관리자 계정이 필요합니다.
 
-배포 전 점검:
+저장소 루트에서 검사를 실행합니다.
 
 ```powershell
 node tools/security/check.mjs
 node tools/monitor/worker.mjs --selftest
 ```
 
-## 보안과 신뢰 원칙
-- 엄격한 CSP, 데이터 값 이스케이프·URL 검증, 모든 DB 테이블 RLS, 공개 키만 브라우저에 포함.
-- 서비스 키·API 키는 저장소에 두지 않고 GitHub Secrets로만 사용합니다.
-- 가격·사진·공지는 출처와 확인일을 함께 표시하고, 확인되지 않은 값은 비워 둡니다.
-- 자세한 내용: [SECURITY.md](SECURITY.md), [web/README.md](web/README.md), [tools/monitor/README.md](tools/monitor/README.md).
+## GitHub Pages 배포
 
-## 아직 하지 않았거나 계획 중인 것
-- 시설별 개별 페이지(검색 노출용). 가격·사진·라이선스가 확인된 시설이 충분히 쌓인 뒤 재검토.
-- 가격·당일 입욕 정보 보강(현재 공개 시설 중 가격이 있는 곳이 일부).
-- 배포 도메인 확정 후 canonical·sitemap 생성(`tools/seo/gen.mjs`), JSON-LD 구조화 데이터 활성화.
-- 모니터링 대상 확대(처리량이 안정된 뒤 단계적으로).
-- 사진 보강(Wikimedia Commons 라이선스 확인분 순차 반영).
+`main`에 푸시하면 [Pages 워크플로](.github/workflows/pages.yml)가 `web/`을 배포합니다. 워크플로는 `SITE_URL=https://masim991.github.io/onsen-hackathon`으로 SEO 메타데이터와 사이트맵을 생성합니다. 도메인을 바꾸면 워크플로의 `SITE_URL`과 저장소의 Pages 설정을 함께 수정해야 합니다.
 
-## 라이선스와 출처
-- 사진은 각 파일의 저작자·라이선스를 `web/photo-assets.js`와 사이트의 출처 페이지에 표기합니다.
-- Leaflet은 BSD-2-Clause이며 라이선스 파일이 `web/vendor/`에 있습니다.
-- 시설 정보의 저작권은 각 시설과 원 출처에 있고, 이 저장소는 링크와 요약 정보를 다룹니다.
+GitHub Pages는 정적 파일을 배포합니다. `vercel.json`과 `web/serve.json`의 HTTP 보안·캐시 헤더는 Pages에 적용되지 않습니다. HTML의 메타 CSP는 별도로 포함되어 있습니다. 서버 측 헤더가 필요하면 이를 지원하는 호스팅을 사용해야 합니다.
+
+## 알려진 한계와 다음 작업
+
+- 숙박비·당일 입욕 요금·사진이 확인되지 않은 시설이 있습니다. 정보의 출처와 확인일을 계속 보강해야 합니다.
+- 시설별 독립 상세 페이지는 아직 없습니다.
+- 사진의 공개 여부와 재게시 권한은 별개입니다. 허가 범위가 불분명한 자료는 출처를 재확인해야 합니다.
+- 정적 호스팅의 관리자 기능은 Supabase 연결과 관리자 계정에 의존합니다.
+
+보안 정책은 [SECURITY.md](SECURITY.md), 사진·지도 자료의 출처는 [자료 출처 페이지](web/sources.html)에 있습니다.
