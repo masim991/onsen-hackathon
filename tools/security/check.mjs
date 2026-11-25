@@ -211,9 +211,12 @@ for (const f of ['web/serve.json', 'vercel.json']) {
 
 // ---- (h) third-party hosts used as resources but not in CSP ----------------
 const CODE_JS = /^web\/(?:admin\/monitor|site|map|intro|hires|db-loader|sources|footer|stack-list|language|motion|page|cover)\.js$/;
+const canonical = read.get(path.join(ROOT, 'web', 'index.html'))?.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)/i)?.[1];
+const selfHost = canonical ? new URL(canonical).host : null;
 const hostOk = (kind, host) => {
   const dir = { connect: 'connect-src', img: 'img-src', style: 'style-src', font: 'font-src', script: 'script-src' }[kind];
   const list = csp[dir] || csp['default-src'] || [];
+  if (host === selfHost && list.includes("'self'")) return true;
   return list.some((o) => o === `https://${host}`);
 };
 const seen = new Map();
