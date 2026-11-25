@@ -140,15 +140,28 @@ export function filterNotices(items, now = Date.now()) {
 const H_RE = /(\d{1,2}):(\d{2})\s*(?:[〜~～\-－ー–—]|から)\s*(\d{1,2}):(\d{2})/g;
 const H_DAY = /日帰り(?:入浴|温泉)?|入浴(?:時間|受付)|立ち?寄り/, H_BIZ = /営業時間/;
 const H_NEG = /受付|最終|ラスト|LO|チェックイン|チェックアウト|\bIN\b|\bOUT\b|食事|レストラン|ランチ|売店|宿泊|フロント|貸切|貸し切り|サウナ/;
+// R6 false-positive guards (hours are never trusted from a row that is about something other than the bath):
+//  H_PHONE: phone/inquiry/reception hours; H_FOOD: restaurant/cafe rows and order-stop notes (checked on the whole row);
+//  H_PART: partial slots (morning bath, night, guests-only, weekday-only); H_MULTI: a second range right after (split hours cannot be stored as one open/close).
+const H_PHONE = /TEL|Tel|電話|お問い?合わせ|問合せ|フリーダイヤル|\d{2,4}-\d{2,4}-\d{3,4}/;
+const H_FOOD = /レストラン|食事処|お食事|ランチ|ディナー|カフェ|喫茶|ラーメン|そば|うどん|定食|オーダー|ラストオーダー|ご朝食|朝食|夕食|バー\b|売店/;
+const H_PART = /朝湯|朝風呂|早朝|夜間|ナイト|宿泊者(?:限定|専用)|ご宿泊(?:の)?お客/;
+const H_WEEK = /月\s*[~〜～-]\s*[金土]|平日|土日|祝日|毎週|第\d/; // weekday-only slice: a business-hours line is not the facility's hours; day-use lines with both weekday/weekend stay (medium, review)
+const H_BATH = /温泉|入浴|大浴場|浴場|風呂|湯/;
+const H_MULTI = /^\s*[)）]?\s*(?:[/／・、,，]|および|及び|と)\s*\d{1,2}:\d{2}/;
 export function extractHours(rows) {
   const out = [];
   for (const row of rows) {
     if (row.length > 300) continue;
+    if (H_PHONE.test(row) || H_FOOD.test(row)) continue;
     for (const m of row.matchAll(H_RE)) {
       const before = row.slice(Math.max(0, m.index - 30), m.index);
-      const ctx = before + ' ' + row.slice(m.index + m[0].length, m.index + m[0].length + 10);
+      const after = row.slice(m.index + m[0].length, m.index + m[0].length + 14);
+      const ctx = before + ' ' + after.slice(0, 10);
       const kind = H_DAY.test(before) ? 'dayuse' : H_BIZ.test(before) ? 'business' : null;
       if (!kind || H_NEG.test(before.replace(/営業時間/g, ''))) continue;
+      if (H_PART.test(before) || H_PART.test(after) || H_MULTI.test(after)) continue;
+      if (kind === 'business' && (!H_BATH.test(row) || H_WEEK.test(before) || H_WEEK.test(after))) continue; // a bare 営業時間 line could be the front desk / shop / restaurant
       const [o, c] = [+m[1] * 60 + +m[2], +m[3] * 60 + +m[4]];
       if (+m[2] > 59 || +m[4] > 59 || o < 4 * 60 || o > 16 * 60 || c <= o + 60 || c > 24 * 60 || /[~〜～-]\s*翌/.test(ctx)) continue;
       out.push({ kind, open: `${pad(+m[1])}:${m[2]}`, close: `${pad(+m[3])}:${m[4]}`, quote: cleanText(row.slice(Math.max(0, m.index - 30), m.index + m[0].length + 10)).slice(0, 80) });
@@ -906,7 +919,9 @@ async function selftest() {
   const h1 = pickHours(extractHours(rows('<p>日帰り入浴 10:00～15:00</p>')));
   t('hours dayuse high', h1?.confidence === 'high' && h1.open === '10:00' && h1.close === '15:00');
   t('hours ambiguous => medium', pickHours(extractHours(rows('<p>日帰り入浴 平日 10:00～15:00</p><p>日帰り入浴 土日 9:00～16:00</p>')))?.confidence === 'medium');
-  t('hours business-only => medium', pickHours(extractHours(rows('<p>営業時間 9:00～21:00</p>')))?.confidence === 'medium');
+  t('hours business-only => medium', pickHours(extractHours(rows('<p>温泉 営業時間 9:00～21:00</p>')))?.confidence === 'medium');
+  t('hours R6: restaurant/phone/morning-only/split/weekday-only rows rejected', extractHours(rows('<p>営業時間 11:30~13:30(オーダーストップ13:00)</p><p>TEL.0570-039866(営業時間/月~金 10:00-17:00)</p><p>日帰り 朝湯5:00~9:00</p><p>入浴時間:15:00~21:00/6:00~7:00</p><p>営業時間 平日 10:00~17:00 温泉</p><p>営業時間 10:00~17:00 フロント</p>')).length === 0);
+  t('hours R6: bath-labelled business hours and plain day-use still extracted', extractHours(rows('<p>温泉 営業時間 10:00~22:00</p>')).length === 1 && extractHours(rows('<p>日帰り入浴 10:00~15:00</p>')).length === 1);
   t('hours reject checkin/LO/unlabelled', extractHours(rows('<p>チェックイン 15:00～18:00</p><p>日帰り入浴 最終受付 14:00～15:00</p><p>10:00～15:00</p>')).length === 0);
   t('parseDate', parseDate('2026.11.3 お知らせ') === '2026-11-03' && parseDate('令和8年4月1日') === '2026-04-01' && parseDate('11月3日') === null);
   const html = '<h2>お知らせ</h2><ul><li><a href="/n/1">2026.11.05 年末年始の営業について</a></li><li>2026年11月01日 設備点検のため臨時休業します</li></ul><p>© 2026</p>';
@@ -966,7 +981,7 @@ async function selftest() {
   t('AUTO_APPLY=on => applied at once', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'auto_applied') && mem.records.length === 2);
   reset(); delete process.env.AUTO_APPLY;
   t('AUTO_APPLY default/unknown => strict', autoLevel() === 'strict' && (process.env.AUTO_APPLY = 'bogus', autoLevel() === 'strict') && (delete process.env.AUTO_APPLY, true));
-  page('<p>1泊2食 お一人様 12,000円〜</p><p>営業時間 9:00～21:00</p>');
+  page('<p>1泊2食 お一人様 12,000円〜</p><p>温泉 営業時間 9:00～21:00</p>');
   await jobPriceHours(job, stub({ dayH: '10:00～15:00', monitor: { price: { minYen: 1500 } } }));
   await jobPriceHours(job, stub({ dayH: '10:00～15:00', monitor: { price: { minYen: 1500 } } }));
   t('policy: 8x price jump and business-only hours => pending_review, nothing applied', mem.changes.length === 2 && mem.changes.every((c) => c.status === 'pending_review') && mem.records.length === 0);
