@@ -1,46 +1,24 @@
-// 페이지를 열 때마다 인트로를 표시한다. 버튼·Esc로 닫힌다.
 (() => {
-  try { if (sessionStorage.getItem('onsen-map-return') === '1') { sessionStorage.removeItem('onsen-map-return'); document.documentElement.dataset.mapReturn = '1'; return; } } catch {}
-  const lang = (document.documentElement.lang || 'ko').slice(0, 2);
-  const T = {
-    ko: { l1: '쉼이 필요한 순간,', l2: '따뜻한 곳으로.', p: '지역과 탕의 취향에 맞춰 일본 온천 숙소를 찾아드립니다.', p2: ' 공식 출처를 확인한 정보만 담았습니다.', cta: '온천 찾아보기', note: '출처 확인 · 개인정보 수집 없음' },
-    ja: { l1: '湯けむりの向こうへ、', l2: '心ほどける宿を。', p: 'エリアと湯の好みに合わせて、日本の温泉宿を探せます。', p2: ' 公式の出典を確認した情報だけを掲載しています。', cta: '温泉を探す', note: '出典確認済み · 個人情報は収集しません' },
-    en: { l1: 'When you need to rest,', l2: 'head somewhere warm.', p: 'Find Japanese onsen stays by region and bath style.', p2: ' Every listing is checked against official sources.', cta: 'Find my onsen', note: 'Sources checked · No personal data collected' },
-  }[lang];
-  if (!T) return;
-  const nav = [['ko', 'index.html', '한국어'], ['ja', 'ja.html', '日本語'], ['en', 'en.html', 'English']]
-    .map(([k, h, n]) => `<a href="${h}"${k === lang ? ' aria-current="page"' : ''} hreflang="${k}">${n}</a>`).join('');
-  const root = document.createElement('div');
-  root.id = 'intro';
-  root.setAttribute('role', 'dialog');
-  root.setAttribute('aria-modal', 'true');
-  root.setAttribute('aria-label', document.title);
-  root.innerHTML = `<div class="in-bg" style="background-image:url(images/noboribetsu.jpg)"></div><div class="in-shade"></div><span class="in-steam"></span><span class="in-steam in-steam-2"></span>
-<header><b class="in-brand"><i>湯</i>${{ ko: '온천 한눈에', ja: '温泉ひとめぐり', en: 'Onsen at a Glance' }[lang]}</b><nav class="glass" aria-label="language">${nav}</nav></header>
-<h1><span>${T.l1}</span><span class="dim">${T.l2}</span></h1>
-<div class="in-bottom"><p>${T.p}<span>${T.p2}</span></p><button type="button" class="in-cta">${T.cta}</button><small><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>${T.note}</small></div><a class="in-photo-credit" href="https://commons.wikimedia.org/wiki/File:Noboribetsu_hot_spring_jigokudani_20130503.jpg" target="_blank" rel="noopener">Photo: メルビル · CC BY-SA 3.0 · cropped</a>`;
-  document.documentElement.append(root);
-  document.documentElement.classList.add('intro-open');
-  const bg = root.querySelector('.in-bg');
-  // 큰 사진으로 교체(실패하면 로컬 사진 유지)
-  const hi = new Image();
-  hi.onload = () => { bg.style.backgroundImage = `url(${hi.src})`; };
-  hi.src = `https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Noboribetsu_hot_spring_jigokudani_20130503.jpg/1280px-Noboribetsu_hot_spring_jigokudani_20130503.jpg`;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-  const tick = () => { cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06; bg.style.transform = `translate3d(${cx}px,${cy}px,0) scale(1.08)`; raf = requestAnimationFrame(tick); };
-  const move = e => { tx = (e.clientX / innerWidth - 0.5) * 40; ty = (e.clientY / innerHeight - 0.5) * 40; };
-  if (!reduced) { addEventListener('mousemove', move, { passive: true }); raf = requestAnimationFrame(tick); }
-  const btn = root.querySelector('.in-cta');
-  const key = e => { if (e.key === 'Escape') close(); };
-  function close() {
-    removeEventListener('mousemove', move); cancelAnimationFrame(raf); removeEventListener('keydown', key);
-    document.documentElement.classList.remove('intro-open');
-    const done = () => root.remove();
-    if (reduced) return done();
-    root.classList.add('out'); root.addEventListener('transitionend', done, { once: true }); setTimeout(done, 1200);
-  }
-  btn.addEventListener('click', () => { try { sessionStorage.setItem('onsen-map-language', lang); } catch {} location.href = `map-explore.html?lang=${encodeURIComponent(lang)}`; });
-  addEventListener('keydown', key);
-  requestAnimationFrame(() => { root.classList.add('on'); btn.focus({ preventScroll: true }); });
+'use strict';
+try{if(sessionStorage.getItem('onsen-map-return')==='1'){sessionStorage.removeItem('onsen-map-return');document.documentElement.dataset.mapReturn='1';return;}}catch{}
+const lang=(document.documentElement.lang||'ko').slice(0,2);
+const t={ko:['온천 한눈에','밤이 깊어지면,','온기가 시작됩니다.','문 너머, 나만의 온천 여행을 만나세요.','온천 찾아보기','바로 지도로'],ja:['温泉ひとめぐり','夜が深まると、','ぬくもりが始まる。','扉の向こうに、あなただけの温泉旅。','温泉を探す','地図へ進む'],en:['Onsen at a Glance','As night falls,','warmth awaits.','Beyond the door, find your own onsen journey.','Find my onsen','Skip to map']}[lang];if(!t)return;
+const nav=[['ko','index.html','한국어'],['ja','ja.html','日本語'],['en','en.html','English']].map(([k,h,n])=>`<a href="${h}"${k===lang?' aria-current="page"':''}>${n}</a>`).join('');
+const strokes=['M19 24Q28 27 31 33','M12 48Q22 50 26 56','M14 91Q26 76 32 64','M48 18L48 51','M48 20L88 18L85 49','M49 34L85 33','M48 49L85 48','M39 61Q68 59 98 59','M57 61Q46 77 35 81','M53 72L92 70Q90 95 80 102L73 97','M64 73Q57 91 44 98','M79 73Q73 92 60 102'];
+const brush=`<svg class="in-brush" viewBox="0 0 112 116" aria-hidden="true">${strokes.map((d,i)=>`<path d="${d}" pathLength="1" style="--stroke:${i}"/>`).join('')}</svg>`;
+const leaf='<svg viewBox="0 0 40 44"><path d="M20 1l4 11 7-6-2 13 10-3-8 10 7 5-13 2-4 10-3-11-13 1 7-8-11-8 12 1-2-12 8 7z"/></svg>';
+const root=document.createElement('div');root.id='intro';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',t[0]);
+root.innerHTML=`<div class="in-world" aria-hidden="true"><div class="in-architecture"><div class="in-portal"><div class="in-door in-door-left"><span></span></div><div class="in-door in-door-right"><span></span></div></div></div></div><div class="in-shade" aria-hidden="true"></div><div class="in-leaves" aria-hidden="true">${Array.from({length:9},(_,i)=>`<i style="--i:${i};--x:${[7,24,42,67,87,16,54,76,94][i]}%">${leaf}</i>`).join('')}</div><div class="in-room" aria-hidden="true"><div class="in-desk"><div class="in-paper"><span>日本</span><img src="images/japan-desk.svg" alt=""></div></div></div><header><b>${t[0]}</b><nav aria-label="Language">${nav}</nav></header><div class="in-content">${brush}<h1>${t[1]}<br><span>${t[2]}</span></h1><p>${t[3]}</p><button class="in-cta" type="button">${t[4]}<span aria-hidden="true">↗</span></button></div><p class="in-caption" aria-hidden="true">湯けむりの、その先へ。</p><button class="in-skip" type="button" hidden>${t[5]}</button>`;
+const previous=document.activeElement;document.documentElement.append(root);document.documentElement.classList.add('intro-open');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)'),btn=root.querySelector('.in-cta'),skip=root.querySelector('.in-skip');let entering=false,finished=false,timers=[];
+const inertBody=()=>{if(document.body)document.body.inert=true;};if(document.body)inertBody();else document.addEventListener('DOMContentLoaded',inertBody,{once:true});
+function cleanup(){timers.forEach(clearTimeout);timers=[];removeEventListener('keydown',key);document.removeEventListener('DOMContentLoaded',inertBody);reduced.removeEventListener('change',motion);}
+function navigate(){if(finished)return;finished=true;cleanup();try{sessionStorage.setItem('onsen-map-language',lang);sessionStorage.setItem('onsen-desk-entry','1');}catch{}location.href=`map-explore.html?lang=${encodeURIComponent(lang)}`;}
+function close(){cleanup();root.remove();document.documentElement.classList.remove('intro-open');if(document.body)document.body.inert=false;if(previous?.isConnected)previous.focus();}
+function enter(){if(entering)return;entering=true;if(reduced.matches){navigate();return;}root.classList.add('approaching');skip.hidden=false;skip.focus();root.querySelector('header').inert=true;root.querySelector('.in-content').inert=true;for(const [name,ms] of [['doors-open',650],['inside',1900],['at-desk',2650]])timers.push(setTimeout(()=>root.classList.add(name),ms));timers.push(setTimeout(navigate,3950));}
+function motion(){if(reduced.matches&&entering)navigate();}
+function key(e){if(e.key==='Escape'){e.preventDefault();entering?navigate():close();return;}if(e.key==='Tab'){const f=[...root.querySelectorAll('a,button')].filter(el=>!el.hidden&&!el.closest('[inert]'));if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===f.at(-1)){e.preventDefault();f[0].focus();}}}
+btn.addEventListener('click',enter);skip.addEventListener('click',navigate);addEventListener('keydown',key);reduced.addEventListener('change',motion);document.addEventListener('visibilitychange',()=>root.classList.toggle('paused',document.hidden));
+addEventListener('pageshow',e=>{if(e.persisted&&entering){entering=false;finished=false;timers.forEach(clearTimeout);timers=[];root.classList.remove('approaching','doors-open','inside','at-desk');root.querySelector('header').inert=false;root.querySelector('.in-content').inert=false;skip.hidden=true;addEventListener('keydown',key);reduced.addEventListener('change',motion);btn.focus();}});
+requestAnimationFrame(()=>{root.classList.add('on');btn.focus({preventScroll:true});});
 })();

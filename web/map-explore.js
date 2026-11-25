@@ -32,6 +32,25 @@
   map.attributionControl.addAttribution('<a href="https://github.com/dataofjapan/land" target="_blank" rel="noopener">Global Map Japan / dataofjapan</a>');
   // 현 경계의 로컬 지리 데이터로 화면을 그려 외부 타일 로딩 없이 탐색한다.
   const features = L.featureGroup().addTo(map), labels = L.layerGroup().addTo(map);
+  // Decorative engraving, not elevation data. Pattern scales with the geographic SVG.
+  function installEngraving() {
+    const svg = document.querySelector('#explore-map .leaflet-overlay-pane svg');
+    if (!svg || svg.querySelector('#land-engraving')) return;
+    const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+    defs.innerHTML = `<pattern id="land-engraving" width="180" height="150" patternUnits="userSpaceOnUse"><rect width="180" height="150" fill="#58333e"/><g fill="none" stroke="#d5b7a4" stroke-width=".55" opacity=".16"><path d="M-30 32C15-25 65 62 108 17S187 10 210 45M-30 43C15-14 65 73 108 28S187 21 210 56M-30 54C15-3 65 84 108 39S187 32 210 67M-30 65C15 8 65 95 108 50S187 43 210 78M-30 100C20 155 58 77 106 111S175 165 210 103M-30 111C20 166 58 88 106 122S175 176 210 114M-30 122C20 177 58 99 106 133S175 187 210 125"/></g></pattern>`;
+    svg.prepend(defs);
+  }
+  try {
+    if (sessionStorage.getItem('onsen-desk-entry') === '1') {
+      sessionStorage.removeItem('onsen-desk-entry');
+      document.body.classList.add('desk-arrival');
+      setTimeout(() => document.body.classList.remove('desk-arrival'), 1400);
+    }
+  } catch {}
+  const regionWord = document.createElement('div');
+  regionWord.className = 'region-word'; regionWord.setAttribute('aria-hidden','true');
+  const journey = document.createElement('div'); journey.className = 'journey-caption'; journey.setAttribute('aria-hidden','true');
+  document.body.append(regionWord, journey);
   let active = null, layers = [];
   const fullBounds = L.latLngBounds([[30.4,129],[41.7,142.8]]);
   const options = {paddingTopLeft:[30,110], paddingBottomRight:[30,110], maxZoom:9, animate:!reduced.matches, duration:1.15};
@@ -53,11 +72,17 @@
         footprint.setAttribute('class', 'pref-footprint');
         footprint.setAttribute('pointer-events', 'none');
         face.parentNode.insertBefore(footprint, face);
-        shape.setStyle({fillColor:'#f1d59c', color:'#fff7df', weight:3});
+        shape.setStyle({fillColor:'#cfaa88', color:'#f4dec3', weight:1.8});
         face.classList.add('pref-raised');
+        // Explicit keyframes keep the first frame grounded even after SVG reordering.
+        face.animate([
+          {transform:'translateY(0px)',filter:'drop-shadow(0 2px 1px rgba(15,4,9,.2))'},
+          {transform:'translateY(-18px)',filter:'drop-shadow(0 18px 9px rgba(15,4,9,.55))'}
+        ], {duration:1050,easing:'cubic-bezier(.45,0,.2,1)',fill:'forwards'});
+        footprint.animate([{opacity:0},{opacity:.65}],{duration:850,fill:'forwards'});
       });
       status.textContent = prefName(pref);
-      setTimeout(() => navigate(pref), 800);
+      setTimeout(() => navigate(pref), 1200);
     } else navigate(pref);
   }
   function navigate(pref) {
@@ -79,7 +104,7 @@
     polys.forEach(poly=>{ const ring=poly[0], box=L.latLngBounds(ring.map(p=>[p[1],p[0]])); const size=(box.getNorth()-box.getSouth())*(box.getEast()-box.getWest()); if(size>area){area=size;best=box.getCenter();} });
     return best;
   }
-  function baseStyle(selected) { return {color:'#e2ebd1', weight:selected?1.8:1.1, opacity:.95, fillColor:selected?'#8fb294':'#9bb99c', fillOpacity:1}; }
+  function baseStyle(selected) { return {color:'#d5b7a4', weight:selected?1.15:.8, opacity:.8, fillColor:'url(#land-engraving)', fillOpacity:1}; }
   function mainlandBounds(items = layers) {
     const bounds = L.latLngBounds([]);
     for (const {feature} of items) {
@@ -100,15 +125,19 @@
     visible.forEach(feature => {
       const id=Number(feature.properties.id), jp=names[id-1], group=regionFor(id); if(!jp || !group)return;
       const layer=L.geoJSON(feature,{style:()=>baseStyle(!!active),onEachFeature(_f, shape){
-        shape.on('mouseover',()=>{shape.setStyle({fillColor:'#e8c487',fillOpacity:1,weight:2.3});status.textContent=active?prefName(jp):group.names[idx];});
+        shape.on('mouseover',()=>{shape.setStyle({fillColor:'#a77572',fillOpacity:1,weight:2.3});status.textContent=active?prefName(jp):group.names[idx];});
         shape.on('mouseout',()=>{ if (!leaving) shape.setStyle(baseStyle(!!active)); });
         shape.on('click',()=>active ? leave(jp) : selectRegion(group));
       }}).addTo(features);
       layers.push({feature,layer});
       if(active) marker(prefCenter(feature),prefName(jp),()=>leave(jp),'pref-label');
     });
+    installEngraving();
     if(!active) groups.slice(1).forEach(group => marker(group.at,group.names[idx],()=>selectRegion(group),'region-label'));
     heading.textContent=active?active.names[idx]:tr.title; hint.textContent=active?tr.region:tr.hint; step.textContent=tr.step;
+    regionWord.textContent=active?active.names[1]:'日本';
+    journey.textContent=active?active.names[2]:'HOKKAIDO — KYUSHU';
+    document.body.classList.toggle('region-selected',!!active);
     back.hidden=!active; status.textContent=active?`${active.names[idx]} · ${tr.region}`:tr.title;
   }
   const inset = document.createElement('button');
@@ -156,7 +185,7 @@
     if (reduced.matches) { map.fitBounds(bounds,{...options,animate:false}); finish(); }
     else {
       map.once('moveend', finish);
-      map.flyToBounds(bounds,{...options,animate:true,duration:.85});
+      map.flyToBounds(bounds,{...options,animate:true,duration:1.15});
       fallbackTimer = setTimeout(finish, 1500);
     }
   }
@@ -174,5 +203,6 @@
   });
   document.addEventListener('keydown',event=>{if(event.key==='Escape' && active){event.preventDefault();back.click();}});
   draw(); map.fitBounds(fullBounds,{...options,animate:false,maxZoom:6.5});
+  map.whenReady(installEngraving);
   map.on('resize', () => { const bounds = active ? mainlandBounds() : fullBounds; if (bounds.isValid()) map.fitBounds(bounds, {...options, animate:false, maxZoom:active?9:6.5}); });
 })();

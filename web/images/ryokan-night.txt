@@ -1,0 +1,10 @@
+Ryokan night environment — generated 2026-11-25 with the built-in image generation tool.
+Asset: ryokan-night.png. Original artwork; not a photograph of an actual inn.
+Prompt: Wide cinematic painterly anime environment for a Japanese onsen website: symmetrical night ryokan timber facade, central open doorway, burgundy wood, amber paper lanterns, red maple foliage, wet stone approach; quiet tatami room and low wooden desk inside; no people, text, signs, logos or watermark. Separate doors are animated in the website.
+Visual research (reference only; their images were not copied into this asset):
+https://www.pakutaso.com/en/20180336087post-15703.html
+https://www.pakutaso.com/en/20210517132post-34656.html
+https://fudo.tree-public-squares.com/
+The map engraving is decorative linework, not measured elevation contours.
+
+Second generated asset: ryokan-room.png. Prompt: matching cinematic painterly anime tatami room at night, high oblique 72-degree sightline over a centered empty burgundy low wooden desk, warm lantern, no people/text/map. Map is overlaid separately from actual geographic data.

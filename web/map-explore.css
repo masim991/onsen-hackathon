@@ -27,61 +27,38 @@ body { overflow:hidden; }
 
 .map-moving .pref-label { visibility:hidden; pointer-events:none; }
 
-/* 지도의 얕은 원근감. 실제 높이 자료가 아닌 평면 지도의 시각 효과다. */
-#explore-map { transform: perspective(1800px) rotateX(10deg); transform-origin: center center; }
-@media (max-width:700px) { #explore-map { transform: perspective(1500px) rotateX(6deg); } }
-@media (prefers-reduced-motion:reduce) { #explore-map { transform:none; } }
-
-#explore-map .leaflet-bottom { bottom: 28px; }
-#explore-map .leaflet-right { right: 30px; }
-
-/* 홋카이도는 전국 보기에서 별도 선택 영역으로 표시한다. */
-.hokkaido-inset { position:fixed; z-index:700; right:24px; bottom:160px; width:240px; padding:14px; display:flex; flex-direction:column; align-items:center; gap:3px; border:1px solid #829c90; background:#1d3832; color:#fff; font:600 14px/1.2 inherit; cursor:pointer; }
+/* Burgundy lacquer and fine pale outlines, inspired by FUDO's geographic compositions. */
+:root { background:#27151f; color:#f4e6d4; }
+#explore-map,.leaflet-container { background-color:#27151f; background-image:radial-gradient(ellipse at 25% 25%,#55303b88,transparent 65%),radial-gradient(ellipse at 80% 80%,#6b3d4133,transparent 60%); }
+/* 18 degrees away from overhead corresponds to a 72 degree tabletop sightline. */
+#explore-map { transform:perspective(1900px) rotateX(18deg); transform-origin:center; }
+#explore-map::before { content:'';position:absolute;inset:-10%;pointer-events:none;opacity:.16;background:repeating-radial-gradient(ellipse at 20% 70%,transparent 0 65px,#c99b8729 66px 67px,transparent 68px 95px); }
+#explore-map .leaflet-bottom { bottom:30px; }
+#explore-map .leaflet-right { right:30px; }
+.leaflet-overlay-pane path { transition:fill .5s,stroke .5s,stroke-width .5s;filter:drop-shadow(0 5px 4px #140a1580); }
+.leaflet-overlay-pane path.pref-raised { transform-box:fill-box;transform-origin:center; }
+.leaflet-overlay-pane path.pref-footprint { fill:#160b14;fill-opacity:.8;stroke:#ab7a72;stroke-width:1;pointer-events:none;filter:none; }
+.map-top { color:#f4e6d4;text-shadow:0 2px 18px #27151f;top:28px;left:28px;right:28px; }
+.map-heading span { display:none; }
+.map-heading h1 { font-family:"Yu Mincho",Georgia,serif;font-weight:400;font-size:clamp(25px,3vw,44px);line-height:1.4; }
+.map-heading p { color:#d8bfba;margin-top:8px; }
+.map-action,.map-place { background:#321e29e8;color:#f7ebda;border-color:#ad8a82; }
+.map-place { border:0;border-bottom:1px solid #ad8a82;border-radius:0;padding:12px 18px;box-shadow:none;font-weight:400;letter-spacing:.08em;transition:background .35s,color .35s; }
+.map-place:hover,.map-place:focus-visible,.map-action:hover,.map-action:focus-visible { background:#f1dfc8;color:#452532;transform:translate(-50%,-50%); }
+.map-action:hover,.map-action:focus-visible { transform:none; }
+.leaflet-control-zoom a { background:#321e29!important;color:#f7ebda!important; }
+.leaflet-control-attribution { background:#27151fe8!important; }
+.region-word { position:fixed;z-index:400;left:6vw;bottom:13vh;color:#dab9a2;opacity:.13;font-family:"Yu Mincho","MS Mincho",serif;font-size:clamp(120px,19vw,300px);line-height:1.05;letter-spacing:-.04em;writing-mode:vertical-rl;pointer-events:none;user-select:none; }
+.journey-caption { position:fixed;z-index:400;left:6vw;bottom:5vh;font:11px/1.5 Georgia,serif;letter-spacing:.3em;color:#cfada4;pointer-events:none; }
+.hokkaido-inset { position:fixed;z-index:700;right:24px;bottom:145px;width:210px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:3px;border:1px solid #9e746d;background:#321e29ed;color:#f4e6d4;font:600 14px/1.2 inherit;cursor:pointer; }
 .hokkaido-inset[hidden] { display:none; }
-.hokkaido-inset svg { width:100%; height:125px; }
-.hokkaido-inset path { fill:#92aa8f; stroke:#e5efe0; stroke-width:1; }
-.hokkaido-inset:hover,.hokkaido-inset:focus-visible { background:#365d51; outline:2px solid #fff; outline-offset:3px; }
-@media(max-width:700px) { .hokkaido-inset { width:150px; right:12px; bottom:160px; font-size:12px; } .hokkaido-inset svg { height:80px; } }
-
-/* 地形 도형은 실제 경계를 쓰고 부드러운 잉크 선과 그림자로 표현한다. */
-#explore-map, .leaflet-container { background:#b8d7d2; }
-.leaflet-overlay-pane path { transition:fill .22s ease, stroke-width .22s ease; filter:drop-shadow(0 4px 2px rgba(32,76,67,.24)); }
-.hokkaido-inset { background:#e9f0df; color:#23473e; border-color:#638a79; }
-.hokkaido-inset path { fill:#8fb294; stroke:#f6f6df; stroke-width:1.6; }
-.hokkaido-inset:hover,.hokkaido-inset:focus-visible { background:#f7eed4; color:#23473e; outline-color:#23473e; }
-@media(prefers-reduced-motion:reduce) { .leaflet-overlay-pane path { transition:none; } }
-
-:root { background:#b8d7d2; }
-.map-top { color:#183f37; text-shadow:none; }
-.map-heading span, .map-heading p { color:#315e52; }
-#explore-map { transform:perspective(1800px) rotateX(6deg); }
-@media(max-width:700px) { #explore-map { transform:perspective(1500px) rotateX(4deg); } }
-@media(prefers-reduced-motion:reduce) { #explore-map { transform:none; } }
-
-/* 지역 경계는 선택 시 잉크 선이 나타나는 짧은 효과를 사용한다. */
-.map-moving .map-place { visibility:hidden; pointer-events:none; }
-.leaflet-overlay-pane path.leaflet-interactive:hover { stroke:#fff7d4; filter:drop-shadow(0 3px 3px rgba(32,76,67,.3)) drop-shadow(0 0 3px rgba(255,244,188,.8)); }
-.map-arrived .leaflet-overlay-pane path.leaflet-interactive { animation:boundary-reveal .5s ease-out both; }
-@keyframes boundary-reveal { from { stroke-opacity:.15; } to { stroke-opacity:.95; } }
-@media(prefers-reduced-motion:reduce) { .map-arrived .leaflet-overlay-pane path.leaflet-interactive { animation:none; } }
-
-/* 수면의 얕은 파문은 지도 도형 아래에 고정한다. */
-#explore-map, .leaflet-container {
-  background-color:#b8d7d2;
-  background-image:radial-gradient(ellipse at 20% 35%, transparent 0 48px, rgba(236,248,235,.23) 49px 50px, transparent 51px 77px, rgba(236,248,235,.13) 78px 79px, transparent 80px), radial-gradient(ellipse at 80% 72%, transparent 0 60px, rgba(236,248,235,.2) 61px 62px, transparent 63px 94px, rgba(236,248,235,.12) 95px 96px, transparent 97px), linear-gradient(160deg,#c8e2db,#aacfc9);
-  background-size:440px 340px,520px 400px,auto;
-}
-.leaflet-overlay-pane path.pref-raised {
-  transform-box:fill-box; transform-origin:center; transform:translateY(-10px);
-  filter:drop-shadow(0 12px 5px rgba(32,76,67,.38));
-  transition:transform .38s cubic-bezier(.16,1,.3,1), fill .2s ease, filter .38s ease;
-}
-@media(prefers-reduced-motion:reduce) { .leaflet-overlay-pane path.pref-raised { transform:none; transition:none; } }
-
-/* 선택 구역 아래의 원래 실루엣과 부드러운 빛으로 높이를 표현한다. */
-.leaflet-overlay-pane path.pref-footprint { fill:#578a78; fill-opacity:.88; stroke:#467666; stroke-opacity:.8; stroke-width:3; pointer-events:none; filter:drop-shadow(0 6px 4px rgba(35,76,65,.26)); }
-.leaflet-overlay-pane path.pref-raised { transform:translateY(-23px); filter:drop-shadow(0 15px 8px rgba(35,76,65,.42)); transition:transform .58s cubic-bezier(.16,1,.3,1), fill .26s ease, filter .58s ease; }
-/* 천천히 흐르는 반투명 물결: 점멸 없이 지도 조작을 막지 않는다. */
-#explore-map::before { content:''; position:absolute; inset:-12%; z-index:0; pointer-events:none; opacity:.42; background:radial-gradient(ellipse 25% 8% at 18% 29%, transparent 56%, rgba(247,250,234,.6) 58%, transparent 61%), radial-gradient(ellipse 20% 7% at 79% 66%, transparent 55%, rgba(247,250,234,.5) 58%, transparent 62%); animation:sea-drift 16s ease-in-out infinite alternate; }
-@keyframes sea-drift { from { transform:translate3d(-10px,0,0); } to { transform:translate3d(10px,-5px,0); } }
-@media(prefers-reduced-motion:reduce) { .leaflet-overlay-pane path.pref-raised { transform:none; transition:none; } #explore-map::before { animation:none; } }
+.hokkaido-inset svg { width:100%;height:125px; }
+.hokkaido-inset path { fill:#93636a;stroke:#e4c8af;stroke-width:1; }
+.hokkaido-inset:hover,.hokkaido-inset:focus-visible { background:#65404c;outline:2px solid #f4e6d4;outline-offset:3px; }
+.map-moving .map-place { visibility:hidden;pointer-events:none; }
+.map-arrived .region-word { animation:region-title-in 1.2s ease both; }
+@keyframes region-title-in { from { opacity:0;transform:translateY(18px); } to { opacity:.13;transform:none; } }
+@keyframes desk-arrive { from { opacity:0; } to { opacity:1; } }
+.desk-arrival { animation:desk-arrive 1s ease both; }
+@media(max-width:700px) { .map-top { top:18px;left:16px;right:16px;gap:12px; }.map-heading h1 { font-size:23px; }.region-word { left:5vw;bottom:20vh;font-size:28vw; }.hokkaido-inset { width:140px;bottom:160px;right:12px; }.hokkaido-inset svg { height:80px; }.map-place { padding:10px; } }
+@media(prefers-reduced-motion:reduce) { #explore-map { transform:none; }.map-arrived .region-word,.desk-arrival { animation:none; }.leaflet-overlay-pane path { transition:none; } }

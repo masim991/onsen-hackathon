@@ -1,22 +1,21 @@
 /* 웹폰트가 오기 전 대체 글꼴의 글자 폭을 맞춰, 글꼴이 바뀔 때 줄바꿈·높이가 튀지 않게 한다(폭은 브라우저에서 실측) */
 @font-face { font-family: "Gaegu Fallback"; src: local("Malgun Gothic"), local("Apple SD Gothic Neo"), local("Noto Sans KR"); size-adjust: 85%; }
 @font-face { font-family: "Gowun Fallback"; src: local("Malgun Gothic"), local("Apple SD Gothic Neo"), local("Noto Sans KR"); size-adjust: 92%; }
-/* 광물질 온천수 팔레트: 청록 먹빛(탕 물) + 유황 노랑(강조 한 곳) + 젖은 돌의 회녹색 바탕.
-   초안의 크림·테라코타 조합 대신 온천 자체의 재료에서 색을 가져왔다. 모든 페이지에서 마지막에 로드되어 기존 변수 값만 덮어쓴다. */
+/* 야간 료칸: 버건디 목재, 따뜻한 종이, 호박빛 강조. 카드 구조는 유지한다. */
 :root {
-  --ai-900: #14272a;  --ai-800: #1d4a50;  --ai-700: #2a5f66;  --ai-100: #d2e2e1;  --ai-ink: #1d4a50;
+  --ai-900: #301a25;  --ai-800: #6b3548;  --ai-700: #80475a;  --ai-100: #ecdadd;  --ai-ink: #6b3548;
   --shu: #b98a14;      /* 유황: 큰 숫자·표식에만 사용 */
-  --shu-ink: #1d4a50;  /* 버튼·링크·작은 강조는 탕 물색(흰 글자 9:1) */
+  --shu-ink: #6b3548;  /* 버튼·링크·작은 강조는 탕 물색(흰 글자 9:1) */
   --shu-soft: #efe7cb;
-  --washi: #eef1ee;    /* 젖은 돌 */
+  --washi: #f3ece7;    /* 젖은 돌 */
   --kinari: #f7f9f6;   /* 카드 */
-  --hinoki: #e1e7e3;   /* 패널·태그 */
+  --hinoki: #ede0dc;   /* 패널·태그 */
   --card-bg: #f9faf7;
-  --ink: #1b2a2b;  --ink-2: #4a5a5a;  --muted: #4a5a5a;
-  --rule: #c7d0cb;  --rule-soft: #dbe2dd;  --line: #c7d0cb;  --line-soft: #dbe2dd;
+  --ink: #35212a;  --ink-2: #6b525b;  --muted: #6b525b;
+  --rule: #d5c1bf;  --rule-soft: #e7d8d3;  --line: #d5c1bf;  --line-soft: #e7d8d3;
   --unk: #7a5a00;  --unk-bg: #f3e8c4;
   --on-dark: #f3f6f3;  --on-dark-2: #b6c4c1;
-  --paper: var(--washi);  --panel: var(--kinari);  --moss: var(--hinoki);  --moss-ink: #2f4244;
+  --paper: var(--washi);  --panel: var(--kinari);  --moss: var(--hinoki);  --moss-ink: #61424d;
   /* 글꼴: 과하지 않은 필기체. 제목은 개구(한글)·클레 원(일본어), 본문은 고운 도둠 */
   --hand: "Gaegu", "Gaegu Fallback", "Gowun Dodum", sans-serif;           /* 손글씨: 히어로 h1, 구역 h2, 지역 타일 이름(24px 이상)만 */
   --ui: "Gowun Dodum", "Gowun Fallback", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; /* 본문·버튼·카드 제목·서랍 */
@@ -26,7 +25,7 @@
   --focus-outline-color: var(--ai-800);
 }
 html, body { background: var(--washi); }
-::selection { background: #bcd6d3; color: var(--ink); }
+::selection { background: #e6c7ce; color: var(--ink); }
 
 /* UI 구분: 면(바탕) → 패널(조건) → 카드(결과) 세 단계를 색과 테두리로 구분 */
 .fbox, .detail, .filters, #filterPanel { background: var(--kinari); border-color: var(--rule); }

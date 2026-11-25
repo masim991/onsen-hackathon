@@ -1,45 +1,34 @@
-/* 인트로: 온천 톤 + 리퀴드 글래스. 수증기·terracotta 토큰 사용 */
-.intro-open { overflow: hidden; }
-#intro { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: clamp(18px, 3vw, 40px); color: #fff; background: #14231f; overflow: hidden; transition: opacity .9s cubic-bezier(.16, 1, .3, 1), transform .9s cubic-bezier(.16, 1, .3, 1); }
-#intro.out { opacity: 0; transform: scale(1.03); pointer-events: none; }
-#intro .in-bg { position: absolute; inset: -4%; z-index: 0; background-size: cover; background-position: 50% 60%; transform: scale(1.08); }
-#intro .in-shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgb(17 36 32 / .55), rgb(17 36 32 / .15) 38%, rgb(17 36 32 / .78)); }
-#intro > header, #intro > h1, #intro > .in-bottom { position: relative; z-index: 3; }
-#intro header { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.in-brand { display: flex; align-items: center; gap: 10px; font: 700 22px/1 "Gaegu", "Gowun Dodum", sans-serif; letter-spacing: -.01em; }
-.in-brand i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #d3a623; color: #14272a; font: normal 18px/1 "Klee One", "Gaegu", serif; }
-.in-brand small { font: 500 13px/1 "Gowun Dodum", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; letter-spacing: .16em; opacity: .75; }
-.glass { background: rgb(255 255 255 / .01); background-blend-mode: luminosity; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); box-shadow: inset 0 1px 1px rgb(255 255 255 / .12); position: relative; border-radius: 999px; overflow: hidden; }
-.glass::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px; background: linear-gradient(180deg, rgb(255 255 255 / .45), rgb(255 255 255 / .15) 20%, transparent 40% 60%, rgb(255 255 255 / .15) 80%, rgb(255 255 255 / .45)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-#intro nav { display: flex; gap: 2px; padding: 6px; }
-#intro nav a { padding: 7px 16px; border-radius: 999px; font: 500 13px/1 "Gowun Dodum", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; letter-spacing: .08em; color: rgb(255 255 255 / .85); text-decoration: none; transition: background-color .2s, color .2s; }
-#intro nav a:hover, #intro nav a[aria-current] { background: rgb(255 255 255 / .16); color: #fff; }
-#intro h1 { margin: 0; text-align: center; font: 700 clamp(34px, 5.6vw, 76px)/1.12 "Gaegu", "Gowun Dodum", sans-serif; letter-spacing: -.01em; text-shadow: 0 8px 34px rgb(0 0 0 / .4); }
-html:lang(ja) #intro h1, html:lang(ja) .in-brand { font-family: "Klee One", "Gaegu", serif; font-weight: 600; letter-spacing: .01em; }
-#intro h1 span { display: block; } #intro h1 { word-break: keep-all; text-wrap: balance; }
-#intro h1 .dim { color: rgb(255 255 255 / .6); }
-.in-bottom { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; padding-bottom: clamp(8px, 3vh, 36px); }
-.in-bottom p { word-break: keep-all; text-wrap: pretty; margin: 0; max-width: 620px; font-size: 15px; line-height: 1.7; }
-.in-bottom p span { color: rgb(255 255 255 / .6); }
-.in-cta { border: 0; border-radius: 999px; background: #fff; color: #14231f; font: 600 15px/1 "Gowun Dodum", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; padding: 15px 34px; cursor: pointer; transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s; }
-.in-cta:hover { transform: scale(1.03); box-shadow: 0 0 32px 4px rgb(255 255 255 / .22); }
-.in-cta:active { transform: scale(.97); }
-.in-cta:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-.in-bottom small { display: flex; align-items: center; gap: 8px; font: 500 13px/1 "Gowun Dodum", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; letter-spacing: .12em; color: rgb(255 255 255 / .72); }
-#intro .in-steam { display: none; }
-@media (prefers-reduced-motion: no-preference) {
-  #intro.on h1 span, #intro.on .in-bottom > *, #intro.on header { animation: in-up 1s cubic-bezier(.16, 1, .3, 1) both; }
-  #intro.on h1 .dim { animation-delay: .15s; }
-  #intro.on .in-bottom > :nth-child(1) { animation-delay: .35s; }
-  #intro.on .in-bottom > :nth-child(2) { animation-delay: .5s; }
-  #intro.on .in-bottom > :nth-child(3) { animation-delay: .65s; }
-  #intro .in-steam { display: block; position: absolute; z-index: 2; right: 12%; bottom: -10%; width: 26vw; height: 40vh; border-radius: 50%; background: #fff; filter: blur(40px); opacity: .12; pointer-events: none; animation: steam-drift 9s ease-in-out infinite alternate; }
-  #intro .in-steam-2 { right: 40%; width: 18vw; animation-duration: 11s; animation-delay: -4s; }
-  #intro.on .in-bg { animation: in-zoom 2.8s cubic-bezier(.16, 1, .3, 1) both; }
-  @keyframes in-zoom { from { scale: 1.1; } to { scale: 1; } }
-  @keyframes in-up { from { opacity: 0; transform: translateY(24px); } }
-}
-@media (max-width: 640px) { .in-brand small { display: none; } #intro nav a { padding: 7px 11px; } }
-
-#intro .in-photo-credit { position:absolute; z-index:3; right:clamp(12px,2vw,28px); bottom:8px; color:#fff; background:rgba(20,35,31,.75); padding:3px 7px; font:12px/1.4 sans-serif; text-decoration:underline; text-underline-offset:2px; }
-#intro .in-photo-credit:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+.intro-open{overflow:hidden}
+#intro{--ink:#f6e6cc;position:fixed;inset:0;z-index:9999;overflow:hidden;color:var(--ink);background:#27151f;font-family:"Gowun Dodum","Yu Mincho",serif;isolation:isolate}#intro *{box-sizing:border-box}
+#intro .in-world{position:absolute;inset:0;transform-origin:50% 55%;transition:transform 2.7s cubic-bezier(.45,0,.25,1)}
+#intro .in-architecture{position:absolute;width:max(100vw,177.68vh);height:max(56.28vw,100vh);left:50%;top:50%;transform:translate(-50%,-50%);background:url(images/ryokan-night.png) center/100% 100% no-repeat}
+#intro .in-portal{position:absolute;left:28.1%;top:23.6%;width:43.9%;height:52%;overflow:hidden;display:flex;box-shadow:inset 0 6px 20px #120a0b}
+#intro .in-door{position:relative;width:50%;height:100%;background:repeating-linear-gradient(90deg,transparent 0 13%,#321b19 13% 15%),repeating-linear-gradient(0deg,transparent 0 24%,#39201c 24% 26%),radial-gradient(ellipse at 50% 65%,#ca8a4a,#694034 80%);border:8px solid #3c211f;box-shadow:inset 0 0 32px #201016aa;transition:transform 1.7s cubic-bezier(.65,0,.25,1);will-change:transform}
+#intro .in-door::after{content:"";position:absolute;bottom:0;left:0;right:0;height:22%;background:repeating-linear-gradient(90deg,#452520 0 4%,#3d211e 4% 5%);border-top:7px solid #311b19}
+#intro .in-door span{position:absolute;right:8%;top:50%;height:11%;width:5%;border:2px solid #ba8d5b;z-index:1;background:#26161a}#intro .in-door-right span{right:auto;left:8%}
+#intro .in-shade{position:absolute;inset:0;background:linear-gradient(90deg,#211019d9,transparent 70%),linear-gradient(0deg,#211019bb,transparent 40%);pointer-events:none;transition:opacity 1s}
+#intro header{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:30px 4.5vw;background:none;z-index:5;transition:opacity .6s}#intro header b{font-size:18px;letter-spacing:.05em;font-weight:400}
+#intro nav{display:flex;gap:6px}#intro nav a{padding:10px 12px;color:#f6e6cc;text-decoration:none;font-size:13px;border-bottom:1px solid transparent}#intro nav a:hover,#intro nav a[aria-current]{border-bottom-color:#d7b395}#intro :is(a,button):focus-visible{outline:2px solid #ffe1ad;outline-offset:5px}
+#intro .in-content{position:absolute;left:8vw;top:50%;transform:translateY(-42%);z-index:4;transition:opacity .65s,transform .9s}
+#intro .in-brush{width:clamp(70px,8vw,120px);height:auto;overflow:visible;margin-bottom:22px;color:#f4d3ab}#intro .in-brush path{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+#intro h1{font-family:"Gowun Dodum","Yu Mincho",serif;font-weight:400;font-size:clamp(34px,4.2vw,66px);line-height:1.32;letter-spacing:-.025em;margin:0;text-wrap:balance;text-shadow:0 5px 24px #1f0e19}#intro h1 span{color:#e8c8ac}#intro .in-content p{font-size:15px;line-height:1.7;margin:24px 0 30px;max-width:36ch;color:#f0dcca}
+#intro .in-cta{border:1px solid #cba483;background:#632f3e;color:#fff0dc;border-radius:2px;display:flex;align-items:center;gap:44px;padding:17px 23px;min-height:52px;font:inherit;cursor:pointer;box-shadow:0 12px 30px #190b1770;transition:background .3s,transform .3s}#intro .in-cta span{font-size:22px}#intro .in-cta:hover{background:#814351;transform:translateY(-2px)}
+#intro .in-caption{position:absolute;right:4.5vw;bottom:5vh;writing-mode:vertical-rl;letter-spacing:.28em;font:16px/1.8 "Klee One",serif;transition:opacity .6s}
+#intro .in-leaves{position:absolute;inset:0;pointer-events:none;overflow:hidden}#intro .in-leaves i{position:absolute;left:var(--x);top:-10%;width:calc(18px + var(--i)*2px);color:#b94c45;animation:maple-fall calc(16s + var(--i)*1.3s) linear infinite;animation-delay:calc(var(--i)*-3.5s)}#intro .in-leaves svg{width:100%;fill:currentColor;filter:drop-shadow(2px 5px 3px #180a1644)}#intro .in-leaves i:nth-child(3n){color:#c77647}#intro.paused .in-leaves i{animation-play-state:paused}
+#intro .in-desk{position:absolute;left:50%;top:59%;width:min(68vw,950px);aspect-ratio:1.55;background:repeating-linear-gradient(0deg,#45252c 0 3px,#49282e 3px 5px);padding:24px;box-shadow:0 30px 65px #12080cc9;transform:translate(-50%,-50%) perspective(1500px) rotateX(18deg) scale(.25);opacity:0;transition:transform 1.5s cubic-bezier(.45,0,.2,1),opacity .6s;pointer-events:none}
+#intro .in-paper{position:relative;width:100%;height:100%;background:#27151f;border:1px solid #b99a7b;color:#e2c3a2;box-shadow:0 4px 16px #14080b66;overflow:hidden}#intro .in-paper>span{position:absolute;left:6%;top:10%;writing-mode:vertical-rl;font:clamp(24px,5vw,70px)/1.2 "Klee One",serif;opacity:.55}#intro .in-paper img{height:95%;width:80%;margin-left:15%;fill:#58333e;stroke:#d5b7a4;stroke-width:1}
+#intro .in-skip{position:absolute;bottom:28px;right:4.5vw;z-index:8;background:#27151fe8;color:var(--ink);border:1px solid #c5a389;padding:12px 20px;font:14px "Gowun Dodum",sans-serif;cursor:pointer}
+#intro.approaching .in-content{opacity:0;transform:translateY(-45%);pointer-events:none}#intro.approaching header,#intro.approaching .in-caption{opacity:0;pointer-events:none}#intro.approaching .in-world{transform:scale(1.6)}#intro.approaching .in-shade{opacity:0}
+#intro.doors-open .in-door-left{transform:translateX(-100%)}#intro.doors-open .in-door-right{transform:translateX(100%)}#intro.inside .in-world{transform:scale(2.5);filter:brightness(.7);transition:transform 1.8s cubic-bezier(.45,0,.2,1),filter 1s}#intro.inside .in-leaves{opacity:0;transition:opacity .6s}#intro.inside .in-desk{opacity:1;transform:translate(-50%,-50%) perspective(1500px) rotateX(18deg) scale(.8)}#intro.at-desk .in-desk{transform:translate(-50%,-50%) perspective(1500px) rotateX(18deg) scale(2.4)}
+@keyframes maple-fall{0%{transform:translate3d(-20px,-8vh,0) rotate(0)}35%{transform:translate3d(45px,38vh,0) rotate(100deg)}70%{transform:translate3d(-18px,77vh,0) rotate(240deg)}100%{transform:translate3d(60px,120vh,0) rotate(330deg)}}@keyframes brush-write{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:no-preference){#intro.on .in-brush path{animation:brush-write .43s ease-out both;animation-delay:calc(var(--stroke)*.14s + .1s)}}
+@media(max-width:640px){#intro header{padding:22px;align-items:flex-start;gap:16px;flex-direction:column}#intro nav{align-self:flex-end}#intro nav a{padding:7px 10px}#intro .in-content{left:7vw;right:7vw;top:auto;bottom:10vh;transform:none}#intro .in-brush{width:72px;margin-bottom:14px}#intro h1{font-size:clamp(29px,8.4vw,44px)}#intro .in-content p{font-size:14px;margin:18px 0 22px}#intro .in-caption{display:none}#intro .in-shade{background:linear-gradient(0deg,#211019ed,#21101977 52%,#21101933)}#intro .in-desk{width:100vw}#intro .in-door{border-width:5px}#intro .in-architecture{left:56%}#intro.approaching .in-content{transform:translateY(-15px)}}
+@media(max-height:580px){#intro .in-brush{width:52px;margin-bottom:8px}#intro h1{font-size:30px}#intro .in-content{top:53%;bottom:auto;transform:translateY(-38%)}#intro .in-content p{margin:12px 0}#intro header{padding:15px 25px;flex-direction:row}#intro .in-cta{padding:10px 18px;min-height:44px}}
+@media(prefers-reduced-motion:reduce){#intro *,#intro *::before,#intro *::after{animation:none!important;transition:none!important}#intro .in-leaves{display:none}}
+/* The camera settles above the actual desk before the map fills the view. */
+#intro .in-room{position:absolute;left:50%;top:50%;width:max(100vw,177.68vh);height:max(56.28vw,100vh);background:url(images/ryokan-room.png) center/100% 100% no-repeat;opacity:0;transform:translate(-50%,-50%) scale(.85);transition:opacity .65s,transform 1.3s cubic-bezier(.45,0,.2,1);pointer-events:none}
+#intro .in-room .in-desk{left:50%;top:50%;width:62%;height:51%;aspect-ratio:auto;padding:0;background:transparent;opacity:1;transform:translate(-50%,-50%) perspective(1900px) rotateX(18deg);box-shadow:0 9px 16px #170b1250;transition:none}
+#intro.inside .in-room{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#intro.at-desk .in-room{transform:translate(-50%,-50%) scale(1.85)}
+#intro .in-brush path:nth-child(3n){stroke-width:4}#intro .in-brush path:nth-child(4n){stroke-width:6}
+@media(prefers-reduced-motion:reduce){#intro .in-room{transition:none}}
