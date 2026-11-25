@@ -33,6 +33,8 @@
   - on: `validateChange`를 통과하고 high+인용문(가격은 0.2~5배 이내)이면 즉시 반영(예전 동작, 비권장).
   - 자동 반영도 old/new/evidence/source가 남고 되돌릴 수 있다(`--revert <id>` 또는 관리 화면 '최근 7일 자동 반영' 목록의 되돌리기 요청).
 - 공지 자동 공개 `AUTO_PUBLISH_NOTICES` = `off(기본) | on`: on 이면 한국어 요약(자동 요약은 키가 있을 때만 생김. 키가 없으면 사람이 적은 요약)이 있고, 날짜가 최근 30일 이내이거나 休業/臨時/営業時間/料金 등 키워드가 있으며, 레스토랑/메뉴/이벤트/求人/ブログ 등 잡음 단어가 없을 때만 `published=true`. 나머지는 비공개로 남는다. 요약이 비어 있으면 아무것도 자동 공개되지 않는다(키 없는 운영에서는 사실상 항상 수동 승인).
+
+- **규칙 기반 공지 요약(R6, 키 불필요):** `summarizeNoticeRules`가 원문에서 분류(휴관·휴업/점검·공사/영업시간 변경/요금 개정/영업 재개)와 날짜를 뽑아 고정 한국어 문장(끝에 `(자동 요약)`)을 만든다. 번역은 하지 않으므로 분류가 안 되는 공지는 요약이 비고 비공개로 남는다. `AUTO_PUBLISH_NOTICES=rules`(워크플로 기본값)이면 시설 단위 휴관/영업시간/요금/재개 공지이고 날짜가 아직 지나지 않았을 때만 자동 공개한다. 매 실행의 `summarizeBacklog`가 (1) 요약이 빈 비공개 공지에 요약을 채우고 (2) 기간이 끝난 규칙 공지를 다시 비공개로 돌린다. 사람이 쓴 요약은 SQL 조건(`summary_ko is null`, 자동 요약 꼬리표)으로 덮어쓰지 않는다. 끄려면 저장소 Variable `AUTO_PUBLISH_NOTICES=off`.
 - 사진: og:image / 본문 img 최대 4장, 5MB 한도, sha256만 저장(`license_status='unverified'`, `published=false`). 이미지 파일은 저장·핫링크 안 함.
 - 로그: warn/error와 요약(run_summary/apply_summary/enqueued/seeded/prune)만 `monitor_logs`에 저장하고, 작업별 info는 stdout/`out/monitor.log`에만 남긴다. JSON 한 줄(ts, level, facility_id, job_id, job_kind, result, error_cause) -> stdout + `out/monitor.log`(2MB 넘으면 `.1`로 회전) + `monitor_logs`. key/token/secret/password/authorization/JWT 패턴은 `[REDACTED]`.
 - blocked(robots/403/SSRF)는 재시도 없이 `skipped`, 일시 오류(timeout/dns/5xx)는 재시도 후 `failed`.

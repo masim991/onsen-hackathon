@@ -204,6 +204,62 @@ export function shouldPublish(n, now = Date.now(), jobUrl = n.source_url) {
   const t = n.notice_date ? Date.parse(n.notice_date) : NaN;
   return NOTICE_KEY.test(txt) && Number.isFinite(t) && t >= now - 30 * DAY && t <= now;
 }
+// ---------- R6: keyless rule-based Korean notice summary ----------
+// Deterministic (no API key): category + dates + fixed Korean template. It never translates free text, so an unrecognised notice gets NO summary (stays private for a human).
+// Auto-publish (AUTO_PUBLISH_NOTICES = rules|on) only when: facility-level closure/hours/price/resume notice, a real date that is not over yet, none of the side-topic words below.
+export const RULE_TAG = ' (자동 요약)';
+// same safety as shouldPublish: https notice link on the same host as the monitored official page
+export const officialNotice = (n, jobUrl) => { try { return new URL(n.source_url).protocol === 'https:' && !!bare(jobUrl) && bare(jobUrl) === bare(n.source_url); } catch { return false; } };
+const RN_SKIP = /レストラン|ランチ|ディナー|ブッフェ|ビュッフェ|カフェ|売店|ショップ|プール|サウナ|イベント|フェア|キャンペーン|割引|クーポン|予約システム|パスワード|禁煙|喫煙|送迎|バス|求人|採用|ブログ|会席|メニュー|競輪|ふっこう|ポイント|ホームページ|お食事|朝食|夕食|宴会|婚礼|貸切|貸し切り/;
+const RN_CLOSE = /休業|休館|休止|閉館|臨時休|定休日の変更/, RN_MAINT = /メンテナンス|メンテンナンス|点検|工事|改装|修繕/, RN_HOURS = /営業時間|入浴時間/, RN_PRICE = /料金|値上|入浴料/, RN_CHG = /変更|短縮|延長|改定|値上|値下|改訂/, RN_RESUME = /営業再開|再開いたし|再開します/;
+const RN_DAY = 86400000, jstDay = (ms) => Math.floor((ms + 9 * 3600000) / RN_DAY) * RN_DAY; // JST midnight as a UTC-ms "day number"
+export function ruleDates(text, refYear) {
+  const s = String(text || '').normalize('NFKC').replace(/令和\s*(\d{1,2})\s*年/g, (_, n) => `${2018 + +n}年`);
+  const re = /(\d{4})\s*[年\/.\-]\s*(\d{1,2})\s*[月\/.\-]\s*(\d{1,2})\s*日?|(\d{1,2})\s*[月\/]\s*(\d{1,2})\s*日?/g;
+  const toks = [];
+  let ex = null, prev = null;
+  for (const m of s.matchAll(re)) {
+    let y = m[1] ? +m[1] : null; const mo = +(m[2] || m[4]), d = +(m[3] || m[5]);
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) continue;
+    if (y) ex ??= y; else y = ex ?? refYear;
+    if (!y) continue;
+    if (!m[1] && prev && (mo < prev.mo || (mo === prev.mo && d < prev.d))) y = prev.y + 1; // 12/26 ~ 1/8 crosses the new year
+    const t = Date.UTC(y, mo - 1, d);
+    if (new Date(t).getUTCMonth() !== mo - 1) continue;
+    prev = { y, mo, d }; toks.push({ t, idx: m.index, len: m[0].length, mo, d, y, tail: s.slice(m.index + m[0].length, m.index + m[0].length + 14) });
+  }
+  return toks;
+}
+export function summarizeNoticeRules(n, now = Date.now()) {
+  const txt = String(n.original_excerpt || n.title || '').normalize('NFKC');
+  if (txt.length < 8 || RN_SKIP.test(txt) || RN_SKIP.test(String(n.title || ''))) return null;
+  const close = RN_CLOSE.test(txt), maint = RN_MAINT.test(txt);
+  let cat = null;
+  if (RN_RESUME.test(txt)) cat = 'resume';
+  else if (close) cat = 'closure';
+  else if (RN_HOURS.test(txt) && RN_CHG.test(txt)) cat = 'hours';
+  else if (RN_PRICE.test(txt) && RN_CHG.test(txt)) cat = 'price';
+  if (!cat) return null;
+  const refYear = (String(n.notice_date || '').match(/^(\d{4})/) || String(n.detected_at || '').match(/^(\d{4})/) || [])[1];
+  let toks = ruleDates(txt, refYear ? +refYear : new Date(now + 9 * 3600000).getUTCFullYear());
+  if (toks.length > 1 && toks[0].idx < 3 && !/^s*(?:([^)]{0,3}))?s*(?:[~〜～-]|から|より)/.test(toks[0].tail)) toks = toks.slice(1); // a leading date is the posting date (2026/11/22 臨時休館のお知らせ 11/23)
+  let start = toks[0] || null, end = null;
+  if (start) {
+    const t2 = toks[1], gap = t2 ? txt.slice(start.idx + start.len, t2.idx) : '';
+    if (t2 && /^\s*(?:\([^)]{0,3}\))?\s*(?:[~〜～\-]|から|より)\s*(?:\([^)]{0,3}\))?\s*$/.test(gap)) end = t2;
+    else { const dm = /^\s*(?:\([^)]{0,3}\))?\s*[~〜～\-]\s*(\d{1,2})\s*日/.exec(start.tail); if (dm) end = { t: Date.UTC(start.y, start.mo - 1, +dm[1]), mo: start.mo, d: +dm[1], y: start.y }; }
+  }
+  const T = jstDay(now), fmt = (o, rel) => { const dd = `${String(o.mo).padStart(2, '0')}-${String(o.d).padStart(2, '0')}`; return rel && rel.y === o.y ? dd : `${o.y}-${dd}`; };
+  const period = start ? (end ? `${fmt(start)} ~ ${fmt(end, start)}` : fmt(start)) : '';
+  const lab = { closure: `${/臨時/.test(txt) ? '임시 ' : ''}${maint ? '점검·공사 ' : ''}${/休止/.test(txt) && !/休館|休業/.test(txt) ? '영업 중지' : '휴관·휴업'}`, resume: '영업 재개', hours: '영업시간 변경', price: '요금 개정' }[cat];
+  const openEnded = start && !end && /より|から|以降|しばらく/.test(start.tail + txt.slice(Math.max(0, start.idx - 2), start.idx));
+  const summary = `${lab} 안내${period ? `: ${period}${openEnded ? ' 부터' : ''}` : ''}. 자세한 내용은 공식 공지 원문을 확인하세요.${RULE_TAG}`;
+  const ref = end ? end.t : start ? start.t : null;
+  const stale = ref === null ? true : (cat === 'closure' || cat === 'resume' ? jstDay(ref) < T : jstDay(ref) < T - 14 * RN_DAY) || jstDay(start.t) > T + 180 * RN_DAY;
+  const fragment = /^[、。ので]|^(まで|より|から|を|は|が|に|も|、)/.test(String(n.title || '').trim()) && !start; // fragment title without a usable date
+  return { summary, category: cat, period, publish: !stale && !fragment && !(!start) && !(!end && !openEnded && cat === 'closure' && jstDay(start.t) < T) };
+}
+
 const PRICE_ORDER = ['per-person-2meals', 'per-person-1meal', 'per-person-room-only', 'per-person', 'room'];
 export function bestPrice(cands) {
   for (const k of PRICE_ORDER) {
@@ -459,6 +515,25 @@ export async function classifyPhotos(sink, { max = +process.env.AI_MAX_IMAGES ||
 }
 
 
+// Backlog + expiry for rule summaries: (1) notices still without a summary get the rule text (and are published only when the rule says so),
+// (2) published rule notices whose date has passed are unpublished again. Human-written summaries are never touched (SQL-side guards in the sink).
+export async function summarizeBacklog(sink, now = Date.now()) {
+  const st = { checked: 0, summarized: 0, published: 0, expired: 0, errors: 0 };
+  if (!sink.listNoticesToSummarize) return st;
+  const pubOk = ['rules', 'on'].includes(process.env.AUTO_PUBLISH_NOTICES);
+  try {
+    const tm = new Map(((sink.noticeTargetUrls && await sink.noticeTargetUrls()) || []).map((x) => [x.facility_id, x.url])); // monitored official page per facility (same-host check)
+    for (const n of await sink.listNoticesToSummarize(500)) {
+      st.checked++; const r = summarizeNoticeRules(n, now); if (!r) continue;
+      const patch = { summary_ko: r.summary, ...(pubOk && r.publish && officialNotice(n, tm.get(n.facility_id)) ? { published: true } : {}) };
+      await sink.summarizeNotice(n.id, patch); st.summarized++; if (patch.published) st.published++;
+    }
+    for (const n of await sink.listRuleNoticesPublished()) { const r = summarizeNoticeRules(n, now); if (!r || !r.publish || !officialNotice(n, tm.get(n.facility_id))) { await sink.unpublishRuleNotice(n.id); st.expired++; } }
+  } catch (e) { st.errors++; log('warn', { result: 'notice_backlog_failed', error_cause: errText(e).slice(0, 80) }); }
+  log('info', { result: 'notice_summary_backlog', meta: st });
+  return st;
+}
+
 // ---------- jobs ----------
 async function jobNotice(job, sink) {
   const p = await getPage(job.url);
@@ -471,7 +546,10 @@ async function jobNotice(job, sink) {
     if (known.notices.has(it.hash)) continue;
     const ai = await summarize(it.excerpt, job.facility_id, sink);
     const row = { facility_id: job.facility_id, source_url: it.url, content_hash: it.hash, title: it.title, notice_date: it.date, original_excerpt: it.excerpt, summary_ko: ai.summary, detected_at: nowIso() };
-    const noticeId = await sink.addNotice({ ...row, published: shouldPublish(row, Date.now(), job.url) });
+    const rule = ai.summary ? null : summarizeNoticeRules(row); // keyless fallback: fixed-template Korean summary (see summarizeNoticeRules)
+    if (rule) row.summary_ko = rule.summary;
+    const pub = rule ? !!(rule.publish && officialNotice(row, job.url) && ['rules', 'on'].includes(process.env.AUTO_PUBLISH_NOTICES)) : shouldPublish(row, Date.now(), job.url);
+    const noticeId = await sink.addNotice({ ...row, published: pub });
     if (ai.row) await sink.addAiLog({ ...ai.row, notice_id: noticeId ?? null }).catch((e) => log('warn', { facility_id: job.facility_id, result: 'ai_log_failed', error_cause: errText(e).slice(0, 80) }));
     known.notices.add(it.hash); added++;
   }
@@ -817,6 +895,12 @@ function restSink() {
     aiUsage: (r) => rq('POST', 'ai_usage', r, 'return=minimal'),
     addAiLog: (r) => rq('POST', 'ai_logs', r, 'return=minimal'),
     // only unpublished, never-checked, non-rejected photos; the worker never touches rows that are already published
+    noticeTargetUrls: () => rq('GET', 'monitor_targets?kind=eq.notice&select=facility_id,url&limit=2000'),
+    listNoticesToSummarize: (n) => rq('GET', `facility_notices?published=eq.false&summary_ko=is.null&select=id,facility_id,source_url,title,notice_date,original_excerpt,detected_at&order=id.asc&limit=${+n}`),
+    listRuleNoticesPublished: () => rq('GET', `facility_notices?published=eq.true&summary_ko=like.${encodeURIComponent('*' + RULE_TAG)}&select=id,facility_id,source_url,title,notice_date,original_excerpt,detected_at&limit=500`),
+    // guards: a summary is only written while still empty (never over a human edit); a rule-published notice is only unpublished while its summary is still the untouched rule text
+    summarizeNotice: (id, patch) => rq('PATCH', `facility_notices?id=eq.${+id}&summary_ko=is.null`, patch, 'return=minimal'),
+    unpublishRuleNotice: (id) => rq('PATCH', `facility_notices?id=eq.${+id}&published=eq.true&summary_ko=like.${encodeURIComponent('*' + RULE_TAG)}`, { published: false }, 'return=minimal'),
     listPhotosToClassify: (n) => rq('GET', `photo_assets?published=eq.false&ai_checked_at=is.null&license_status=neq.rejected&select=id,facility_id,image_url,sha256,license_status,license_source,license_note&order=discovered_at.asc&limit=${+n}`),
     updatePhoto: (id, patch) => rq('PATCH', `photo_assets?id=eq.${+id}&published=eq.false`, patch, 'return=minimal'),
     prune: (days) => rq('POST', 'rpc/monitor_prune', { days }),
@@ -894,7 +978,7 @@ async function main() {
   } else if (a.mode === 'run') {
     const t0 = Date.now();
     try {
-      const st = await run(sink, a); await classifyPhotos(sink).catch((e) => log('warn', { result: 'classify_failed', error_cause: errText(e).slice(0, 80) })); await applyApproved(sink);
+      const st = await run(sink, a); await classifyPhotos(sink).catch((e) => log('warn', { result: 'classify_failed', error_cause: errText(e).slice(0, 80) })); await summarizeBacklog(sink); await applyApproved(sink);
       log('info', { result: 'heartbeat', meta: heartbeatMeta(true, st, Date.now() - t0) }); // last step of a good run; the admin page checks its age
     } catch (e) {
       log('error', { result: 'heartbeat', error_cause: errText(e).slice(0, 80), meta: heartbeatMeta(false, null, Date.now() - t0) });
@@ -929,6 +1013,28 @@ async function selftest() {
   const html = '<h2>お知らせ</h2><ul><li><a href="/n/1">2026.11.05 年末年始の営業について</a></li><li>2026年11月01日 設備点検のため臨時休業します</li></ul><p>© 2026</p>';
   const items = extractNoticeItems(html, htmlToLines(html), 'https://e.com/', Date.parse('2026-11-20'));
   t('notice items dated + link', items.length >= 2 && items[0].date === '2026-11-05' && items[0].url === 'https://e.com/n/1');
+  { // R6 rule-based notice summaries (fixed "today" = 2026-11-25 JST)
+    const now0 = Date.parse('2026-11-25T03:00:00Z'), N = (ex, extra = {}) => ({ facility_id: 'f1', source_url: 'https://e.com/news', title: ex, original_excerpt: ex, notice_date: null, detected_at: '2026-11-24T00:00:00Z', ...extra });
+    const a1 = summarizeNoticeRules(N('■休館期間 2026年12月1日(火)〜12月4日(金)'), now0);
+    t('notice rules: closure range => summary + publish', a1 && a1.publish && a1.summary.startsWith('휴관·휴업 안내: 2026-12-01 ~ 12-04') && a1.summary.endsWith(RULE_TAG));
+    const a2 = summarizeNoticeRules(N('【12/2~12/3】メンテナンスに伴う休館のお知らせ'), now0);
+    t('notice rules: yearless dates take the detected year; maintenance label', a2 && a2.publish && a2.summary.includes('점검·공사 휴관·휴업 안내: 2026-12-02 ~ 12-03'));
+    const a3 = summarizeNoticeRules(N('【12/26~1/8】ランチビュッフェ営業休止のご案内'), now0), a4 = summarizeNoticeRules(N('2026/12/26 ~ 2027/1/8 休館'), now0);
+    t('notice rules: restaurant/side-topic skipped; range across new year', a3 === null && a4 && a4.summary.includes('2026-12-26 ~ 2027-01-08'));
+    const a5 = summarizeNoticeRules(N('2026/11/22(日) 臨時休館のお知らせ 11/23(月)'), now0), a6 = summarizeNoticeRules(N('2026年6月16日(金)を終日休館とさせていただきます。'), now0);
+    t('notice rules: past/ended closures get a summary but are NOT published', a5 && !a5.publish && a5.summary.startsWith('임시 휴관·휴업') && a6 && !a6.publish);
+    const a7 = summarizeNoticeRules(N('臨時休業のお知らせ!'), now0), a8 = summarizeNoticeRules(N('2024年7月26日(金)より機械のメンテナンスのためしばらくの間休業させていただきます。'), now0);
+    t('notice rules: no date or stale open-ended => not published', a7 && !a7.publish && a8 && !a8.publish);
+    const a9 = summarizeNoticeRules(N('2026年12月10日より入浴料金改定のお知らせ'), now0), a10 = summarizeNoticeRules(N('2025年5月1日より入浴料金改定 ご注意ください'), now0);
+    t('notice rules: price revision upcoming published, old one not', a9 && a9.publish && a9.summary.startsWith('요금 개정 안내') && a10 && !a10.publish);
+    t('notice rules: unrelated notice => null; summary has no html and is short', summarizeNoticeRules(N('冬期間限定の新しい宿泊プランのご案内です'), now0) === null && !/[<>]/.test(a1.summary) && a1.summary.length < 120);
+    const mem = { ups: [], un: [] }, bsink = { noticeTargetUrls: async () => [{ facility_id: 'f1', url: 'https://e.com/' }], listNoticesToSummarize: async () => [{ id: 1, ...N('■休館期間 2026年12月1日(火)〜12月4日(金)') }, { id: 2, ...N('お知らせ') }], listRuleNoticesPublished: async () => [{ id: 3, ...N('2026/11/22(日) 臨時休館のお知らせ 11/23(月)') }, { id: 4, ...N('■休館期間 2026年12月1日(火)〜12月4日(金)') }], summarizeNotice: async (id, p) => void mem.ups.push([id, p]), unpublishRuleNotice: async (id) => void mem.un.push(id) };
+    process.env.AUTO_PUBLISH_NOTICES = 'rules'; const bs = await summarizeBacklog(bsink, now0); delete process.env.AUTO_PUBLISH_NOTICES;
+    t('notice backlog: summarise+publish new, expire ended, leave valid', bs.summarized === 1 && bs.published === 1 && mem.ups[0][1].published === true && mem.un.join() === '3' && bs.expired === 1);
+    t('notice backlog: off-domain / http source is never auto-published', !officialNotice({ source_url: 'https://other.com/n' }, 'https://e.com/') && !officialNotice({ source_url: 'http://e.com/n' }, 'https://e.com/') && officialNotice({ source_url: 'https://www.e.com/n' }, 'https://e.com/'));
+    mem.ups = []; await summarizeBacklog(bsink, now0);
+    t('notice backlog: AUTO_PUBLISH off => summary only, never published', mem.ups.length === 1 && mem.ups[0][1].published === undefined);
+  }
   const NF = (title, date, extra = {}) => ({ title, date, excerpt: title, ...extra }), nnow = Date.parse('2026-11-23');
   const nk = (l) => filterNotices(l, nnow).length;
   t('notice filter: junk dropped (walk, menu, YouTube, renewal, magazine, recruit)', nk([NF('開催 伊師浜国民休養地自然観察会', '2026-11-03'), NF('ふぐと宮崎牛会席', '2026-12-14'), NF('凌雲閣を撮影したYouTube「旅する時間」様の動画が公開されました。', '2026-11-10'), NF('公式ホームページをリニューアルいたしました。', '2026-11-01'), NF('秋の南房総へ。おすすめ取材記事', '2026-11-01')]) === 0);
