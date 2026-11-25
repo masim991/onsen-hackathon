@@ -31,3 +31,6 @@ tools/prices/removed-prices.*
 
 # originals backup before image shrink (reversible)
 _originals_backup/
+
+# local visual QA captures
+shots/
