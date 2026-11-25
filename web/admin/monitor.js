@@ -24,6 +24,18 @@
   }
   const safeHref = (v) => { try { const u = new URL(v); return /^https?:$/.test(u.protocol) ? u.href : ''; } catch { return ''; } };
   const link = (url, text) => { const h = safeHref(url); return h ? el('a', {href: h, target: '_blank', rel: 'noopener noreferrer'}, text || url) : el('span', {}, text || url || '-'); };
+  function photoPreview(p) {
+    const href = safeHref(p.image_url);
+    const hint = el('span', {class: 'photo-preview-hint'}, href ? '미리보기를 불러오는 중…' : '이미지 주소를 확인하세요');
+    const frame = el('div', {class: 'photo-preview-frame'}, hint);
+    if (href && href.startsWith('https://')) {
+      const img = el('img', {class: 'photo-preview-image', src: href, alt: `${p.facility_id} 이미지 미리보기`, loading: 'lazy', decoding: 'async', referrerpolicy: 'no-referrer'});
+      img.addEventListener('load', () => { hint.hidden = true; });
+      img.addEventListener('error', () => { img.remove(); hint.textContent = '미리보기를 불러오지 못했습니다'; });
+      frame.prepend(img);
+    } else if (href) hint.textContent = 'HTTP 이미지는 원본 링크에서 확인하세요';
+    return el('figure', {class: 'photo-preview'}, frame, el('figcaption', {}, link(p.image_url, '원본 이미지 열기')));
+  }
   // DB 시각은 timestamptz(UTC). 브라우저 시간대와 무관하게 한국 시간으로 고정해 보여 준다.
   const KST = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'});
   const when = (v) => { const d = v ? new Date(v) : null; return d && !isNaN(d) ? `${KST.format(d)} KST` : '-'; };
@@ -311,10 +323,11 @@
         // 라이선스가 verified 에서 벗어나면 공개도 같이 내린다(공개는 verified 일 때만 가능).
         const saveLic = el('button', {type: 'button', class: 'btn', on: {click: async () => go(lic.value === 'verified' ? {license_status: 'verified'} : {license_status: lic.value, published: false})()}}, '라이선스 저장');
         return el('div', {class: 'item'}, el('div', {}, tag(p.published ? '공개' : '비공개', p.published ? 'good' : 'warn'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
-          el('div', {class: 'meta'}, '이미지 주소(미리보기 없음): ', link(p.image_url)), el('div', {class: 'meta'}, `sha256 ${p.sha256}`),
-          p.ai_checked_at ? el('div', {class: 'meta'}, `AI 분류: ${LABEL_KO[p.ai_label] || p.ai_label || '-'} (${p.ai_confidence ?? '-'}) · 상태 ${STATE_KO[p.publish_state] || p.publish_state}`) : null,
-          field('라이선스 상태', lic), el('div', {class: 'acts'}, saveLic,
-            el('button', {type: 'button', class: 'btn primary', disabled: p.license_status !== 'verified', title: p.license_status !== 'verified' ? '라이선스 확인(verified) 후에만 공개할 수 있습니다' : '', on: {click: go({published: !p.published})}}, p.published ? '공개 해제' : '공개')), box);
+          el('div', {class: 'photo-item-layout'}, photoPreview(p), el('div', {class: 'photo-item-details'},
+            el('div', {class: 'meta'}, '이미지 주소: ', link(p.image_url)), el('div', {class: 'meta'}, `sha256 ${p.sha256}`),
+            p.ai_checked_at ? el('div', {class: 'meta'}, `AI 분류: ${LABEL_KO[p.ai_label] || p.ai_label || '-'} (${p.ai_confidence ?? '-'}) · 상태 ${STATE_KO[p.publish_state] || p.publish_state}`) : null,
+            field('라이선스 상태', lic), el('div', {class: 'acts'}, saveLic,
+              el('button', {type: 'button', class: 'btn primary', disabled: p.license_status !== 'verified', title: p.license_status !== 'verified' ? '라이선스 확인(verified) 후에만 공개할 수 있습니다' : '', on: {click: go({published: !p.published})}}, p.published ? '공개 해제' : '공개')), box)));
       }});
   }
 
@@ -362,12 +375,13 @@
           const r = await patch(`photo_assets?id=eq.${p.id}`, body, box); if (r) rerun();
         }}}, label);
         return el('div', {class: 'item'}, el('div', {}, tag(STATE_KO[p.publish_state] || p.publish_state, 'warn'), ' ', tag(LABEL_KO[p.ai_label] || p.ai_label || '-'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
-          el('div', {class: 'meta'}, `AI 신뢰도 ${p.ai_confidence ?? '-'} · ${p.ai_reason || '-'}`),
-          el('div', {class: 'meta'}, `라이선스 ${p.license_status} · 출처 ${p.license_source || '미기록'}${p.license_note ? ` · ${p.license_note}` : ''}`),
-          el('div', {class: 'meta'}, '이미지 주소(미리보기 없음, 열어서 확인): ', link(p.image_url)),
-          el('p', {class: 'meta'}, logo ? '로고는 시설 공식 사이트 링크 옆 작은 식별용으로만 쓸 후보입니다. 승인해도 사진으로 공개되지는 않습니다.' : '공식/출처 불명 사진은 공개하지 않고 공식 페이지 링크만 둡니다. 사용 허락·라이선스를 직접 확인한 경우에만 승인하세요(승인 = verified + 공개).'),
-          el('div', {class: 'acts'}, logo ? act('로고 사용 승인', 'primary', {publish_state: 'logo_approved'}, '이 로고를 식별용 후보로 승인합니다.') : act('라이선스 확인함 · 승인(공개)', 'primary', {license_status: 'verified', publish_state: 'approved', published: true}, '사용 허락/라이선스를 직접 확인했고 공개합니다. 계속할까요?'),
-            act('반려', 'danger', {publish_state: 'rejected', published: false})), box);
+          el('div', {class: 'photo-item-layout'}, photoPreview(p), el('div', {class: 'photo-item-details'},
+            el('div', {class: 'meta'}, `AI 신뢰도 ${p.ai_confidence ?? '-'} · ${p.ai_reason || '-'}`),
+            el('div', {class: 'meta'}, `라이선스 ${p.license_status} · 출처 ${p.license_source || '미기록'}${p.license_note ? ` · ${p.license_note}` : ''}`),
+            el('div', {class: 'meta'}, '이미지 주소: ', link(p.image_url)),
+            el('p', {class: 'meta'}, logo ? '로고는 시설 공식 사이트 링크 옆 작은 식별용으로만 쓸 후보입니다. 승인해도 사진으로 공개되지는 않습니다.' : '공식/출처 불명 사진은 공개하지 않고 공식 페이지 링크만 둡니다. 사용 허락·라이선스를 직접 확인한 경우에만 승인하세요(승인 = verified + 공개).'),
+            el('div', {class: 'acts'}, logo ? act('로고 사용 승인', 'primary', {publish_state: 'logo_approved'}, '이 로고를 식별용 후보로 승인합니다.') : act('라이선스 확인함 · 승인(공개)', 'primary', {license_status: 'verified', publish_state: 'approved', published: true}, '사용 허락/라이선스를 직접 확인했고 공개합니다. 계속할까요?'),
+              act('반려', 'danger', {publish_state: 'rejected', published: false})), box)));
       }});
   }
 

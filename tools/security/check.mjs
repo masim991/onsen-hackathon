@@ -176,7 +176,7 @@ let metaCsp = null;
 for (const [p, s] of pages) {
   const m = s.match(/<meta[^>]+http-equiv=["']Content-Security-Policy["'][^>]*content="([^"]+)"/i);
   if (!m) { fail('f-csp', rel(p), 1, 'missing CSP <meta>'); continue; }
-  const c = parseCsp(m[1]); metaCsp ||= c;
+  const c = parseCsp(m[1]); if (rel(p) === 'web/index.html') metaCsp = c;
   if (/unsafe-eval/.test(m[1])) fail('f-csp', rel(p), 1, "CSP contains 'unsafe-eval'");
   if ((c['script-src'] || c['default-src'] || []).includes("'unsafe-inline'")) fail('f-csp', rel(p), 1, "CSP script-src contains 'unsafe-inline'");
   if (!c['object-src']?.includes("'none'")) fail('f-csp', rel(p), 1, "CSP lacks object-src 'none'");
@@ -191,8 +191,15 @@ for (const f of ['web/serve.json', 'vercel.json']) {
   if (!hdr) { fail('f-csp', f, 0, 'no Content-Security-Policy header'); continue; }
   const h = parseCsp(hdr.value);
   if (!h['frame-ancestors']) fail('f-csp', f, 0, 'header CSP lacks frame-ancestors');
-  if (metaCsp) for (const k of Object.keys(metaCsp)) if (JSON.stringify(metaCsp[k]) !== JSON.stringify(h[k])) fail('f-csp', f, 0, `header CSP differs from meta in ${k}`);
+  if (metaCsp) for (const k of Object.keys(metaCsp)) if (k !== 'img-src' && JSON.stringify(metaCsp[k]) !== JSON.stringify(h[k])) fail('f-csp', f, 0, `header CSP differs from meta in ${k}`);
+  // The header permits HTTPS images for the admin preview. Public pages keep
+  // their narrower meta CSP, so both policies still restrict public images.
+  if (!h['img-src']?.includes('https:')) fail('f-csp', f, 0, 'header CSP must allow admin HTTPS photo previews');
 }
+const adminPage = pages.find(([p]) => rel(p) === 'web/admin/monitor.html');
+const adminPolicy = adminPage && parseCsp(adminPage[1].match(/<meta[^>]+http-equiv=["']Content-Security-Policy["'][^>]*content="([^"]+)"/i)?.[1] || '');
+if (!adminPolicy?.['img-src']?.includes('https:')) fail('f-csp', 'web/admin/monitor.html', 1, 'admin CSP must allow HTTPS photo previews');
+if (metaCsp?.['img-src']?.includes('https:')) fail('f-csp', 'web/index.html', 1, 'public CSP must retain restricted image hosts');
 const csp = metaCsp || {};
 // /admin/: noindex meta on every admin page, and noindex + no-store headers for /admin in both header files.
 for (const [p, s] of pages) if (/^web\/admin\//.test(rel(p)) && !/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(s)) fail('f-csp', rel(p), 1, 'admin page lacks robots noindex meta');
