@@ -207,32 +207,32 @@
       el('button', {type: 'button', class: 'btn', on: {click: () => openTab('activity')}}, '새로고침'));
     const status = msgBox(), results = el('div', {class: 'activity-list'});
     const search = el('input', {type: 'search', placeholder: '시설 id 또는 내용', 'aria-label': '최근 활동 검색'});
-    const kinds = [['all', '전체'], ['change', '변경'], ['log', '오류·로그'], ['job', '작업'], ['notice', '공지'], ['ai', 'AI 로그']];
-    let selected = 'all', events = [];
+    const kinds = [['attention', '확인 필요'], ['all', '전체'], ['change', '변경'], ['log', '오류·로그'], ['job', '작업'], ['notice', '공지'], ['ai', 'AI 로그']];
+    let selected = 'attention', events = [];
     const switches = el('div', {class: 'activity-switch', role: 'group', 'aria-label': '기록 종류'},
-      kinds.map(([kind, label]) => el('button', {type: 'button', class: 'btn', 'aria-pressed': kind === 'all' ? 'true' : 'false', on: {click: () => {
+      kinds.map(([kind, label]) => el('button', {type: 'button', class: 'btn', 'aria-pressed': kind === 'attention' ? 'true' : 'false', on: {click: () => {
         selected = kind;
         for (const b of switches.querySelectorAll('button')) b.setAttribute('aria-pressed', b.dataset.kind === kind ? 'true' : 'false');
         render();
       }}, 'data-kind': kind}, label)));
     const sources = [
-      ['change', 'facility_changes?select=id,facility_id,field,status,created_at,applied_at,old_value,new_value,evidence,source_url&order=created_at.desc&limit=35', r => ({kind: 'change', tab: 'changes', time: r.created_at, fid: r.facility_id, state: ST_KO[r.status] || r.status, title: `${r.field === 'price' ? '가격' : r.field === 'hours' ? '영업시간' : r.field} 변경`, note: `${pretty(r.old_value)} → ${pretty(r.new_value)}`, detail: r.evidence, url: r.source_url, tone: r.status === 'rejected' ? 'bad' : r.status === 'pending_review' ? 'warn' : 'good'})],
-      ['log', 'monitor_logs?select=id,facility_id,job_kind,level,result,error_cause,ts&order=ts.desc&limit=45', r => ({kind: 'log', tab: 'logs', time: r.ts, fid: r.facility_id, state: r.level, title: `${KIND_KO[r.job_kind] || r.job_kind || '시스템'} · ${r.result || '기록'}`, note: r.error_cause, tone: r.level === 'error' ? 'bad' : r.level === 'warn' ? 'warn' : ''})],
-      ['job', 'monitor_jobs?select=id,facility_id,kind,status,run_after,started_at,finished_at,error&order=id.desc&limit=30', r => ({kind: 'job', tab: 'jobs', time: r.finished_at || r.started_at || r.run_after, fid: r.facility_id, state: r.status, title: `${KIND_KO[r.kind] || r.kind} 점검`, note: r.error, tone: stCls(r.status)})],
-      ['notice', 'facility_notices?select=id,facility_id,title,published,detected_at,source_url&order=detected_at.desc&limit=30', r => ({kind: 'notice', tab: 'notices', time: r.detected_at, fid: r.facility_id, state: r.published ? '공개' : '비공개', title: r.title || '제목 없는 공지', url: r.source_url, tone: r.published ? 'good' : 'warn'})],
-      ['ai', 'ai_logs?select=id,facility_id,kind,status,model,error,created_at&order=created_at.desc&limit=30', r => ({kind: 'ai', tab: 'ailogs', time: r.created_at, fid: r.facility_id, state: r.status, title: `${AI_KIND_KO[r.kind] || r.kind} · ${r.model || '모델 미기록'}`, note: r.error, tone: r.status === 'error' ? 'bad' : ''})]
+      ['change', 'facility_changes?select=id,facility_id,field,status,created_at,applied_at,old_value,new_value,evidence,source_url&order=created_at.desc&limit=35', r => ({kind: 'change', tab: 'changes', time: r.created_at, fid: r.facility_id, state: ST_KO[r.status] || r.status, title: `${r.field === 'price' ? '가격' : r.field === 'hours' ? '영업시간' : r.field} 변경`, note: `${pretty(r.old_value)} → ${pretty(r.new_value)}`, url: r.source_url, tone: r.status === 'rejected' ? 'bad' : r.status === 'pending_review' ? 'warn' : 'good', attention: ['pending_review', 'approved', 'revert_requested'].includes(r.status)})],
+      ['log', 'monitor_logs?select=id,facility_id,job_kind,level,result,error_cause,ts&order=ts.desc&limit=45', r => ({kind: 'log', tab: 'logs', time: r.ts, fid: r.facility_id, state: r.level, title: `${KIND_KO[r.job_kind] || r.job_kind || '시스템'} · ${r.result || '기록'}`, note: r.error_cause, tone: r.level === 'error' ? 'bad' : r.level === 'warn' ? 'warn' : '', attention: ['error', 'warn'].includes(r.level)})],
+      ['job', 'monitor_jobs?select=id,facility_id,kind,status,run_after,started_at,finished_at,error&order=id.desc&limit=30', r => ({kind: 'job', tab: 'jobs', time: r.finished_at || r.started_at || r.run_after, fid: r.facility_id, state: r.status, title: `${KIND_KO[r.kind] || r.kind} 점검`, note: r.error, tone: stCls(r.status), attention: r.status === 'failed'})],
+      ['notice', 'facility_notices?select=id,facility_id,title,published,detected_at,source_url&order=detected_at.desc&limit=30', r => ({kind: 'notice', tab: 'notices', time: r.detected_at, fid: r.facility_id, state: r.published ? '공개' : '비공개', title: r.title || '제목 없는 공지', url: r.source_url, tone: r.published ? 'good' : 'warn', attention: !r.published})],
+      ['ai', 'ai_logs?select=id,facility_id,kind,status,model,error,created_at&order=created_at.desc&limit=30', r => ({kind: 'ai', tab: 'ailogs', time: r.created_at, fid: r.facility_id, state: r.status, title: `${AI_KIND_KO[r.kind] || r.kind} · ${r.model || '모델 미기록'}`, note: r.error, tone: r.status === 'error' ? 'bad' : '', attention: r.status === 'error'})]
     ];
     root.append(intro, el('div', {class: 'activity-controls'}, field('최근 기록에서 찾기', search), switches), status, results);
     function render() {
       const q = search.value.trim().toLocaleLowerCase();
-      const shown = events.filter(r => (selected === 'all' || selected === r.kind) && (!q || [r.fid, r.title, r.note, r.state].some(v => String(v || '').toLocaleLowerCase().includes(q)))).slice(0, 60);
+      const shown = events.filter(r => (selected === 'all' || selected === r.kind || selected === 'attention' && r.attention) && (!q || [r.fid, r.title, r.note, r.state].some(v => String(v || '').toLocaleLowerCase().includes(q)))).slice(0, 60);
       results.replaceChildren(...(shown.length ? shown.map(r => el('article', {class: 'activity-entry'},
         el('time', {}, when(r.time)),
         el('div', {class: 'activity-entry-main'},
           el('div', {class: 'activity-entry-heading'}, tag(kinds.find(([k]) => k === r.kind)?.[1] || r.kind), tag(r.state || '-', r.tone), el('strong', {}, r.title)),
           el('div', {class: 'meta'}, r.fid || '시설 없음'),
           r.note ? el('p', {class: 'activity-note'}, String(r.note).slice(0, 180)) : null,
-          el('div', {class: 'activity-entry-actions'}, el('button', {type: 'button', class: 'btn', on: {click: () => openTab(r.tab, {fid: r.fid || '', st: '', level: ''})}}, r.fid ? '이 시설 전체 기록' : '전체 기록'), r.url ? link(r.url, '원문') : null)))) : [el('p', {class: 'msg'}, '조건에 맞는 최근 기록이 없습니다. 전체 이력은 각 탭에서 검색하세요.')]));
+          el('div', {class: 'activity-entry-actions'}, el('button', {type: 'button', class: 'btn', on: {click: () => openTab(r.tab, {fid: r.fid || '', st: '', level: ''})}}, r.fid ? '이 시설 전체 기록' : '전체 기록'), r.url ? link(r.url, '원문') : null)))) : [el('p', {class: 'msg'}, selected === 'attention' ? '최근 확인할 기록이 없습니다. 전체를 누르면 나머지 활동을 볼 수 있습니다.' : '조건에 맞는 최근 기록이 없습니다. 전체 이력은 각 탭에서 검색하세요.')]));
       say(status, `최근 기록 ${events.length}건 중 ${shown.length}건 표시`);
     }
     search.addEventListener('input', render);
