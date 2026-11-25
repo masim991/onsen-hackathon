@@ -61,8 +61,6 @@
 ## 키 없는 운영 (기본값, `ANTHROPIC_API_KEY` 불필요)
 - 이 프로젝트는 Anthropic API 키 없이 운영한다(키는 유료). `ANTHROPIC_API_KEY`는 **선택**이며 등록하지 않아도 모든 기능이 동작한다. Actions에 빈 secret이 있어도 '키 없음'으로 취급.
 - **공지 한국어 요약 = 수동.** 키가 없으면 `summary_ko`는 비고, `ai_logs`에도 행을 남기지 않는다. 관리자가 직접 쓴다: `/admin/monitor` 로그인 > '공지' 탭 > 공지 카드의 '한국어 요약' 칸에 원문(원문 링크 확인)을 보고 1~2문장 입력 > '요약 저장' 또는 '승인하고 공개'(요약이 비어 있으면 공개 불가). 'AI 로그' 탭은 자동 요약을 쓸 때만 승인/수정/반려용이다.
-
-**사진 권리 기준:** 이미지 URL에 접근할 수 있다는 사실은 재게시 라이선스가 아니다. `photo_assets.license_status=verified`는 저작권자의 허락이나 재사용 가능한 라이선스와 그 범위가 확인된 경우에만 사용한다. `onsen_photos.published`는 별도의 공개 스위치이며 새 행은 기본 비공개다. 출처 링크만 적힌 공식 사이트 복사본 15장은 재게시 허가가 확인될 때까지 비공개다(`010_photo_rights_visibility.sql`).
 - **사진 분류 = 규칙 기반(`rules-v1`).** 키가 없으면 `classifyPhotos`가 이미지를 같은 안전장치(https+공개 호스트만, SSRF 검사, 5MB 상한, 매직 바이트 확인, 실행당 `AI_MAX_IMAGES` 상한)로 받아 아래 신호로 분류하고, 라벨/신뢰도/이유를 `photo_assets.ai_label/ai_confidence/ai_reason`에 저장, `ai_logs`에 `kind=image_classify, model=rules-v1, status=ok, tokens=0` 1행을 남긴다. 이유는 항상 `rule:`로 시작한다. 이미지는 저장하지 않는다.
   - 신호: ① 파일명/URL 경로/alt의 일본어·한국어·영어 키워드(logo/ロゴ, 料理/食事/夕食/会席, 露天風呂/大浴場/温泉, 客室/部屋, 外観/全景, map/地図/アクセス 등. ASCII는 단어 단위라 `bathroom`은 `room`/`bath`로 안 잡힘. `onsen`/`温泉`/`view` 같은 흔한 단어는 0.5점) ② 헤더만 읽은 가로·세로(png/jpeg/webp/gif/svg, 디코딩·의존성 없음), 비율, 매우 작은 크기 ③ 파일 형식(SVG, 투명 PNG) ④ 팔레트 색 수(<=16색 PNG/GIF)와 바이트/픽셀(평평한 그래픽).
   - 분류 순서: 로고(키워드 또는 SVG/작은 투명·소색 그래픽) > 지도·문서(키워드 또는 큰 소색 이미지) > 풍경/온천/객실/음식(키워드 필수, 크기·비율은 신뢰도만 올림) > `other`. 키워드가 없거나 동점·너무 작은 이미지는 `other`(신뢰도 0.3 이하).
