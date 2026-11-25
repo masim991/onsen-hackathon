@@ -1,0 +1,38 @@
+name: monitor
+on:
+  schedule:
+    - cron: '11,41 * * * *'
+  workflow_dispatch: {}
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      HAS_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Skip when the service key secret is not registered yet
+        if: env.HAS_KEY != 'true'
+        run: echo "::notice::SUPABASE_SERVICE_ROLE_KEY secret is not set - skipping (see tools/monitor/USER-TODO.md)"
+      # limit 250 per run, 1.1 s per host and robots.txt are enforced by the worker; it stops claiming new rounds after 30 min.
+      # A worker error exits non-zero (red run, GitHub e-mails the owner) and writes a failed 'heartbeat' row that the admin page shows.
+      - if: env.HAS_KEY == 'true'
+        run: node tools/monitor/worker.mjs --run --sink rest --limit 250 --deadline-min 30
+        env:
+          SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AUTO_APPLY: ${{ vars.AUTO_APPLY || 'strict' }}
+          AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'off' }}
+          AI_MAX_IMAGES: ${{ vars.AI_MAX_IMAGES || '20' }}
+      - name: Report failure
+        if: failure()
+        run: echo "::error::monitor run failed - see the log above and the red banner on /admin/monitor"

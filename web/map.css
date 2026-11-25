@@ -6,3 +6,31 @@
 .map-panel .map-reset{display:inline-flex;align-items:center;justify-content:center;min-height:38px;margin:4px 0 8px;padding:0 12px;border:1px solid #c8c3b8;border-radius:6px;background:#f7f5f0;color:#3e4a3d;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
 .map-panel .map-reset:hover{background:#eae5dc}
 .map-panel .map-reset:focus-visible{outline:3px solid #c86d51;outline-offset:2px}
+
+/* 지도 타일(국토지리원 pale)의 푸른 바다색을 팔레트(젖은 돌·청록)에 맞게 눌러 준다. 타일 레이어만, 마커·도형은 그대로 */
+.leaflet-tile-pane { filter: saturate(.4) sepia(.14); }
+
+/* Relief overview: prefecture contours use the same geographic data as Leaflet. */
+.japan-overview{padding:clamp(18px,3vw,30px);margin:0 0 24px;border-radius:16px;background:#e7ebe2;color:#263b34;overflow:hidden}
+.japan-overview h2{margin:0 0 6px;font-size:clamp(1.25rem,2vw,1.65rem)}
+.japan-overview>p{margin:0;font-size:.9rem}
+.japan-overview-map{display:block;width:100%;max-height:480px;overflow:visible;filter:drop-shadow(0 12px 12px rgb(35 54 45 / .18))}
+.japan-pref{cursor:pointer;outline:none}
+.japan-pref-side{fill:#617a68;stroke:#617a68;stroke-width:1;stroke-linejoin:round}
+.japan-pref-face{fill:#b4c7b3;stroke:#f3f5ed;stroke-width:1;stroke-linejoin:round;transition:fill .18s ease,transform .18s ease}
+.japan-pref:hover .japan-pref-face,.japan-pref:focus .japan-pref-face{fill:#c78769;transform:translateY(-4px)}
+.japan-pref:focus-visible .japan-pref-face{stroke:#263b34;stroke-width:2.5}
+.japan-overview .japan-overview-readout{min-height:2.5em;padding:10px 14px;border-radius:8px;background:#f7f7f0;font-weight:700}
+@media(prefers-reduced-motion:reduce){.japan-pref-face{transition:none}}
+
+/* A shallow relief, with water rings framing the geographic shapes. */
+.japan-overview { max-width: 1380px; margin: clamp(20px, 4vw, 56px) auto; padding: clamp(24px, 4vw, 52px); background: linear-gradient(145deg, #e8f1ed, #dce8e2 58%, #cbded7); border: 1px solid #bfd2ca; box-shadow: 0 24px 65px rgb(25 67 61 / .12); }
+.japan-overview-stage { position: relative; isolation: isolate; perspective: 1100px; }
+.japan-overview-stage::before { content: ''; position: absolute; inset: 12% 16%; z-index: -1; border: 1px solid rgb(42 95 102 / .22); border-radius: 50%; box-shadow: 0 0 0 28px rgb(42 95 102 / .045), 0 0 0 56px rgb(42 95 102 / .035), 0 0 0 84px rgb(42 95 102 / .025); transform: rotate(-16deg) scaleY(.56); pointer-events: none; }
+.japan-overview-map { position: relative; transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transform-origin: center; transition: transform .35s cubic-bezier(.16,1,.3,1); filter: drop-shadow(0 18px 14px rgb(25 67 61 / .25)); }
+.japan-pref-side { fill: #547a70; stroke: #547a70; }
+.japan-pref-face { fill: #accac0; stroke: #f3faf6; transition: fill .24s ease, transform .3s cubic-bezier(.16,1,.3,1); }
+.japan-pref:hover .japan-pref-face, .japan-pref:focus-visible .japan-pref-face, .japan-pref.is-selected .japan-pref-face { fill: #c99845; transform: translateY(-7px); }
+.japan-overview .japan-overview-readout { background: rgb(255 255 255 / .75); border: 1px solid rgb(42 95 102 / .16); color: #1d4a50; }
+@media (max-width: 700px) { .japan-overview { margin: 20px 12px; padding: 22px 18px; } }
+@media (prefers-reduced-motion: reduce) { .japan-overview-map, .japan-pref-face { transition: none; } .japan-overview-map { transform: none; } .japan-pref:hover .japan-pref-face, .japan-pref:focus-visible .japan-pref-face, .japan-pref.is-selected .japan-pref-face { transform: none; } }

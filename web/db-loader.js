@@ -2,12 +2,15 @@
   const project = 'https://frncsllpkxrsgxyqsfwd.supabase.co';
   const key = 'sb_publishable_7rJJBUzpz-WimUPB6eSOZg_cz4K_fGW';
   const lang = document.documentElement.lang.slice(0, 2);
-  const scripts = lang === 'ko' ? ['app.js','map.js','language.js','motion.js'] : lang === 'ja' ? ['ja.js','map-ja.js','language.js','motion.js'] : ['en.js','language.js','motion.js'];
-  const stateKey = 'onsen-catalog-refresh-state';
-  async function readRows(table, order) {
+  const scripts = ['site.js?v=20270105','map.js?v=20270105','language.js?v=20270105','stack-list.js?v=20270105','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
+  // 보안: DB 값은 innerHTML로 렌더링되므로 수신 시점에 HTML 이스케이프 + URL 스킴(http/https) 검증
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const clean = v => typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map(clean) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)])) : v;
+  const safeUrl = v => { try { const u = new URL(v); return /^https?:$/.test(u.protocol) ? esc(u.href) : ''; } catch { return ''; } };
+  async function readRows(table, order, filter = '') {
     const rows = [];
     for (let offset = 0; ; offset += 1000) {
-      const response = await fetch(`${project}/rest/v1/${table}?select=*&order=${order}&offset=${offset}&limit=1000`, {headers:{apikey:key, Authorization:`Bearer ${key}`}, signal:AbortSignal.timeout(8000)});
+      const response = await fetch(`${project}/rest/v1/${table}?select=*&order=${order}${filter}&offset=${offset}&limit=1000`, {headers:{apikey:key, Authorization:`Bearer ${key}`}, signal:AbortSignal.timeout(8000)});
       if (!response.ok) throw new Error(`${table}: HTTP ${response.status}`);
       const batch = await response.json();
       if (!Array.isArray(batch)) throw new Error('Invalid catalog response');
@@ -15,34 +18,59 @@
       if (batch.length < 1000) return rows;
     }
   }
-  async function readCatalog() {
-    const rows = await readRows('onsen_facilities', 'id.asc');
-    if (!rows.length) throw new Error('Empty catalog');
-    let photos = null;
-    try { photos = await readRows('onsen_photos', 'facility_id.asc,sort_order.asc,image_key.asc'); }
-    catch (error) { console.warn('Photo catalog unavailable; using local photos.', error); }
-    return {rows, photos};
+  // 승인(published)된 공지만: RLS가 익명에게는 그 행만 보여 준다. 값은 받는 즉시 이스케이프·URL 검증한다.
+  const NOTICE_Q = 'facility_notices?select=id,facility_id,title,notice_date,summary_ko,source_url,detected_at&published=eq.true&summary_ko=not.is.null&order=detected_at.desc&limit=500';
+  const rest = async (path) => {
+    const response = await fetch(`${project}/rest/v1/${path}`, {headers:{apikey:key, Authorization:`Bearer ${key}`}, cache:'no-store', signal:AbortSignal.timeout(8000)});
+    if (!response.ok) throw new Error(`${path.split('?')[0]}: HTTP ${response.status}`);
+    const body = await response.json();
+    if (!Array.isArray(body)) throw new Error('Invalid response');
+    return body;
+  };
+  const readNotices = () => rest(NOTICE_Q);
+  function setNotices(rows) {
+    const map = new Map();
+    for (const n of rows || []) {
+      if (typeof n.facility_id !== 'string' || typeof n.summary_ko !== 'string' || !n.summary_ko.trim()) continue;
+      if (!map.has(n.facility_id)) map.set(n.facility_id, []);
+      map.get(n.facility_id).push({title:esc(n.title), summary:esc(n.summary_ko), url:safeUrl(n.source_url), date:/^\d{4}-\d{2}-\d{2}$/.test(n.notice_date || '') ? n.notice_date : ''});
+    }
+    window.ONSEN_NOTICES = map;
   }
-  function applyCatalog({rows, photos}) {
+  async function readCatalog() {
+    // 시설과 사진은 서로 독립이라 동시에 받는다. 사진만 실패하면 로컬 사진을 쓴다.
+    const [rows, photos, notices] = await Promise.all([
+      readRows('onsen_facilities', 'id.asc', '&unlisted=eq.false').catch(() => readRows('onsen_facilities', 'id.asc')), // 숨김 열이 없는 옛 DB에서도 동작
+      readRows('onsen_photos', 'facility_id.asc,sort_order.asc,image_key.asc').catch(error => { console.warn('Photo catalog unavailable; using local photos.', error); return null; }),
+      readNotices().catch(() => null) // 공지는 덤: 실패해도 화면은 그대로
+    ]);
+    if (!rows.length) throw new Error('Empty catalog');
+    return {rows, photos, notices};
+  }
+  function applyCatalog({rows, photos, notices}, partial) {
+    if (notices) setNotices(notices);
     const publishedIds = new Set(rows.map(row => String(row.id)));
-    for (let i=RAW.length-1; i>=0; i--) if (!publishedIds.has(String(RAW[i].id))) RAW.splice(i,1);
+    if (!partial) for (let i=RAW.length-1; i>=0; i--) if (!publishedIds.has(String(RAW[i].id))) RAW.splice(i,1);
     const local = new Map(RAW.map(r => [String(r.id), r]));
     for (const row of rows) {
       let r = local.get(row.id);
-      const values = {...row.record, n:row.name_ko, jp:row.name_ja, pref:row.prefecture, a:row.area, kind:row.facility_kind || 'unknown', hp:row.official_url, srcUrl:row.source_url, checked:row.source_checked};
+      const values = {...clean(row.record), monitor:clean(row.record?.monitor ?? null) /* 되돌림으로 키가 사라지면 이전 값도 지운다 */, n:esc(row.name_ko), jp:esc(row.name_ja), pref:esc(row.prefecture), a:esc(row.area), kind:esc(row.facility_kind || 'unknown'), hp:safeUrl(row.official_url), srcUrl:safeUrl(row.source_url), checked:esc(row.source_checked)};
       if (r) Object.assign(r, values);
       else { r={id:row.id, src:'official', b:'', im:'', ...values}; RAW.push(r); local.set(row.id,r); }
       const extra=EXTRA[row.id] || (row.record?.extra ? (EXTRA[row.id]={}) : undefined);
       if (extra && row.record?.dayPChecked && row.record.dayPChecked > (extra.checked || '') && /^[\d,]+$/.test(row.record.dayP || '')) extra.dayPrice=Number(row.record.dayP.replace(/,/g,''));
-      if (extra && row.record?.extra && typeof row.record.extra === 'object') Object.assign(extra,row.record.extra);
+      if (extra && row.record?.extra && typeof row.record.extra === 'object') Object.assign(extra,clean(row.record.extra));
     }
     if (photos !== null) {
       for (const r of local.values()) { r.im=''; IM_FIX[r.id]=''; }
       const groups = new Map();
       const safeValue = value => typeof value === 'string' ? !/[<>"']/.test(value) : !value || typeof value !== 'object' || Object.values(value).every(safeValue);
+      // 사용 신고 요건 확인 전 해당 이미지 두 장은 로컬 표시에서 보류한다. DB 원본은 보존한다.
+      const pendingRights = new Set(['official/orihashi-kagoshima-2428.jpg','official/koshikano-kagoshima-2394.jpg']);
       for (const p of photos) {
+        if (pendingRights.has(p.image_key)) continue;
         if (!local.has(p.facility_id) || !p.image_key || !p.image_path || ![p.image_key,p.image_path,p.caption,p.author,p.license,p.metadata].every(safeValue)) continue;
-        if (!/^images\/[\w.\-/]+$/.test(p.image_path) && !/^https:\/\/[^\s]+$/.test(p.image_path)) continue;
+        if (!/^images\/[\w.\-/]+$/.test(p.image_path) && !/^https:\/\/(upload|commons)\.wikimedia\.org\/[^\s]+$/.test(p.image_path)) continue; // 보안: CSP가 허용하는 이미지 호스트만 받는다
         const meta=p.metadata || {};
         if (meta.source && !/^https?:\/\/[^\s]+$/.test(meta.source)) continue;
         if (meta.terms && !/^https?:\/\/[^\s]+$/.test(meta.terms)) continue;
@@ -57,39 +85,74 @@
     }
     document.documentElement.dataset.catalog = 'supabase';
   }
-  function saveView() {
-    const form=document.querySelector('#filters, #search');
-    const controls=form ? [...form.querySelectorAll('input,select')].map(el=>({value:el.value,checked:el.checked})) : [];
-    const panel=form?.querySelector('details') || document.querySelector('#filterPanel');
-    try { sessionStorage.setItem(stateKey,JSON.stringify({lang,controls,open:panel?.open,sort:document.querySelector('#sort')?.value,fav:document.querySelector('#favToggle')?.getAttribute('aria-pressed')==='true',scroll:scrollY})); } catch {}
+  // 같은 출처의 보조 JSON(이름 교정·시설별 덮어쓰기·공식 사이트 가격)은 DB 응답과 동시에 받고, 실패해도 없는 것으로 친다.
+  const jget = p => fetch(p, {cache:'no-cache', signal:AbortSignal.timeout(8000)}).then(r => r.ok ? r.json() : null).catch(() => null);
+  const AUX = Promise.all(['names-fix','overrides','prices','price-stats'].map(n => jget('data/'+n+'.json')));
+  const okId = id => /^[\w-]{1,80}$/.test(id);
+  // DB가 이름을 덮어쓴 뒤에 적용한다: 한국어 이름만 id로 교정(names-fix), 시설별 덮어쓰기(overrides: hp:null 이면 공식 사이트 주소를 비운다).
+  function applyAux([names, over, prices, stats]) {
+    const byId = new Map(RAW.map(r => [String(r.id), r]));
+    for (const [id, v] of Object.entries(names || {})) if (okId(id) && byId.has(id) && typeof v?.n === 'string' && v.n) byId.get(id).n = esc(v.n);
+    for (const [id, v] of Object.entries(over || {})) if (okId(id) && byId.has(id) && v && v.hp === null) byId.get(id).hp = '';
+    window.ONSEN_PRICES = {items: prices?.items || {}, stats: stats?.byPref || {}};
   }
-  function restoreView() {
-    let state; try {state=JSON.parse(sessionStorage.getItem(stateKey));sessionStorage.removeItem(stateKey)} catch {return}
-    if (!state || state.lang!==lang) return;
-    const form=document.querySelector('#filters, #search'); if (!form) return;
-    const controls=[...form.querySelectorAll('input,select')];
-    state.controls?.forEach((v,i)=>{if(controls[i]){controls[i].value=v.value;if('checked' in controls[i])controls[i].checked=v.checked}});
-    const pref=form.querySelector('#prefSel, #pref'); const area=form.querySelector('#regionSel, #area'); const selectedArea=area?.value;
-    pref?.dispatchEvent(new Event('input',{bubbles:true})); if(area) area.value=selectedArea||'';
-    form.dispatchEvent(new Event('input',{bubbles:true}));
-    const sort=document.querySelector('#sort'); if(sort && state.sort!=null){sort.value=state.sort;sort.dispatchEvent(new Event('change',{bubbles:true}));}
-    const panel=form.querySelector('details') || document.querySelector('#filterPanel'); if(panel && state.open!=null)panel.open=state.open;
-    if(state.fav)document.querySelector('#favToggle')?.click();
-    window.scrollTo(0,state.scroll||0);
+  // 변경 감지: Realtime(웹소켓)은 wss 호스트 + 클라이언트 라이브러리가 필요해 CSP/무의존 원칙과 맞지 않아, 열린 동안 60초마다 가벼운 REST 두 건만 확인한다.
+  // 시각이 바뀐 경우에만 바뀐 행을 다시 받아 제자리에서 다시 그린다. shortcut: 최신 공지 1건만 비교하므로 오래된 공지의 승인 취소는 새로고침 때 반영, Realtime은 나중에.
+  const PROBE_N = 'facility_notices?select=id,detected_at&published=eq.true&order=detected_at.desc&limit=1';
+  const PROBE_F = 'onsen_facilities?select=id,updated_at&unlisted=eq.false&order=updated_at.desc&limit=1';
+  const seen = {n: undefined, f: undefined};
+  async function poll() {
+    if (document.hidden || seen.busy) return;
+    seen.busy = true;
+    try {
+      const [pn, pf] = await Promise.all([rest(PROBE_N).catch(() => null), rest(PROBE_F).catch(() => null)]);
+      let changed = false;
+      if (pn) {
+        const v = pn[0] ? `${pn[0].id}@${pn[0].detected_at}` : '';
+        if (seen.n === undefined) seen.n = v;
+        else if (v !== seen.n) { seen.n = v; setNotices(await readNotices()); changed = true; }
+      }
+      if (pf && pf[0] && typeof pf[0].updated_at === 'string') {
+        const v = pf[0].updated_at;
+        if (seen.f === undefined) seen.f = v;
+        else if (v !== seen.f) {
+          const rows = await rest(`onsen_facilities?select=*&unlisted=eq.false&updated_at=gt.${encodeURIComponent(seen.f)}&order=updated_at.asc&limit=1000`);
+          seen.f = v;
+          if (rows.length) { applyCatalog({rows, photos:null}, true); changed = true; }
+        }
+      } else if (pf && seen.f === undefined) seen.f = '';
+      if (changed && window.onsenRefresh) window.onsenRefresh();
+    } catch (error) { console.warn('Change check failed.', error); }
+    finally { seen.busy = false; }
   }
-  function loadScript(src) { return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);}); }
+  // 기준값은 처음에 받은 카탈로그에서 얻는다(추가 요청 없음). 받지 못했으면 첫 poll 이 기준값을 잡는다.
+  function seedSeen({rows, notices}) {
+    if (notices) seen.n = notices[0] ? `${notices[0].id}@${notices[0].detected_at}` : '';
+    const ts = rows.map(r => r.updated_at).filter(v => typeof v === 'string');
+    if (ts.length) seen.f = ts.reduce((a, b) => a > b ? a : b);
+  }
+  // 탭이 숨겨지면 타이머를 멈추고, 다시 보이면 즉시 한 번 확인한 뒤 60초 간격을 재개한다.
+  let timer = 0;
+  function startPolling() {
+    const stop = () => { clearInterval(timer); timer = 0; };
+    const run = () => { stop(); timer = setInterval(poll, 60000); };
+    if (!document.hidden) run();
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else { poll(); run(); } });
+  }
+  // async=false: 내려받기는 동시에, 실행은 넣은 순서대로(앞 스크립트의 전역 값을 뒤 스크립트가 쓴다).
+  function loadScript(src) { return new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);}); }
   (async () => {
-    let signature=null;
-    try { const data=await readCatalog();applyCatalog(data);if(data.photos!==null)signature=JSON.stringify(data); }
-    catch (error) { document.documentElement.dataset.catalog = 'local'; console.warn('Supabase catalog unavailable; using local data.',error); }
-    for (const src of scripts) await loadScript(src);
-    restoreView();
-    /* 자동 갱신 중지: 사이트를 다시 열거나 새로고침하면 최신 DB를 읽습니다.
-    setInterval(async()=>{
-      if(document.hidden || /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement?.tagName || '') || document.querySelector('#list details[open]') || document.activeElement?.closest('#list, #detail'))return;
-      try {const latest=await readCatalog();if(latest.photos===null)return;const next=JSON.stringify(latest);if(signature!==next){applyCatalog(latest);window.refreshOnsenCatalog?.();signature=next;} }
-      catch(error){console.warn('Catalog refresh deferred.',error)}
-    },60000);
-    */
+    // 일본어·영어 시설 설명 번역표(한국어는 불필요)는 DB 응답을 기다리는 동안 같이 받는다(번역표는 RAW와 무관).
+    const locale = lang !== 'ko' ? loadScript(`locale-${lang === 'ja' ? 'ja' : 'en'}-data.js?v=20270105`) : Promise.resolve();
+    try { const data=await readCatalog();applyCatalog(data);seedSeen(data); }
+    catch (error) {
+      document.documentElement.dataset.catalog = 'local'; console.warn('Supabase catalog unavailable; using local data.',error);
+      // 폴백에서도 숨긴(unlisted) 시설은 보이지 않게: 공개 id 목록에 있는 번들 기록만 남긴다(목록을 못 받으면 그대로 둔다)
+      try { await loadScript('listed-ids.js?v=20270105'); const ok = new Set(window.LISTED_IDS.map(String)); for (let i=RAW.length-1; i>=0; i--) if (!ok.has(String(RAW[i].id))) RAW.splice(i,1); } catch {}
+    }
+    applyAux(await AUX);
+    await locale;
+    await Promise.all(scripts.map(loadScript));
+    startPolling();
   })().catch(error=>console.error('Application failed to load',error));
 })();

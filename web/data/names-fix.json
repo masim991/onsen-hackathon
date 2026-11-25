@@ -1,0 +1,522 @@
+{
+ "official-aichi-mitani-higaki": {
+  "n": "미타니온천 히가키 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-chiba-kamogawa-boso-kamogawa-onsen-zekuu": {
+  "n": "보소가모가와온천 제쿠",
+  "src": "rule:onsen-reading"
+ },
+ "official-fukuoka-kitakyushu-corona-kokura": {
+  "n": "덴넨온천 코로나노유 고쿠라점",
+  "src": "rule:onsen-reading"
+ },
+ "official-fukuoka-kitakyushu-otogi-no-yashiro": {
+  "n": "혼조 덴넨온천 오토기노야시로",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-armeria": {
+  "n": "게로온천 호텔 구사카베 아르메리아",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-diamond-gero": {
+  "n": "다이아몬드 게로온천 소사이어티",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-fukiya": {
+  "n": "온천 비즈니스호텔 후키야",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-hiroshi": {
+  "n": "온천야도 히로시",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-marronnier-gero": {
+  "n": "오텔 드 마로니에 게로온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-shinmei-sanso": {
+  "n": "토론온천 신메이산소",
+  "src": "rule:onsen-reading"
+ },
+ "official-gifu-gero-yamagataya": {
+  "n": "게로온천 야마가타야",
+  "src": "rule:onsen-reading"
+ },
+ "official-hokkaido-noboribetsu-takinoya": {
+  "n": "노보리베쓰 온천쿄 다키노야",
+  "src": "rule:onsen-reading"
+ },
+ "official-hyogo-arima-kinnoyu": {
+  "n": "아리마 혼온천 킨노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-hyogo-awaji-goshiki-yuyufive": {
+  "n": "고시키온천 유유 파이브",
+  "src": "rule:onsen-reading"
+ },
+ "official-hyogo-awaji-hananoyu": {
+  "n": "히가시우라 선파크 덴넨온천 하나노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-hyogo-takedao-azare": {
+  "n": "다케다오온천 모미지칸 벳테이 아자레",
+  "src": "rule:onsen-reading"
+ },
+ "official-hyogo-yumura-yuamu": {
+  "n": "산인유무라온천 와쿠이즈미노야도 유아무",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-daigo-daigo-onsen-hoyo-center-shinrin-no-onsen": {
+  "n": "다이고온천 호요센터 신린노온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-daigo-daigo-onsen-yamizo": {
+  "n": "다이고온천 야미조",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-daigo-tsukiore-onsen-takimi-no-yu": {
+  "n": "쓰키오레온천 다키미노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-hitachinaka-ajigaura-onsen-nozomi": {
+  "n": "아지가우라온천 노조미",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-hitachinaka-hitachinaka-onsen-kirari-bettei": {
+  "n": "히타치나카온천 기라리 벳테이",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-ishioka-yasato-onsen-yurinosato": {
+  "n": "야사토온천 유리노사토",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-joso-kinu-no-yu": {
+  "n": "덴넨온천 기누노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-namegata-aso-onsen-shirahonoyu": {
+  "n": "아소온천 시라호노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-tsukuba-tsukuba-no-yu-hotel-ichibo": {
+  "n": "쓰쿠바노유 쓰쿠바산온천 호텔 이치보",
+  "src": "rule:onsen-reading"
+ },
+ "official-ibaraki-tsukuba-tsukuba-onsen-hotel": {
+  "n": "쓰쿠바온천 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-ishikawa-yamanaka-andanomori-yamanaka": {
+  "n": "안다노모리 가가야마나카온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-ishikawa-yamanaka-kajikaso": {
+  "n": "야마나카온천 가지카소",
+  "src": "rule:onsen-reading"
+ },
+ "official-kagoshima-kagoshima-yunoyama": {
+  "n": "덴넨온천 유노야마",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-gora-onsen-hotel-maroude-hakone": {
+  "n": "고라온천 호텔 마로우도 하코네",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-hakone-ashinoyu-onsen-matsuzakaya-honten": {
+  "n": "하코네 아시노유온천 마쓰자카야 혼텐",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-hakone-kowakidani-onsen-mizu-no-oto": {
+  "n": "하코네 고와키다니온천 미즈노오토",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-hakone-onsen-sanso-nakamura": {
+  "n": "하코네온천산소 나카무라",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-hakone-yumoto-onsen-hotel-okada": {
+  "n": "하코네유모토온천 호텔 오카다",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-onsen-hotel-gorakan": {
+  "n": "온천 호텔 고라칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-onsen-ryokan-mitake": {
+  "n": "온천 료칸 미타케",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-hakone-onsen-ryokan-yusakaso": {
+  "n": "온천 료칸 유사카소",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-nanasawa-kabutoyu-onsen-sansuiro": {
+  "n": "가부토유온천 산스이로",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-nanasawa-kotakuji-onsen-gyokusuiro": {
+  "n": "고타쿠지온천 교쿠스이로",
+  "src": "rule:onsen-reading"
+ },
+ "official-kanagawa-yugawara-yugawara-onsen-chitose": {
+  "n": "유가와라온천 지토세",
+  "src": "rule:onsen-reading"
+ },
+ "official-kochi-kochi-harunonoyu": {
+  "n": "텐넨온천 하루노노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-kumamoto-kumamoto-dormy-kumamoto": {
+  "n": "덴넨온천 롯카노유 도미인 구마모토",
+  "src": "rule:onsen-reading"
+ },
+ "official-kumamoto-kumamoto-super-hotel-lohas": {
+  "n": "슈퍼호텔 로하스 구마모토 덴넨온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-akaumi": {
+  "n": "덴넨온천 아카네우미",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-asamogawa-shizunosato": {
+  "n": "아사모가와온천 시즈노사토",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-hashiudoso": {
+  "n": "단고온천 하시우도소",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-kumihama-yumotokan": {
+  "n": "구미하마온천 유모토칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-livemax-kizu": {
+  "n": "리브맥스 리조트 유히가우라 기즈온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-onono-komachi": {
+  "n": "오노노 고마치온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-taiza-nagomian": {
+  "n": "다이자온천고 나고미안 소라토우미",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-taiza-sumihei": {
+  "n": "다이자온천 스미헤이",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-ugawa-yoshinonosato": {
+  "n": "우가와온천 요시노노사토",
+  "src": "rule:onsen-reading"
+ },
+ "official-kyoto-kyotango-yasaka-ashiginu": {
+  "n": "야사카 아시기누온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-miyagi-naruko-ninomiyaso": {
+  "n": "민슈쿠온천 니노미야소",
+  "src": "rule:onsen-reading"
+ },
+ "official-nara-nara-kamokimi-no-yu": {
+  "n": "텐넨온천 카모키미노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-niigata-muikamachi-ryugon": {
+  "n": "온천 오야도 류곤",
+  "src": "rule:onsen-reading"
+ },
+ "official-oita-hita-honjin": {
+  "n": "아이켄토 스고스 온천 료칸 혼진",
+  "src": "rule:onsen-reading"
+ },
+ "official-okinawa-ginowan-aroma": {
+  "n": "에나직 덴넨온천 아로마",
+  "src": "rule:onsen-reading"
+ },
+ "official-okinawa-nanjo-enjin-no-yu": {
+  "n": "덴넨온천 사시키노 엔진노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-izumisano-inunaki-onsen-center": {
+  "n": "이누나키온천센터",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-izumisano-kanku-gardenpalace": {
+  "n": "간쿠온천 호텔 가든 팰리스",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-izumisano-yumoto-onsenso": {
+  "n": "유모토온천소",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-kawachinagano-nantenen": {
+  "n": "아마미온천 난텐엔",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-minoh-ooedo-kanko-hotel": {
+  "n": "오에도온천모노가타리 프리미엄 미노오칸코 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-minoh-spa-garden": {
+  "n": "오에도온천모노가타리 미노오온천 스파가든",
+  "src": "rule:onsen-reading"
+ },
+ "official-osaka-osaka-solaniwa": {
+  "n": "소라니와온천 오사카 베이타워",
+  "src": "rule:onsen-reading"
+ },
+ "official-saga-fairfield-by-marriott-saga-ureshino-onsen": {
+  "n": "페어필드 바이 메리어트 사가 우레시노온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-saga-ooedo-onsen-monogatari-ureshinokan": {
+  "n": "오에도온천모노가타리 우레시노칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-chichibu-kawabata-onsen-bon-no-yu": {
+  "n": "지치부카와바타온천 본노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-chichibu-onsen-mangan-no-yu": {
+  "n": "지치부온천 만간노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-chichibu-yumoto-bukou-onsen": {
+  "n": "지치부유모토 부코온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-michi-no-eki-otaki-onsen": {
+  "n": "미치노에키 오타키온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-michi-no-eki-ryokami-onsen-yakushi-no-yu": {
+  "n": "미치노에키 료가미온천 야쿠시노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-saitama-chichibu-seibu-chichibu-ekimae-onsen-matsuri-no-yu": {
+  "n": "세이부치치부에키마에온천 마쓰리노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-shizuoka-ito-akazawa-onsen-hotel": {
+  "n": "아카자와온천 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-shizuoka-ito-daitokan": {
+  "n": "이토온천 다이토칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-shizuoka-ito-hanafubuki": {
+  "n": "이즈고겐·조가사키온천 하나후부키",
+  "src": "rule:onsen-reading"
+ },
+ "official-shizuoka-ito-kirano-sato": {
+  "n": "야와타노온천고 모리노유 기라노사토",
+  "src": "rule:onsen-reading"
+ },
+ "official-shizuoka-ito-yunoniwa": {
+  "n": "라포레 이토온천 유노니와",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-ashino-onsen-ashino-onsen": {
+  "n": "아시노온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-chuzenjiko-nikko-chuzenjiko-onsen-hotel-kaan": {
+  "n": "닛코 주젠지코온천 호텔 가안",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-hatashita-onsen-fukujuen": {
+  "n": "펫토 다노시무 온천 료칸 후쿠주엔",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-kinugawa-onsen-asaya": {
+  "n": "기누가와온천 아사야",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-kinugawa-onsen-hotel": {
+  "n": "기누가와온천 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-kinugawa-onsen-sanraku": {
+  "n": "기누가와온천 산라쿠",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-kinugawa-onsen-wakatake-no-sho": {
+  "n": "쇼야니 나라우 모테나시노야도 기누가와온천 와카타케노쇼",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-ooedo-onsen-monogatari-hotel-kinugawa-gyoen": {
+  "n": "오에도온천모노가타리 호텔 기누가와 교엔",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-ooedo-onsen-monogatari-premium-kinugawa-kanko-hotel": {
+  "n": "오에도온천모노가타리 프리미엄 기누가와 간코 호텔",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-kinugawa-wakatake-no-sho-bettei-sasane": {
+  "n": "기누가와온천 와카타케노쇼 벳테이 사사네",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-monzen-onsen-ooedo-onsen-monogatari-premium-hotel-new-shiobara": {
+  "n": "오에도온천모노가타리 프리미엄 호텔 뉴 시오바라",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-nakashiobara-onsen-akasawa-onsen-ryokan": {
+  "n": "아카사와온천 료칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-nasu-onsen-cottage-sakura-no-oka": {
+  "n": "온천 코티지 사쿠라노오카",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-nasu-yufuri-nasu-takao-onsen-lodge": {
+  "n": "홋타라카시노야도 유후리 나스 다카오온천 롯지",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-nikko-nikko-sawa-onsen": {
+  "n": "닛코사와온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-nikko-tosho-onsen": {
+  "n": "도쇼온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-okukinu-teshirosawa-onsen": {
+  "n": "데시로사와온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-tochigi-sandogoya-onsen-sandogoya-onsen-tabakoya-ryokan": {
+  "n": "산도고야온천 다바코야 료칸",
+  "src": "rule:onsen-reading"
+ },
+ "official-tokyo-okutama-okutama-onsen-moegi-no-yu": {
+  "n": "오쿠타마온천 모에기노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-toyama-kurobe-ikuji-tanakaya": {
+  "n": "이쿠지온천 다나카야",
+  "src": "rule:onsen-reading"
+ },
+ "official-toyama-kurobe-ogawa-onsen-hotel-ogawa": {
+  "n": "오가와온천 모토유 호텔 오가와",
+  "src": "rule:onsen-reading"
+ },
+ "official-toyama-unazuki-grandvrio-unazuki": {
+  "n": "그랑비리오 호텔 우나즈키온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-toyama-unazuki-togen": {
+  "n": "구로베·우나즈키온천 도겐",
+  "src": "rule:onsen-reading"
+ },
+ "official-toyama-unazuki-yamanoha": {
+  "n": "구로베·우나즈키온천 야마노하",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-arida-hikarinoyu": {
+  "n": "아리타가와온천 아유자야 히카리노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-arida-kanaya-mekeikyo": {
+  "n": "가나야 묘케이쿄온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-arida-michishio-no-yu": {
+  "n": "기이히다카온천 온천칸 우미노사토 미치시오노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-arida-tsurunoyu": {
+  "n": "쓰루노유온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-arida-yuasajo": {
+  "n": "유아사온천 유아사조",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-katsuura-hamayu": {
+  "n": "덴넨온천 고슈요쿠조 하마유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-katsuura-hanakayuu": {
+  "n": "난키타이지온천 하나이로도리노야도 가유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-katsuura-shikinosato": {
+  "n": "시키노사토온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-katsuura-yurinoyama": {
+  "n": "유리노야마온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-koya-yadori-iyashinoyu": {
+  "n": "야도리온천 이야시노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-kushimoto-ooedo": {
+  "n": "오에도온천모노가타리 난키쿠시모토",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-ryujin-kamanosaki": {
+  "n": "가마노사키온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-ryujin-komatagawa": {
+  "n": "류진 고마타가와온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-ryujin-motoyu": {
+  "n": "류진온천 모토유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-ryujin-nyunokawa": {
+  "n": "니우노카와온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-shirahama-gyoen": {
+  "n": "오에도온천모노가타리 프리미엄 시라하마 교엔",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-shirahama-mikasa": {
+  "n": "히토무네가시 온천 앤 사우나 미카사",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-shirahama-saichoraku": {
+  "n": "오에도온천모노가타리 프리미엄 시라하마 사이초라쿠",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-hanayama": {
+  "n": "하나야마온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-jintsu": {
+  "n": "진쓰온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-kada-hiina": {
+  "n": "가다아와시마온천 오사카야 히이나노유",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-kada-kaigetsu": {
+  "n": "와카야마 가다온천 가다카이게쓰",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-kishu-kuroshio": {
+  "n": "기슈 구로시오온천",
+  "src": "rule:onsen-reading"
+ },
+ "official-wakayama-wakayamashi-manpa": {
+  "n": "와카노우라온천 만파 리조트",
+  "src": "rule:onsen-reading"
+ },
+ "official-yamanashi-isawa-oedo-shinko": {
+  "n": "오에도 온천 모노가타리 호텔 신코",
+  "src": "rule:onsen-reading"
+ },
+ "ryokan-nov13-6": {
+  "n": "온천 료칸 스이메이",
+  "src": "rule:onsen-reading"
+ }
+}

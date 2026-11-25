@@ -42,17 +42,35 @@
     const syncMotion = () => hero.classList.toggle('motion-paused', !visible || document.hidden);
     new IntersectionObserver(entries => { visible = entries[0].isIntersecting; syncMotion(); }).observe(hero);
     document.addEventListener('visibilitychange', syncMotion);
-    const reveal = new IntersectionObserver((entries, observer) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        if (!reduced.matches && !document.hidden) entry.target.animate(
-          [{opacity:.65, filter:'blur(4px)', transform:'translateY(12px)'}, {opacity:1, filter:'blur(0)', transform:'translateY(0)'}],
-          {duration:700, easing:'ease-out'}
-        );
+    // 스크롤 내릴 때·올릴 때 모두 재생: 화면에 들어오면 in, 완전히 벗어나면 제거. 벗어난 방향으로 되돌아오는 방향이 정해짐.
+    const REVEAL = '.guide, .fbox, .locale-property-notes, #results-h';
+    const seen = new WeakSet();
+    const reveal = new IntersectionObserver(entries => {
+      let n = 0;
+      for (const { target, isIntersecting, boundingClientRect } of entries) {
+        if (isIntersecting) { target.style.setProperty('--d', Math.min(n++, 5) * 60 + 'ms'); target.classList.add('in'); }
+        else if (target.classList.contains('in')) {
+          target.style.setProperty('--d', '0ms');
+          target.style.setProperty('--rv-y', boundingClientRect.top < 0 ? '-10px' : '10px');
+          target.classList.remove('in');
+        }
       }
-    }, {threshold:.12});
-    document.querySelectorAll('.results, .listing').forEach(section => reveal.observe(section));
+    }, { rootMargin: '80px 0px -40px 0px' });
+    const watch = root => root.querySelectorAll?.(REVEAL).forEach(el => {
+      if (seen.has(el)) return;
+      seen.add(el);
+      if (!reduced.matches) el.classList.add('rv');
+      reveal.observe(el);
+    });
+    watch(document);
+    new MutationObserver(list => list.forEach(m => m.addedNodes.forEach(n => n.nodeType === 1 && (n.matches(REVEAL) && watch({ querySelectorAll: () => [n] }), watch(n))))).observe(document.body, { childList: true, subtree: true });
+    // 초안의 수증기: 히어로 위로 천천히 번지는 안개 두 덩이
+    for (const cls of ['steam', 'steam steam-2']) {
+      const st = document.createElement('span');
+      st.className = cls;
+      st.setAttribute('aria-hidden', 'true');
+      hero.append(st);
+    }
   }
   reduced.addEventListener('change', () => {
     if (reduced.matches) { photoAnimation?.cancel(); countAnimation?.cancel(); }

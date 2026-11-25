@@ -1,8 +1,8 @@
-.header-tools{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:0;max-width:100%}.language-switch{display:flex;align-items:center;gap:7px;font-size:12px;color:inherit;white-space:nowrap}.language-switch span{white-space:nowrap;flex:none}.language-switch select{width:auto;min-width:98px;font:inherit;color:#2c2a29;background:#f7f5f0;border:1px solid #b9b4a8;border-radius:5px;padding:5px 8px;min-height:36px}.language-switch select:focus-visible{outline:2px solid #c86d51;outline-offset:2px}.header-tools .fx{margin:0;text-align:right;max-width:100%;min-width:0}.header-tools .fx small{white-space:normal;overflow-wrap:anywhere}@media(max-width:700px){.header-tools{gap:3px;max-width:calc(100% - 32px)}.language-switch{font-size:11px}.language-switch select{min-height:40px;padding:3px 8px}}
+.header-tools{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:0;max-width:100%}.language-switch{display:flex;align-items:center;gap:7px;font-size: 13px;color:inherit;white-space:nowrap}.language-switch span{white-space:nowrap;flex:none}.language-switch select{width:auto;min-width:98px;font:inherit;color:#2c2a29;background:#f7f5f0;border:1px solid #b9b4a8;border-radius:5px;padding:5px 8px;min-height:36px}.language-switch select:focus-visible{outline:2px solid #c86d51;outline-offset:2px}.header-tools .fx{margin:0;text-align:right;max-width:100%;min-width:0}.header-tools .fx small{white-space:normal;overflow-wrap:anywhere}@media(max-width:700px){.header-tools{gap:3px;max-width:calc(100% - 32px)}.language-switch{font-size: 13px}.language-switch select{min-height:40px;padding:3px 8px}}
 @media(min-width:701px){.top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px}.top nav{min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.top nav a,.top nav button{flex:none;white-space:nowrap}.header-tools{margin-left:0}}
-.header-tools .fx{display:grid;justify-items:end;font-size:11px;line-height:1.35;color:#d9d3c9}.header-tools .fx b{font-size:13px;color:#f7f5f0}.header-tools .fx small{font-size:10px}
+.header-tools .fx{display:grid;justify-items:end;font-size: 13px;line-height:1.35;color:#d9d3c9}.header-tools .fx b{font-size:13px;color:#f7f5f0}.header-tools .fx small{font-size: 13px}
 @media(min-width:701px) and (max-width:1250px){.top nav a,.top nav button{padding-inline:7px;font-size:13px}.top nav .ic{width:15px;height:15px}}
-.locale-property-notes{margin:1.25rem 0;padding:1rem;background:#f7f5f0;border:1px solid #e0dacf}.locale-property-notes h4{margin:0 0 .75rem;font-size:1rem}.locale-property-notes dl{display:grid;gap:.75rem;margin:0}.locale-property-notes dl>div{display:grid;gap:.2rem}.locale-property-notes dt{font-weight:700;font-size:.85rem}.locale-property-notes dd{margin:0;font-size:.9rem;line-height:1.6;overflow-wrap:anywhere}.locale-property-notes small{font-size:.75rem;color:#5e5a54}.locale-property-notes a{text-underline-offset:.15em}
+.locale-property-notes{margin:1.25rem 0;padding:1rem;background:#f7f5f0;border:1px solid #e0dacf}.locale-property-notes h4{margin:0 0 .75rem;font-size:1rem}.locale-property-notes dl{display:grid;gap:.75rem;margin:0}.locale-property-notes dl>div{display:grid;gap:.2rem}.locale-property-notes dt{font-weight:700;font-size:.85rem}.locale-property-notes dd{margin:0;font-size:.9rem;line-height:1.6;overflow-wrap:anywhere}.locale-property-notes small{font-size:.8125rem;color:#5e5a54}.locale-property-notes a{text-underline-offset:.15em}
 /* 관광기관 시설 사진은 원본의 가장자리를 자르지 않습니다. */
 img[data-photo-kind="facility"]{object-fit:contain!important;background:#eae5dc}
 
@@ -15,3 +15,8 @@ img[data-photo-kind="facility"]{object-fit:contain!important;background:#eae5dc}
   header.top nav a,header.top nav button{min-height:48px}
 }
 @media (min-width:1251px){header.top nav{justify-content:flex-start}}
+/* 언어 전환과 보조 정보도 공통 청록·돌빛을 따른다. */
+.language-switch select { background: #f7f9f6; color: #1b2a2b; border-color: #aebfba; }
+.language-switch select:focus-visible { outline-color: #1d4a50; }
+.locale-property-notes { background: #f1f6f2; border-color: #cadbd3; }
+.locale-property-notes small { color: #4a5a5a; }

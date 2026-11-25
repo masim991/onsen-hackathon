@@ -147,7 +147,8 @@ PHOTOS.orihashi2428 = {
   ]]
 };
 LOCAL_PHOTOS['official/orihashi-kagoshima-2428.jpg'] = 'images/orihashi-kagoshima-2428.jpg';
-IM_FIX['ryokan-nov13-7'] = 'orihashi2428';
+// 공개 보류: 가고시마 갤러리 이미지의 사용 신고 적용 여부를 확인한 후 연결한다.
+IM_FIX['ryokan-nov13-7'] = '';
 
 // 가고시마 관광 홍보 목적에 한해 제공되는 원본 사진입니다.
 PHOTOS.koshikano2394 = {
@@ -158,7 +159,7 @@ PHOTOS.koshikano2394 = {
   ]]
 };
 LOCAL_PHOTOS['official/koshikano-kagoshima-2394.jpg'] = 'images/koshikano-kagoshima-2394.jpg';
-IM_FIX['ryokan-nov13-8'] = 'koshikano2394';
+IM_FIX['ryokan-nov13-8'] = ''; // 위와 같은 이유로 공개 보류
 
 // 촬영자와 CC BY-SA 원문을 확인한 사진. 사나게 사진은 온천 표지판으로 시설 내부가 아닙니다.
 PHOTOS.osawaToujiya2026 = { cap: '오사와 온천 도지야 외관', shots: [['1/11/Osawa_Onsen_Toujiya.jpg', '掬茶', 'CC BY-SA 4.0', { source: 'https://commons.wikimedia.org/wiki/File:Osawa_Onsen_Toujiya.jpg', credit: '掬茶 · CC BY-SA 4.0', kind: 'facility', resized: true }]] };

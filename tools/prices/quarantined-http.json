@@ -1,0 +1,26 @@
+{
+  "note": "HTTPS 원문 확인 전 공개 가격에서 제외한 기존 값. 재검증 후 복원 가능.",
+  "items": {
+    "official-fukushima-iizaka-izumiya": {
+      "from": 7425,
+      "unit": "JPY/person/night",
+      "basis": "1泊2食",
+      "src": "http://anabaraonsen-idumiya.jp/index.html",
+      "checked": "2026-11-23"
+    },
+    "official-niigata-senami-seiunsou": {
+      "from": 18000,
+      "unit": "JPY/person/night",
+      "basis": "1泊2食",
+      "src": "http://www.seiunsou.com/room.html",
+      "checked": "2026-11-23"
+    },
+    "official-tochigi-hatashita-onsen-kokorozukushi-no-yado-nuriya": {
+      "from": 9900,
+      "unit": "JPY/person/night",
+      "basis": "1泊2食",
+      "src": "http://www.naf.co.jp/nuriya/plan.stm",
+      "checked": "2026-11-23"
+    }
+  }
+}

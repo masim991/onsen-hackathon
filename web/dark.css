@@ -1,0 +1,102 @@
+/* 다크 모드 (html[data-theme="dark"]). 마지막에 로드되어 토큰과 하드코딩된 밝은 색을 덮는다. 색은 청록 먹빛 + 따뜻한 갈색 글자. */
+
+/* 머리글: 다크 모드 버튼은 언어 선택 바로 왼쪽 */
+.hd-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.theme-btn { flex: none; display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgb(255 255 255 / .45); border-radius: 50%; background: rgb(255 255 255 / .12); color: #fff; cursor: pointer; }
+.theme-btn:hover { background: rgb(255 255 255 / .24); }
+.theme-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.theme-btn svg:has(.i-sun) { display: none; }
+:root[data-theme="dark"] .theme-btn svg:has(.i-sun) { display: block; }
+.theme-btn svg:has(.i-moon) { display: block; }
+:root[data-theme="dark"] .theme-btn svg:has(.i-moon) { display: none; }
+header:not(.top) .theme-btn { margin-left: auto; width: 40px; height: 40px; }
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ai-900: #0e1a1c; --ai-800: #8fcac7; --ai-700: #86bfbd; --ai-100: #223b3d; --ai-ink: #a9d8d5;
+  --shu: #d9aa3c; --shu-ink: #e2bb5e; --shu-soft: #3a3322;
+  --washi: #1a2022; --kinari: #212829; --hinoki: #2a3335; --card-bg: #222a2b; --white: #222a2b;
+  --ink: #ece7de; --ink-2: #b9c0ba; --muted: #b9c0ba;
+  --rule: #3e494b; --rule-soft: #333d3f; --line: #3e494b; --line-soft: #333d3f;
+  --unk: #e6bd62; --unk-bg: #3b3322; --heart: #f08a9a;
+  --paper: var(--washi); --panel: var(--kinari); --moss: var(--hinoki); --moss-ink: #d6dad2;
+  --focus-outline-color: #9ad4d1;
+  --act: #2b6a6e; --act-hover: #357a7e;
+}
+html[data-theme="dark"], html[data-theme="dark"] body { background: var(--washi); color: var(--ink); }
+[data-theme="dark"] ::selection { background: #3d6b6e; color: #fff; }
+[data-theme="dark"] img:not(.leaflet-tile) { filter: brightness(.92); }
+[data-theme="dark"] .brand .mark, [data-theme="dark"] .brand-txt { filter: none; }
+
+/* 채움(흰 글자) 요소: 글자용으로 밝아진 토큰 대신 짙은 청록 */
+[data-theme="dark"] :is(.hs-go, .card .badges .bdg.stay, .d-badges .stay, .d-six li::before, .see-results, .pg-toc a[aria-current], .pg-cta a, .pager button[aria-current], #favToggle[aria-pressed="true"] #favCount, .badge, .pill input:checked + span, .thumbs button[aria-current="true"], .btn, .rowopt input:checked) { background-color: var(--act); border-color: var(--act); color: #fff; }
+[data-theme="dark"] :is(.hs-go:hover, .pg-cta a:hover, .btn:hover) { background: var(--act-hover); border-color: var(--act-hover); color: #fff; }
+[data-theme="dark"] .btn.line { background: transparent; color: var(--ai-800); border-color: var(--ai-800); }
+[data-theme="dark"] .btn.line:hover { background: var(--ai-100); }
+[data-theme="dark"] input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--act) var(--fill), #46514f var(--fill)); }
+[data-theme="dark"] input[type="range"]::-moz-range-track { background: #46514f; }
+[data-theme="dark"] input[type="range"]::-moz-range-progress { background: var(--act); }
+[data-theme="dark"] .rowopt input { border-color: #8c9690; }
+[data-theme="dark"] .tog input:checked + span { background: linear-gradient(var(--ai-100), var(--ai-100)) left bottom / 100% 100% no-repeat, var(--white); }
+[data-theme="dark"] .fav-toast { background: #ece7de; color: #1a2022; }
+
+/* 면 */
+[data-theme="dark"] :is(.top, header.top) { background: #11191b; border-color: var(--rule); }
+/* 히어로 글자는 cover-upgrade.css(투명 바탕·흰 글자)를 그대로 쓴다. .hero-txt 에 면/글자색을 주면 사진 위에 어두운 상자가 생긴다 */
+[data-theme="dark"] .hero { background: #172022; }
+[data-theme="dark"] .card.sel, [data-theme="dark"] :is(.card:hover, .card.sel) { background: #25302f; }
+[data-theme="dark"] .card:hover { border-color: #5a6b6b; }
+[data-theme="dark"] :is(.blurb, .notice) { color: var(--ink-2); }
+[data-theme="dark"] .notice { color: var(--unk); }
+[data-theme="dark"] .nav:hover { background: var(--hinoki); }
+[data-theme="dark"] .d-srcst-changed, [data-theme="dark"] .d-srcst-unreachable { background: var(--unk-bg); border-color: var(--shu); }
+[data-theme="dark"] :is(.card .badges .bdg.day, .d-badges .day) { color: var(--unk); }
+[data-theme="dark"] :is(dialog.cmp, .cmp th, .cmp td) { background: var(--kinari); color: var(--ink); }
+[data-theme="dark"] dialog.cmp::backdrop { background: rgb(0 0 0 / .62); }
+
+/* 입력·선택 */
+[data-theme="dark"] :is(select, input[type="text"], input[type="search"], input:not([type]), textarea) { background-color: #1c2325; color: var(--ink); border-color: #5d6a69; }
+[data-theme="dark"] ::placeholder { color: #9aa6a4; opacity: 1; }
+[data-theme="dark"] .language-switch select { background: #1c2325; color: var(--ink); border-color: #5d6a69; }
+html[data-theme="dark"] header.top .language-switch select, html[data-theme="dark"].cover-on header.top select { background: #1c2325; color: var(--ink); }
+[data-theme="dark"] .language-switch, [data-theme="dark"] .language-switch span { color: #e6e1d8; }
+[data-theme="dark"] .locale-property-notes { background: var(--kinari); border-color: var(--rule); }
+[data-theme="dark"] .locale-property-notes small { color: var(--ink-2); }
+[data-theme="dark"] img[data-photo-kind="facility"] { background: var(--hinoki); }
+[data-theme="dark"] header.top nav { border-top-color: var(--rule); }
+
+/* 지도: 타일은 그대로, 컨트롤·툴팁·팝업은 어둡게 */
+[data-theme="dark"] #prefMap { border-color: var(--rule); background: #20292a; }
+[data-theme="dark"] .leaflet-tooltip { border-color: var(--rule); background: #2a3335; color: var(--ink); }
+[data-theme="dark"] .leaflet-tooltip-top:before { border-top-color: #2a3335; }
+[data-theme="dark"] .leaflet-tooltip-bottom:before { border-bottom-color: #2a3335; }
+[data-theme="dark"] .leaflet-tooltip-left:before { border-left-color: #2a3335; }
+[data-theme="dark"] .leaflet-tooltip-right:before { border-right-color: #2a3335; }
+[data-theme="dark"] .map-panel .map-reset { border-color: var(--rule); background: var(--hinoki); color: var(--ink); }
+[data-theme="dark"] .map-panel .map-reset:hover { background: #354042; }
+[data-theme="dark"] :is(.leaflet-popup-content-wrapper, .leaflet-popup-tip) { background: #2a3335; color: var(--ink); }
+[data-theme="dark"] .leaflet-popup-content a { color: var(--ai-800); }
+[data-theme="dark"] :is(.leaflet-bar a, .leaflet-bar a:hover) { background: #2a3335; color: var(--ink); border-color: var(--rule); }
+[data-theme="dark"] .leaflet-control-attribution { background: rgb(26 32 34 / .85) !important; color: var(--ink-2); }
+[data-theme="dark"] .leaflet-control-attribution a { color: var(--ai-800); }
+
+/* sources.html */
+[data-theme="dark"] header:not(.top) { background: #11191b; }
+[data-theme="dark"] a:focus-visible, [data-theme="dark"] input:focus-visible { outline-color: #9ad4d1; }
+[data-theme="dark"] .meta { color: var(--ink-2); }
+[data-theme="dark"] footer:not(.night) { background: var(--hinoki); color: var(--ink); }
+
+/* 휴대폰 머리글: 버튼이 하나 늘어도 브랜드가 줄바꿈되지 않도록 간격만 줄인다 */
+@media (max-width: 700px) { header.top .header-tools { gap: 6px !important; } .hd-row { gap: 6px; } }
+html[data-theme="dark"] header.top .fav-top, html[data-theme="dark"].cover-on header.top .fav-top { background: #1c2325; color: var(--ink); border-color: #5d6a69; }
+
+/* guide / water: --ai-900 는 어두운 면 전용이라 글자는 따로 */
+[data-theme="dark"] .pg-body h2 { color: var(--ink); }
+[data-theme="dark"] :is(.pg a:hover, .pg-back a:hover) { color: var(--ink); }
+[data-theme="dark"] .pg-cta a:hover { color: #fff; }
+[data-theme="dark"] header:not(.top) ~ main a, [data-theme="dark"] header:not(.top) ~ footer a { color: var(--ai-800); }
+
+/* 지도 타일: 다크 모드에서는 밝은 타일이 화면에서 튀지 않게 명도를 낮춘다(마커·도형·컨트롤은 그대로) */
+[data-theme="dark"] .leaflet-tile-pane { filter: saturate(.35) brightness(.62) contrast(1.05); }
+[data-theme="dark"] :is(.cmp tr.cmp-unconf th, .cmp tr.cmp-unconf td) { background: var(--hinoki); color: var(--ink-2); }

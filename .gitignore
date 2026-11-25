@@ -1,0 +1,33 @@
+# secrets / local config
+.env
+.env.*
+*.key
+.claude/settings.local.json
+# third-party skills installed locally (restore with skills-lock.json)
+.agents/
+.claude/skills/
+# worker output, logs, DB dumps and caches
+tools/monitor/out/
+tools/cleanup/backup/
+tools/cleanup/db-snapshot/
+tools/**/*.log
+tools/**/backup/
+_removed/
+node_modules/
+*.bak
+
+# internal working data (kept locally, not published)
+tools/tracker/review-queue.*
+tools/tracker/state.json
+tools/tracker/summary.txt
+tools/cleanup/
+tools/prices/candidates.json
+tools/prices/cache.json
+tools/prices/kinds.json
+tools/names/audit-result.json
+
+# manual price review decisions (internal)
+tools/prices/removed-prices.*
+
+# originals backup before image shrink (reversible)
+_originals_backup/

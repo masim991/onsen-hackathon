@@ -1,0 +1,36 @@
+/* 하단 배너: 밤의 온천 */
+footer.night { position: relative; isolation: isolate; overflow: hidden; margin: 0; padding: clamp(56px, 9vw, 120px) clamp(20px, 5vw, 72px) clamp(28px, 4vw, 44px); background: #070c13; color: #c9d3df; min-height: clamp(380px, 46vw, 560px); display: flex; align-items: flex-end; font-size: 16px; line-height: 1.7; }
+footer.night canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+.night-in { position: relative; width: 100%; max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px clamp(24px, 6vw, 96px); align-items: end; }
+.night-brand { display: flex; gap: 16px; align-items: center; }
+.night-brand i { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid rgb(232 238 247 / .45); border-radius: 50%; color: #e8eef7; font: normal 26px/1 "Shippori Mincho", serif; backdrop-filter: blur(4px); background: rgb(255 255 255 / .04); }
+.night-brand b { display: block; font: 700 26px/1.2 var(--serif, serif); color: #f2f6fb; letter-spacing: .01em; }
+.night-brand p { margin: 4px 0 0; font-size: 16px; color: #aab7c6; }
+.night-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 32px; }
+.night-nav h2 { margin: 0 0 10px; font: 600 14px/1 var(--ui, sans-serif); letter-spacing: .18em; text-transform: uppercase; color: #8696a9; }
+.night-nav a, .night-nav button { display: flex; align-items: center; width: 100%; min-height: 44px; padding: 0; border: 0; background: none; color: #d6dfea; font: inherit; font-size: 16px; text-align: left; text-decoration: none; cursor: pointer; transition: color .2s, transform .25s cubic-bezier(.16, 1, .3, 1); }
+.night-nav a:hover, .night-nav button:hover { color: #fff; transform: translateX(4px); }
+.night-nav a:focus-visible, .night-nav button:focus-visible, .lg-close:focus-visible { outline: 2px solid #e8eef7; outline-offset: 3px; border-radius: 2px; }
+.night-note, .night-copy { grid-column: 1 / -1; margin: 0; font-size: 14px; color: #8e9cae; }
+.night-note { padding-top: 22px; border-top: 1px solid rgb(232 238 247 / .14); }
+dialog.legal { width: min(680px, calc(100vw - 32px)); max-height: min(82vh, 760px); padding: 0; border: 1px solid rgb(232 238 247 / .22); border-radius: 8px; background: #0e1620; color: #d6dfea; box-shadow: 0 30px 80px rgb(0 0 0 / .6); overflow: hidden; }
+dialog.legal::backdrop { background: rgb(3 6 10 / .72); backdrop-filter: blur(3px); }
+dialog.legal[open] { animation: lg-in .4s cubic-bezier(.16, 1, .3, 1); }
+.lg-body { max-height: min(82vh, 760px); overflow-y: auto; padding: 34px clamp(22px, 4vw, 40px) 30px; }
+.lg-body h2 { margin: 0 0 18px; font: 700 28px/1.3 var(--serif, serif); color: #f2f6fb; }
+.lg-body h3 { margin: 22px 0 6px; font: 700 18px/1.4 var(--serif, serif); color: #e8eef7; }
+.lg-body p { margin: 0; font-size: 16px; color: #c3cedb; }
+.lg-body .lg-src { margin-top: 26px; font-size: 15px; }
+.lg-body a { color: #e8eef7; text-underline-offset: 4px; }
+.lg-close { position: absolute; top: 10px; right: 12px; z-index: 2; width: 44px; height: 44px; border: 1px solid rgb(232 238 247 / .3); border-radius: 50%; background: #0e1620; color: #e8eef7; font-size: 22px; line-height: 1; cursor: pointer; }
+@keyframes lg-in { from { opacity: 0; transform: translateY(14px) scale(.985); } }
+@media (max-width: 760px) { .night-in { grid-template-columns: 1fr; } footer.night { align-items: flex-end; } }
+@media (prefers-reduced-motion: reduce) { dialog.legal[open] { animation: none; } .night-nav a:hover, .night-nav button:hover { transform: none; } }
+/* 밤하늘과 입욕수의 색을 사이트의 청록·돌빛 팔레트와 연결한다. */
+footer.night { background: #0d1b1b; color: #cfdfd9; }
+footer.night canvas { filter: sepia(.24) hue-rotate(105deg) saturate(.8); }
+.night-brand p, .night-note, .night-copy { color: #b2c9c0; }
+.night-nav h2 { color: #a8c5b9; }
+.night-nav a, .night-nav button { color: #d9e8e1; }
+.night-brand i { border-color: rgb(195 224 211 / .5); color: #e8f4ed; }
+.night-note { border-top-color: rgb(195 224 211 / .23); }

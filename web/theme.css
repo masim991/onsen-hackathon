@@ -1,0 +1,111 @@
+/* 웹폰트가 오기 전 대체 글꼴의 글자 폭을 맞춰, 글꼴이 바뀔 때 줄바꿈·높이가 튀지 않게 한다(폭은 브라우저에서 실측) */
+@font-face { font-family: "Gaegu Fallback"; src: local("Malgun Gothic"), local("Apple SD Gothic Neo"), local("Noto Sans KR"); size-adjust: 85%; }
+@font-face { font-family: "Gowun Fallback"; src: local("Malgun Gothic"), local("Apple SD Gothic Neo"), local("Noto Sans KR"); size-adjust: 92%; }
+/* 광물질 온천수 팔레트: 청록 먹빛(탕 물) + 유황 노랑(강조 한 곳) + 젖은 돌의 회녹색 바탕.
+   초안의 크림·테라코타 조합 대신 온천 자체의 재료에서 색을 가져왔다. 모든 페이지에서 마지막에 로드되어 기존 변수 값만 덮어쓴다. */
+:root {
+  --ai-900: #14272a;  --ai-800: #1d4a50;  --ai-700: #2a5f66;  --ai-100: #d2e2e1;  --ai-ink: #1d4a50;
+  --shu: #b98a14;      /* 유황: 큰 숫자·표식에만 사용 */
+  --shu-ink: #1d4a50;  /* 버튼·링크·작은 강조는 탕 물색(흰 글자 9:1) */
+  --shu-soft: #efe7cb;
+  --washi: #eef1ee;    /* 젖은 돌 */
+  --kinari: #f7f9f6;   /* 카드 */
+  --hinoki: #e1e7e3;   /* 패널·태그 */
+  --card-bg: #f9faf7;
+  --ink: #1b2a2b;  --ink-2: #4a5a5a;  --muted: #4a5a5a;
+  --rule: #c7d0cb;  --rule-soft: #dbe2dd;  --line: #c7d0cb;  --line-soft: #dbe2dd;
+  --unk: #7a5a00;  --unk-bg: #f3e8c4;
+  --on-dark: #f3f6f3;  --on-dark-2: #b6c4c1;
+  --paper: var(--washi);  --panel: var(--kinari);  --moss: var(--hinoki);  --moss-ink: #2f4244;
+  /* 글꼴: 과하지 않은 필기체. 제목은 개구(한글)·클레 원(일본어), 본문은 고운 도둠 */
+  --hand: "Gaegu", "Gaegu Fallback", "Gowun Dodum", sans-serif;           /* 손글씨: 히어로 h1, 구역 h2, 지역 타일 이름(24px 이상)만 */
+  --ui: "Gowun Dodum", "Gowun Fallback", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; /* 본문·버튼·카드 제목·서랍 */
+  --serif: var(--ui);                                                     /* 기존 규칙의 var(--serif) 는 기본이 본문체, 손글씨 자리는 아래에서 --hand 로 바꾼다 */
+  --mincho: "Klee One", "Gaegu", serif;  --mincho-ja: "Klee One", "Gaegu", serif;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --focus-outline-color: var(--ai-800);
+}
+html, body { background: var(--washi); }
+::selection { background: #bcd6d3; color: var(--ink); }
+
+/* UI 구분: 면(바탕) → 패널(조건) → 카드(결과) 세 단계를 색과 테두리로 구분 */
+.fbox, .detail, .filters, #filterPanel { background: var(--kinari); border-color: var(--rule); }
+.card { background: var(--card-bg); border-color: var(--rule-soft); }
+.card:hover { border-color: var(--ai-700); }
+.card.sel { border-color: var(--ai-800); background: #f2f7f5; box-shadow: inset 0 0 0 1px var(--ai-800); }
+.card .tag, .tags li, .chip { background: var(--hinoki); color: var(--moss-ink); border-radius: 3px; }
+.btn { border-radius: 4px; }
+.brand .mark { color: var(--ai-900); }
+
+/* 본문·제목 서체 (일본어·영어 페이지 포함) */
+html:lang(ja) { --ui: "Gowun Dodum", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif; }
+html:lang(en) { --ui: "Gowun Dodum", "Gowun Fallback", "Segoe UI", system-ui, sans-serif; }
+body { font-family: var(--ui); font-size: 17px; line-height: 1.7; }
+h1, h2, .rail summary, .filters summary, .rg-grid b, .night-brand b { --serif: var(--hand); }
+html:lang(ja) :is(h1, h2, .rail summary, .filters summary, .rg-grid b, .night-brand b) { --serif: "Klee One", "Gaegu", serif; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 700; text-wrap: balance; }
+html:lang(ja) :is(h1, h2) { font-weight: 600; }
+.hero-txt h1 { font-family: var(--serif); font-weight: 700; letter-spacing: -.01em; font-size: clamp(54px, 7.2vw, 96px); }
+html[lang="ja"] .intro>div:first-child h1, html[lang="en"] .intro>div:first-child h1 { font-family: var(--serif); font-weight: 600; letter-spacing: .01em; font-size: clamp(44px, 6vw, 84px); }
+
+/* 글자 크기: 상단 메뉴·환율·조건 영역을 한 단계 키운다 */
+.top nav a, .top nav button { font-size: 17px; min-height: 48px; }
+.brand-txt strong { font-size: 20px; }
+.brand-txt small { font-size: 13px; }
+.language-switch, .language-switch select { font-size: 15px; }
+.header-tools .fx { font-size: 14px; }
+.header-tools .fx b { font-size: 17px; }
+.header-tools .fx small { font-size: 13px; }
+#railHint, .eyebrow, .filters p, .filters summary, p.sub-h, .sub-h { font-size: 15.5px; }
+.map-help, .filters small { font-size: 14px; }
+label, legend, .filters label, .rail label { font-size: 15.5px; }
+select, input[type="text"], input[type="search"] { font-size: 16px; }
+span.t { font-size: 16px; } span.n { font-size: 14px; }
+.badge, #activeCount, #favCount { font-size: 14px; }
+#favToggle, #heroPause, .more-btn, button.link, .map-reset { font-size: 16px; }
+.chips li, .tags li, .stack-row .tags li { font-size: 14px; }
+p.loc, .place { font-size: 15.5px; }
+.card-credit, small.credit, .credit { font-size: 13px; }
+.pager button { font-size: 16px; }
+.card .price, .listing .price { font-size: 17px; }
+.bottom, footer { font-size: 15px; }
+@media (max-width: 700px) { .top nav a, .top nav button { font-size: 16px; } body { font-size: 16px; } }
+
+/* 글자 크기 바닥선: 기존 CSS의 작은 값(11~13px)이 남지 않도록 영역별로 고정 */
+.rail :is(label, span, small, p, button, legend, option, select, input, a, li, dt, dd),
+.filters :is(label, span, small, p, button, legend, option, select, input, a, li, dt, dd, summary) { font-size: 15.5px !important; }
+.rail :is(.map-help, small, .n), .filters :is(.map-help, small) { font-size: 14.5px !important; }
+.rail .badge, .rail summary .badge { font-size: 15px !important; }
+.rail summary, .filters summary, #filterPanel > summary { font-size: 24px !important; }
+.top :is(a, button, span, small, b, label, select) { font-size: 16px !important; }
+.top nav a, .top nav button { font-size: 17px !important; }
+.header-tools .fx { font-size: 14.5px !important; } .header-tools .fx b { font-size: 17px !important; } .header-tools .fx small { font-size: 13px !important; }
+.brand-txt strong { font-size: 21px !important; } .brand-txt small { font-size: 13.5px !important; }
+.card :is(li, span, small, p, button), .listing :is(li, span, small, p, button, summary, a) { font-size: 15px !important; }
+.card h3, .listing h3 { font-size: 21px !important; }
+.card .loc, .listing .place { font-size: 15.5px !important; }
+.card .blurb { font-size: 16px !important; }
+.card .price strong, .listing .price strong { font-size: 18px !important; }
+.bar :is(span, small, label, select, button) { font-size: 16px !important; }
+.bar h2 { font-size: 26px !important; }
+.hero .sub, .intro p { font-size: 17px !important; }
+.hero :is(button, a, small, span) { font-size: 15.5px !important; }
+.listing :is(dt, dd), .detail :is(dt, dd) { font-size: 15px !important; }
+.no-image, .nophoto, .nophoto span { font-size: 15px !important; }
+small, .small { font-size: max(14px, 1em); }
+/* 조건 배너는 칸 전체 폭을 쓰고, 메뉴는 넘치면 줄바꿈한다 */
+.filters summary, #filterPanel > summary, .rail summary { display: flex !important; align-items: center; width: 100%; box-sizing: border-box; }
+.top nav a, .top nav button { padding-inline: 10px; }
+/* 글자가 커진 만큼 메뉴를 한 줄 아래로 내려 잘리지 않게 한다 */
+@media (min-width: 701px) and (max-width: 1620px) {
+  header.top { grid-template-columns: minmax(0, 1fr) auto !important; gap: 0 16px !important; padding-top: 10px; }
+  header.top .brand { grid-column: 1; grid-row: 1; }
+  header.top .header-tools { grid-column: 2; grid-row: 1; }
+  header.top nav { grid-column: 1 / -1; grid-row: 2; flex-wrap: nowrap; overflow-x: auto; border-top: 1px solid var(--rule-soft); margin-top: 10px; }
+}
+.top .brand { font-size: 21px; line-height: 1.3; }
+.top .brand small { font-size: 14px !important; }
+/* 지도 저작자 표시도 13px 이상 */
+.leaflet-control-attribution { font-size: 13px !important; }
+/* 푸터의 湯 글자는 불러오지 않는 Shippori Mincho 대신 불러오는 Klee One 으로 */
+html .night-brand i { font-family: "Klee One", "Gaegu", serif; }

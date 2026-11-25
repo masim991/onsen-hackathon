@@ -92,4 +92,30 @@ const PHOTOS = {
 // 자료에 사진 키가 없던 시설에 붙이는 온천지 사진
 const IM_FIX = { 1352: 'oyasu', 241: 'shiobara', 247: 'shiobara', 1293: 'beppu', 1347: 'kurokawa', o1: 'dogo', o2: 'kusatsu', o7: 'sukayu' };
 const LOCAL_PHOTOS = { 'b/b5/Gunma_hot_springs_2017.jpg': 'images/gunma.jpg', '1/10/Noboribetsu_hot_spring_jigokudani_20130503.jpg': 'images/noboribetsu.jpg', '4/41/Kamihoroso_roten.JPG': 'images/tokachi.jpg' };
-const shotUrl = (shot, w) => LOCAL_PHOTOS[shot[0]] || `${W}${shot[0]}/${w}px-${shot[0].split('/').pop()}`;
+// 로컬 사진은 그대로, 그 외(DB의 Commons 원본 Special:FilePath 포함)는 upload.wikimedia.org 의 폭 지정 썸네일을 쓴다.
+// (FilePath?width= 는 thumb.wikimedia.org 로 넘어가 CSP 에 막히고, 원본은 2~6천 px 라 썸네일이 훨씬 가볍다.)
+// DB 키는 'commons/파일명' 이라 썸네일 경로의 해시 폴더(파일명 MD5 앞 1·2자)를 직접 계산한다.
+const md5 = (s) => {
+  const b = new TextEncoder().encode(s), n = b.length, w = new Uint32Array(((n + 8 >> 6) + 1) * 16);
+  b.forEach((v, i) => { w[i >> 2] |= v << (i % 4 * 8); });
+  w[n >> 2] |= 0x80 << (n % 4 * 8); w[w.length - 2] = n * 8;
+  const K = Array.from({ length: 64 }, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 2 ** 32)), S = [7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21];
+  let h = [0x67452301, 0xefcdab89 | 0, 0x98badcfe | 0, 0x10325476];
+  for (let o = 0; o < w.length; o += 16) {
+    let [A, B, C, D] = h;
+    for (let i = 0; i < 64; i++) {
+      const g = i < 16 ? i : i < 32 ? (5 * i + 1) % 16 : i < 48 ? (3 * i + 5) % 16 : 7 * i % 16;
+      let F = i < 16 ? (B & C) | (~B & D) : i < 32 ? (D & B) | (~D & C) : i < 48 ? B ^ C ^ D : C ^ (B | ~D);
+      F = (F + A + K[i] + w[o + g]) | 0; A = D; D = C; C = B;
+      const s = S[(i >> 4) * 4 + i % 4]; B = (B + ((F << s) | (F >>> (32 - s)))) | 0;
+    }
+    h = [h[0] + A | 0, h[1] + B | 0, h[2] + C | 0, h[3] + D | 0];
+  }
+  return h.map((v) => [0, 8, 16, 24].map((k) => ((v >>> k) & 255).toString(16).padStart(2, '0')).join('')).join('');
+};
+const thumbKey = (k) => {
+  if (/^[0-9a-f]\/[0-9a-f]{2}\//.test(k)) return k;
+  const name = k.split('/').pop(), hash = md5(decodeURIComponent(name).replace(/ /g, '_'));
+  return `${hash[0]}/${hash.slice(0, 2)}/${name}`;
+};
+const shotUrl = (shot, w) => { const u = LOCAL_PHOTOS[shot[0]]; if (u && !/^https?:/.test(u)) return u; try { return `${W}${thumbKey(shot[0])}/${w}px-${shot[0].split('/').pop()}`; } catch { return u; } };

@@ -1,0 +1,84 @@
+# 소유자가 해야 할 일 (순서대로)
+
+요약
+- 코드/DB/보안 점검은 끝났고, 남은 일은 키·계정·실행 위치·배포 확인뿐입니다(아래 1~5번, 이 순서).
+- 1~3번을 끝내야 모니터가 실제로 돌고 4~5번 확인이 가능합니다. 키는 채팅/커밋에 절대 붙여넣지 마세요.
+- 6번(Commons 사진 52건)은 Wikimedia가 다운로드 차단(429)을 풀면 `tools/photos`에서 다시 실행하면 됩니다.
+- 7번은 공개 전 결정 사항(테스트 데이터 정리, 숨김 해제 시 id 목록 재생성)입니다.
+- 이 PC 점검 결과: 워커 selftest 통과, `tools/monitor/out`과 로그에 키/토큰 없음, `.github/workflows/monitor.yml` 문법 이상 없음.
+
+## 1. 서비스 키 준비
+- Supabase 대시보드 > 프로젝트 `frncsllpkxrsgxyqsfwd` > Project Settings > API Keys > secret 키(service role) 복사.
+- Anthropic API 키는 필요 없습니다(유료라서 쓰지 않기로 함). 등록하지 마세요. 공지 한국어 요약은 직접 쓰고, 사진 분류는 규칙으로 자동 처리됩니다(3-2 참고).
+- 이 PC에서만 시험할 때: `$env:SUPABASE_SERVICE_ROLE_KEY="..."` (PowerShell 창을 닫으면 사라짐)
+
+## 2. 관리자 계정 만들기
+- Supabase 대시보드 > Authentication > Users > Add user > Create new user (이메일/비밀번호, Auto Confirm 체크).
+- SQL Editor 에서 실행(이메일만 바꾸기):
+  ```sql
+  insert into public.admins (user_id)
+  select id from auth.users where email = 'YOUR_ADMIN_EMAIL@example.com'
+  on conflict do nothing;
+  ```
+
+## 3. 실행 위치 선택 (둘 중 하나)
+- A. GitHub Actions(권장, PC가 꺼져 있어도 동작): 저장소 Settings > Secrets and variables > Actions > New repository secret 로 `SUPABASE_SERVICE_ROLE_KEY`(이것만 필수) 등록. `ANTHROPIC_API_KEY`는 만들지 않아도 됩니다. `.github/workflows/monitor.yml` 이 준비돼 있으니 저장소에 push 하면 30분마다 `--run` 이 돕니다. Actions 탭 > `monitor` > Run workflow 로 수동 실행도 가능. 저장소 루트가 이 프로젝트 폴더여야 경로(`tools/monitor/worker.mjs`)가 맞습니다.
+- B. Windows 작업 스케줄러(이 PC가 켜져 있을 때만 동작). PowerShell(관리자 아님)에서 한 번 실행:
+  ```powershell
+  [Environment]::SetEnvironmentVariable("SUPABASE_SERVICE_ROLE_KEY","키","User")
+  schtasks /Create /SC MINUTE /MO 30 /TN "OnsenMonitor" /TR "node \"<프로젝트 폴더 경로>\tools\monitor\worker.mjs\" --run --sink rest"
+  ```
+  환경변수는 설정 후 새로 연 창/로그인부터 적용됩니다. `node`가 PATH에 있어야 합니다(`node -v` 확인). 삭제: `schtasks /Delete /TN "OnsenMonitor" /F`
+
+## 3-1. 자동 반영 설정 (선택, 코드 변경 없음)
+- GitHub 저장소 Settings > Secrets and variables > Actions > Variables 탭 > New repository variable.
+- `AUTO_APPLY` = `off`(전부 검토 대기) / `strict`(기본: 공식 도메인·엄격 패턴·이전값 0.5~2배 또는 연속 2회 확인만 자동 반영) / `on`(비권장). 값이 없으면 strict.
+- `AUTO_PUBLISH_NOTICES` = `on` 이면 한국어 요약이 있고 최근/중요하며 잡음이 아닌 공지만 자동 공개(요약이 비어 있으면 공개되지 않으므로 키 없는 운영에서는 켜 봐야 효과가 거의 없음). 기본 off.
+- 자동 반영된 값은 관리 화면 > 변경 이력 맨 위 '최근 7일 자동 반영'에서 훑어보고 틀린 것만 되돌리기 요청.
+
+## 3-2. 공지 요약(수동) / 사진 분류(규칙) - 키 없음, 추가 설정 없음
+- 공지 한국어 요약은 직접 씁니다(5~10분이면 충분). `/admin/monitor` 로그인 > '공지' 탭 > 공지 카드에서 '원문' 링크로 내용을 확인 > '한국어 요약' 칸에 1~2문장 입력(원문에 없는 날짜/금액은 쓰지 마세요) > '승인하고 공개'(공개 안 할 거면 '요약 저장'만, 필요 없는 공지는 그대로 비공개). 요약이 비어 있으면 공개 버튼이 막힙니다. 'AI 로그' 탭의 공지 요약 칸은 비어 있는 게 정상입니다.
+- 사진 분류는 워커가 규칙(파일명·경로 키워드 + 크기·비율·형식·색 수)으로 자동 처리하고, 결과는 'AI 로그' 탭에 `rules-v1`(이유가 `rule:`로 시작)로 쌓입니다. 장수는 Variables 의 `AI_MAX_IMAGES`(선택, 기본 20)로 조절. 규칙 분류는 신뢰도 0.8에 거의 닿지 않으므로 대부분 '라이선스 보류', 로고는 항상 '로고 검토'로 남습니다(정상).
+- 공개 규칙(그대로): 풍경/온천탕/객실/음식 사진은 신뢰도 0.8 이상이고 라이선스가 확인(verified, 또는 owned, 또는 Commons+라이선스 기록)된 것만 공개 대상이며, 공식 사이트/출처 불명 사진은 '라이선스 보류'로 남고 공식 페이지 링크만 둡니다. '로고·사진 승인' 탭에서 직접 확인한 것만 승인하세요(사진 승인 = verified + 공개). 규칙이 라벨을 틀려도 라이선스 확인은 사람이 하므로 자동으로 공개되는 일은 없습니다.
+- 공개 사이트는 바뀌지 않습니다. 승인된 로고를 시설 카드의 공식 링크 옆에 작게 보이려면 후속 작업(anon 읽기 정책 + 로더)이 필요합니다(README 'AI 로그 + 사진 분류' 마지막 항목).
+- 테스트용 가짜 모드(선택): `AI_MOCK=1 node tools/monitor/worker.mjs --classify --sink rest` (서비스 키 필요, 가짜 응답으로 mock 로그만 쌓고 사진/공지는 바꾸지 않음).
+- 나중 옵션(지금은 안 해도 됨): 무료 로컬 CLIP 모델로 키워드 없는 사진도 분류. 모델이 수백 MB라 Actions에서 캐시 설정이 필요하고 실행이 느려집니다. 규칙 분류가 너무 많이 '기타'로 남을 때만 검토하세요.
+
+## 4. 첫 실제 실행 (rest 싱크는 실서버로 돌려본 적이 없습니다)
+- 키를 설정한 PowerShell 에서, 프로젝트 폴더로 이동 후:
+  - (선택) 대상 넓히기: `node tools/monitor/worker.mjs --seed --sink rest --n 1246` (테스트 대상 30개는 이미 DB에 있음)
+  - 실행: `node tools/monitor/worker.mjs --run --sink rest`
+  - 확인(SQL Editor): `select result, count(*) from monitor_logs group by 1;`
+
+## 5. 관리 화면 확인 (사이트 배포 후)
+- `https://<사이트>/admin/monitor` > 로그인 > 7개 탭이 보이는지, '공지' 탭에서 승인/비공개가 되는지 확인. 요약(summary_ko)이 비어 있으면 공개할 수 없으니(키 없는 운영이라 항상 비어 있음) 직접 한국어 요약을 적고 승인(3-2 참고).
+- 개발자도구 > Network 에서 `/admin/monitor` 응답 헤더에 `X-Robots-Tag: noindex, nofollow`, `Cache-Control: no-store` 확인.
+- 변경 이력에서 승인 -> 워커 실행(`node tools/monitor/worker.mjs --apply --sink rest` 또는 `--run`) -> '반영됨' 확인 -> '되돌리기 요청' -> 워커 실행 -> '되돌림' 확인을 한 번 해보세요. 키가 없으면 승인해도 '승인' 상태로 대기합니다.
+- 직접 되돌림: `node tools/monitor/worker.mjs --revert <변경 id> --sink rest`. 나중에 반영된 변경이 있으면 `superseded`로 거부되니 새 것부터 되돌리세요.
+- 현재 DB의 '검토 대기' 변경 2건(실데이터)은 손대지 않았습니다. 승인할지는 직접 판단하세요.
+
+## 6. Commons 사진 52건 가져오기 (보류 중, 소유자 승인은 이미 받음)
+- 상태: 2026-11-23 재시도에서 첫 파일부터 429(5분 후에도 동일)라 0건 받고 중단. DB·사이트 변경 없음. 라이선스 52건은 API로 다시 확인해 모두 일치.
+- 다시 할 때: 몇 시간~하루 뒤 `tools/photos/import-report.md` 순서 2~3. 즉 `tools/photos`에서 `node get.mjs`(2초 간격, 429면 5분 한 번 쉬고 계속되면 멈춤) -> `node gen.mjs`(INSERT SQL + photo-assets 추가분) -> SQL 실행 -> `?v=` 를 20270101 로 올리고(html + `db-loader.js` + `web/README.md`) `node tools/security/check.mjs`.
+- 스이메이칸(水明館)·조라쿠엔(長楽園)·쓰보유(つぼ湯) 3건은 분류의 첫 파일을 임시로 골랐으니 이미지를 눈으로 확인하고, 시설이 분명히 보이지 않으면 뺍니다.
+
+## 7. 공개 전에 정할 일
+- 이 PC에 남은 모니터 테스트 데이터(monitor_* 대상 90개, 공지 19건, 사진 해시 90건)는 일부러 남겨 두었습니다. 지우려면 `delete from public.monitor_targets;`(자식 행 자동 삭제) 후 `facility_notices`/`photo_assets`/`facility_changes`/`monitor_logs` 를 비우세요.
+- 숨긴 시설 2,243건(unlisted)은 삭제하지 않았습니다. 일부를 다시 보이게 하면(`update onsen_facilities set unlisted=false where id in (...)`, 전체 되돌리기는 `tools/cleanup/unhide.sql`) `web/listed-ids.js` 를 다시 만드세요(`web/README.md` 숨김 절). 안 만들어도 사이트는 정상이고 DB 장애 폴백에서만 빠집니다.
+- 하지 않은 것(요청이 있을 때만): 공지 자동 공개(현재 전부 `published=false`), 사진 공개(`license_status='verified'` 승인 필요), 관리자 화면 실시간 반영(Realtime은 CSP에 wss 호스트 추가 필요).
+
+## 8. 외부 cron으로 모니터를 매시간 돌리기 (오너 전용, PC 꺼도 동작)
+GitHub의 `schedule`은 하루 2번 정도만 돌아서 점검이 필요량(약 1,500건/일)의 1/5밖에 안 됩니다. 외부 서비스가 매시간 워크플로를 깨우게 합니다. 토큰은 채팅·커밋·로그에 절대 붙여넣지 말고 cron 서비스의 비밀 입력칸에만 넣으세요.
+1. GitHub > Settings(프로필) > Developer settings > Personal access tokens > **Fine-grained tokens** > Generate new token.
+   - Repository access: **Only select repositories** > 이 저장소 하나만.
+   - Permissions > Repository permissions > **Actions: Read and write** (다른 권한은 모두 No access; Metadata 읽기는 자동).
+   - 만료는 90일 정도로 짧게 잡고 달력에 갱신일을 적어 둡니다. 토큰은 생성 직후 한 번만 보이니 바로 다음 단계에 입력하세요.
+2. cron-job.org(무료) 가입 > Create cronjob.
+   - URL: `https://api.github.com/repos/<OWNER>/<REPO>/actions/workflows/monitor.yml/dispatches` (<OWNER>/<REPO>는 본인 저장소)
+   - Schedule: 60분마다(Every 60 minutes).
+   - Advanced > Request method **POST**, Request body: `{"ref":"main"}`
+   - Headers: `Authorization: Bearer <토큰>`, `Accept: application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, `Content-Type: application/json`, `User-Agent: onsen-monitor-cron`
+   - 성공 응답은 HTTP 204(본문 없음). cron-job.org의 실패 알림 이메일을 켜 두세요.
+3. 확인: Actions 탭 > monitor 에 정시 부근 실행이 생기는지, 1시간 뒤 /admin/monitor 에 빨간 배너가 없는지. 워크플로는 동시에 하나만 돌고(concurrency) 겹치면 대기합니다.
+4. 문제가 생기면 cron-job.org에서 작업을 끄기만 하면 됩니다. 토큰이 새면 GitHub에서 즉시 Revoke 하세요. 이 토큰은 Actions만 다루고 코드·비밀값에는 접근하지 못합니다.
+5. 등록 전에는 /admin/monitor 에 하트비트 경고 배너가 뜰 수 있습니다(첫 정상 실행 후 사라짐).

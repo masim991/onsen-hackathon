@@ -1,0 +1,44 @@
+/* 상단 배너: 스크롤하면 전체 화면 커버가 고정 헤더 띠로 줄어든다.
+   scroll-driven-animations.style 의 "cover card to fixed header" 방식(animation-timeline: scroll())을 적용.
+   지원하지 않는 브라우저와 '동작 줄이기' 설정에서는 cover.js 가 html.cover-on 을 붙이지 않아 기존 정적 배너를 그대로 쓴다. */
+html.cover-on { --cover-h: clamp(420px, 64svh, 760px); --collapse: calc(var(--cover-h) - var(--hdr-h, 88px)); --stack-top: calc(var(--hdr-h, 88px) + 10px); scroll-padding-top: calc(var(--hdr-h, 88px) + 12px); }
+html.cover-on body { padding-top: var(--cover-h); }
+
+/* 사진 커버(고정) */
+html.cover-on .hero { position: fixed; inset: 0 0 auto 0; z-index: 60; height: var(--cover-h); margin: 0; animation: cover-shrink linear both; animation-timeline: scroll(root); animation-range: 0 var(--collapse); }
+html.cover-on .hero > img { animation: cover-pan linear both; animation-timeline: scroll(root); animation-range: 0 var(--collapse); }
+html.cover-on .hero :is(.hero-txt, .hero-tate, .hero-controls, .credit) { animation: cover-fade linear both; animation-timeline: scroll(root); animation-range: 0 calc(var(--collapse) * .5); }
+@keyframes cover-shrink { to { height: var(--hdr-h, 88px); } }
+@keyframes cover-pan { from { object-position: 50% 30%; filter: brightness(1); } to { object-position: 50% 75%; filter: brightness(.9) saturate(1.05); } }
+@keyframes cover-fade { to { opacity: 0; translate: 0 -28px; visibility: hidden; } }
+
+/* 헤더(고정, 사진 위에 얹힘) */
+html.cover-on header.top { position: fixed; inset: 0 0 auto 0; z-index: 80; border: 0; color: #fff; background: linear-gradient(180deg, rgb(8 20 24 / .66), rgb(8 20 24 / 0)); animation: top-solid linear both; animation-timeline: scroll(root); animation-range: 0 var(--collapse); }
+@keyframes top-solid { to { background-color: rgb(8 20 24 / .28); } }
+html.cover-on header.top :is(.brand, .brand-txt, .brand-txt strong, .brand-txt small, nav a, nav button, label, .fx, .fx b, .fx small, p, small) { color: #fff; }
+html.cover-on header.top nav { border-color: rgb(255 255 255 / .25); }
+html.cover-on header.top nav a[aria-current]::after { background: #d3a623; }
+html.cover-on header.top nav :is(a, button) { opacity: .92; }
+html.cover-on header.top .brand .mark { background: #d3a623; color: #14272a; }
+html.cover-on header.top :is(a, button):focus-visible { outline-color: #fff; }
+html.cover-on header.top select { background: rgb(255 255 255 / .92); color: #14272a; }
+
+/* 넓은 화면: 한 줄 헤더(고정 띠가 너무 높아지지 않게) */
+@media (min-width: 1100px) {
+  html.cover-on header.top { grid-template-columns: auto minmax(0, 1fr) auto !important; padding-top: 6px; padding-bottom: 6px; align-items: center; }
+  html.cover-on header.top .brand { grid-column: 1; grid-row: 1; }
+  html.cover-on header.top nav { grid-column: 2; grid-row: 1; margin: 0; border-top: 0; justify-content: center; overflow: visible; flex-wrap: nowrap; }
+  html.cover-on header.top .header-tools { grid-column: 3; grid-row: 1; }
+  html.cover-on header.top .brand-txt small { display: none; }
+  html.cover-on header.top nav :is(a, button) { padding-inline: 12px; font-size: 16px !important; min-height: 44px; }
+  html.cover-on header.top .header-tools .fx { display: none; }
+}
+
+/* 겹침 정리: 고정 헤더 아래로 sticky 요소를 내리고, 지도(Leaflet)가 헤더 위로 올라오지 않게 한다 */
+html.cover-on .rail { top: var(--hdr-h, 88px); max-height: calc(100vh - var(--hdr-h, 88px)); }
+.leaflet-container { isolation: isolate; z-index: 0; }
+html.cover-on header.top :is(.brand-txt strong, nav a, nav button, .header-tools label) { text-shadow: 0 1px 8px rgb(0 0 0 / .55); }
+
+/* 높이 64svh: 동작 줄이기·스크롤 구동 미지원(cover-on 없음)에서도 같은 높이로 검색창이 첫 화면 안에 들어오게 한다 */
+html:not(.cover-on) .hero { height: clamp(420px, 64svh, 760px); }
+@media (max-width: 700px) { html:not(.cover-on) .hero { height: clamp(440px, 64svh, 620px); } }
