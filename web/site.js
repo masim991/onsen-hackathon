@@ -129,12 +129,18 @@ const photoCredit = (shot) => {
 };
 // 사진 설명: ko는 자료의 한국어 설명, ja·en은 시설/온천지 기준으로 만든 문장
 const photoAlt = (f, shot) => LANG === 'ko' ? (shot[3]?.caption || PHOTOS[f.img].cap) : shot[3]?.kind === 'facility' ? UI.alt.facility(f.name) : UI.alt.area(f.prefName);
-const coverageCredit = (shot) => {
+const coverageLabel = (shot) => {
   const m = shot[3];
   if (!m?.coverage) return '';
   const area = m.kind === 'area';
   const label = LANG === 'ja' ? (area ? '地域の風景 · 施設の写真ではありません' : '施設写真') : LANG === 'en' ? (area ? 'Regional view · not this facility' : 'Facility photo') : (area ? '지역 사진 · 시설 사진 아님' : '시설 사진');
-  return `<span class="coverage-label">${label}</span><small class="coverage-credit"><a href="${m.source}" target="_blank" rel="noopener">${m.title} © ${shot[1]}</a>${m.terms ? ` · <a href="${m.terms}" target="_blank" rel="noopener">${shot[2]}</a>` : ` · ${shot[2]}`}</small>`;
+  return `<span class="coverage-label">${label}</span>`;
+};
+const coverageCredit = (shot) => {
+  const m = shot[3];
+  if (!m?.coverage) return '';
+  const title = LANG === 'ko' || !m.source.includes('commons.wikimedia.org/wiki/File:') ? m.title : decodeURIComponent(m.source.split('/').pop()).replaceAll('_', ' ');
+  return `<div class="coverage-credit"><a href="${m.source}" target="_blank" rel="noopener">${title} © ${shot[1]}</a>${m.terms ? ` · <a href="${m.terms}" target="_blank" rel="noopener">${shot[2]}</a>` : ` · ${shot[2]}`}</div>`;
 };
 
 // 환율: 엔화 자료를 원화(ko)·달러(en)로 바꿔 보여 줍니다. 일본어는 엔화만. 값을 못 받으면 엔화 그대로 둡니다.
@@ -346,7 +352,7 @@ function card(f) {
   const sel = state.sel === f.id;
   return `
   <article class="card${sel ? ' sel' : ''}" data-id="${f.id}">
-    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'area'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}${coverageCredit(f.shots[0])}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>
+    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'area'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}${coverageLabel(f.shots[0])}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>${coverageCredit(f.shots[0])}
     <div class="body">
       ${badges(f)}
       <h3><button type="button" class="pick" aria-expanded="${sel}" data-pick="${f.id}">${f.name}</button></h3>
