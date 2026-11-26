@@ -40,7 +40,7 @@
   select.addEventListener('change', () => {
     const { qs, hash } = carry();
     try { sessionStorage.setItem('onsen-carry', JSON.stringify({ qs, hash, t: Date.now() })); } catch {}
-    window.location.href = select.value + (qs ? '?' + qs : '') + hash;
+    window.location.href = select.value + (qs ? '?' + qs : hash ? '' : '?nointro') + hash;
   });
   // 다크 모드 버튼은 언어 선택 바로 왼쪽(theme-init.js 가 만든다)
   const row = document.createElement('div');

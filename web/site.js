@@ -65,7 +65,8 @@ const makeFacility = (r) => {
   const region = (D.prefs[r.pref] || [-1])[0];
   const official = r.src === 'official';
   const x = EXTRA[String(r.id)] || {};
-  const dayPrice = /^[\d,]+$/.test(r.dayP || '') ? +r.dayP.replace(/,/g, '') : null;
+  const dayPriceMatch = String(r.dayP || '').match(/^([\d,]+)(?:\s*[~〜～-]\s*[\d,]+)?$/);
+  const dayPrice = dayPriceMatch ? +dayPriceMatch[1].replace(/,/g, '') : null;
   const dbStay = Number.isFinite(r.stayPricePerPerson) && r.stayPricePerPerson > 0 ? r.stayPricePerPerson : null;
   const off = dbStay == null ? pickOff(r) : null;
   const hasRooms = r.rooms && r.rooms !== '0室';
@@ -79,7 +80,7 @@ const makeFacility = (r) => {
     area: r.a, areaName: areaName(r.a), pref: r.pref, prefName: prefName(r.pref), region, regionName: regionName(region),
     blurb: tr(r.b), img, shots: (PHOTOS[img]?.shots || []).filter((shot) => LOCAL_PHOTOS[shot[0]]), hp: r.hp,
     official, srcUrl: official ? r.srcUrl : SPA(r.id), checked: r.checked || CHECKED,
-    monHours: monitorHours(r), day: x.dayStatus || yn(r.day), dayPrice: x.dayPrice === undefined ? dayPrice : x.dayPrice, dayHours: tr(x.dayHours === undefined ? (r.dayH || '').replace(/～/g, '~') : x.dayHours), dayNote: tr(x.dayNote || r.dayNote),
+    monHours: monitorHours(r), day: x.dayStatus || yn(r.day), dayPrice: x.dayPrice === undefined ? dayPrice : x.dayPrice, dayPriceRange: x.dayPrice === undefined && /[~〜～-]/.test(r.dayP || ''), dayHours: tr(x.dayHours === undefined ? (r.dayH || '').replace(/～/g, '~') : x.dayHours), dayNote: tr(x.dayNote || r.dayNote),
     stay: x.stayStatus || (r.stay ? yn(r.stay) : hasRooms ? 'y' : 'u'), rooms: /\d/.test(r.rooms || '') ? r.rooms.match(/\d+/)[0] : null, stayP: tr(r.stayP), stayPrice: dbStay ?? off?.from ?? null, off, stayPriceNote: priceNote(r),
     open: x.openStatus || cnt(r.open), openN: x.openStatus ? null : num(r.open), priv: x.privStatus || cnt(r.priv), privN: x.privStatus ? null : num(r.priv), room: x.roomCount ? 'y' : cnt(r.room), roomN: x.roomCount || num(r.room),
     flow: yn(r.flow), qualityKeys: (r.q || '').split(',').map((s) => s.trim()).filter(Boolean), quality: list(r.q, D.qual), colors: list(r.color, D.color), temp: r.temp || null, place: r.place ? (LANG === 'ja' ? r.place : D.place[r.place]?.[LANG] || null) : null,
@@ -128,7 +129,7 @@ const photoCredit = (shot) => {
   return `${shot[1]}${C.resized} · <a href="${photoSource(shot)}" target="_blank" rel="noopener">${C.original}</a> · ${licence ? `<a href="${licence}" target="_blank" rel="noopener">${name}</a>` : name} · Wikimedia Commons`;
 };
 // 사진 설명: ko는 자료의 한국어 설명, ja·en은 시설/온천지 기준으로 만든 문장
-const photoAlt = (f, shot) => LANG === 'ko' ? (shot[3]?.caption || PHOTOS[f.img].cap) : shot[3]?.kind === 'facility' ? UI.alt.facility(f.name) : UI.alt.area(f.prefName);
+const photoAlt = (f, shot) => LANG === 'ko' ? (shot[3]?.caption || PHOTOS[f.img].cap) : shot[3]?.kind === 'facility' ? UI.alt.facility(f.name) : shot[3]?.kind === 'area' ? UI.alt.area(f.prefName) : LANG === 'ja' ? '温泉の写真' : 'Onsen photograph';
 const coverageLabel = (shot) => {
   const m = shot[3];
   if (!m?.coverage) return '';
@@ -150,6 +151,7 @@ const conv = (n) => UI.conv$(n, fx.rate);
 const money = (n, up = '') => fx.rate ? `<b>${UI.approx(conv(n))}${up}</b><i>${yen(n)}${up}</i>` : `<b>${yen(n)}${up}</b>`;
 const moneyText = (n, up = '') => (fx.rate ? UI.approx(conv(n)) : yen(n)) + up;
 const stayMoney = (f) => money(f.stayPrice, f.off ? '〜' : '');
+const dayMoney = (f) => money(f.dayPrice, f.dayPriceRange ? '〜' : '');
 const basisText = (f) => f.off ? UI.px.basis[f.off.basis] : '';
 const oldTag = (f) => f.off?.old ? ` <em class="old">${UI.px.old}</em>` : '';
 const offSrcLink = (f) => `<a href="${escQ(f.off.src)}" target="_blank" rel="noopener noreferrer">${f.off.assoc ? UI.px.srcAssoc(escQ(f.off.domain)) : f.off.mon ? UI.px.srcMon : UI.px.srcOfficial}<span class="vh">${UI.newWin}</span></a>`;
@@ -335,7 +337,7 @@ const PREF_SHORT = (() => {
 const prefChip = (f) => escQ(PREF_SHORT[f.pref] || Array.from(unesc(f.prefName)).slice(0, 3).join(''));
 function compactCard(f) {
   const sel = state.sel === f.id;
-  const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice)}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, refText(f), UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
+  const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice, f.dayPriceRange ? '〜' : '')}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, refText(f), UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
   return `
   <article class="card nophoto-card${sel ? ' sel' : ''}" data-id="${f.id}">
     <span class="np-chip" aria-hidden="true">${ic('onsen')}<b>${prefChip(f)}</b></span>
@@ -352,7 +354,7 @@ function card(f) {
   const sel = state.sel === f.id;
   return `
   <article class="card${sel ? ' sel' : ''}" data-id="${f.id}">
-    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'area'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}${coverageLabel(f.shots[0])}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>${coverageCredit(f.shots[0])}
+    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'unknown'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}${coverageLabel(f.shots[0])}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>${coverageCredit(f.shots[0])}
     <div class="body">
       ${badges(f)}
       <h3><button type="button" class="pick" aria-expanded="${sel}" data-pick="${f.id}">${f.name}</button></h3>
@@ -365,7 +367,7 @@ function card(f) {
     </div>
     <div class="side">
       ${heart(f)}
-      <div class="prices">${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${stayNp(f) ? UI.noStayPrice : UI.noPrice}</small></p>${refLine(f)}` : ''}${dayShown(f) ? `<p class="price day"><small>${UI.dayPriceLabel}</small>${money(f.dayPrice)}</p>` : ''}</div>
+      <div class="prices">${f.stayPrice != null && f.stay !== 'n' ? `<p class="price"><small>${f.off ? basisText(f) : UI.priceSmall}</small>${stayMoney(f)}${f.off ? (f.off.old ? `<small class="old">${UI.px.old}</small>` : '') : f.stayPriceNote ? `<small>${UI.seeDetail}</small>` : ''}</p>` : f.stay !== 'n' ? `<p class="price noprice"><small>${stayNp(f) ? UI.noStayPrice : UI.noPrice}</small></p>${refLine(f)}` : ''}${dayShown(f) ? `<p class="price day"><small>${UI.dayPriceLabel}</small>${dayMoney(f)}</p>` : ''}</div>
     </div>
   </article>`;
 }
@@ -396,7 +398,7 @@ function cmpRender(focusId) {
   const priceRow = (k, none) => {
     // 최저 표시는 확인된 값끼리, 같은 기준(식사 조건)일 때만
     const pf = fs.filter((f) => price[k](f) != null), v = pf.map(price[k]), lo = new Set(pf.map((f) => f.off?.basis)).size < 2 && v.length > 1 && Math.min(...v) < Math.max(...v) ? Math.min(...v) : null;
-    return (f) => f[k] === 'n' ? none : (price[k](f) == null ? (k === 'stay' && stayNp(f) ? `<span class="nc">${TL.stayNp}</span>` : nc) : (k === 'stay' ? stayMoney(f) : money(price[k](f))) + (price[k](f) === lo ? ` <em class="low">${C.low}</em>` : '') + (k === 'stay' && f.off ? `<small>${basisText(f)}</small><small>${f.off.assoc ? UI.px.srcAssocShort : f.off.mon ? UI.px.srcMonShort : UI.px.srcOfficial}</small>${f.off.old ? `<small class="old">${UI.px.old}</small>` : ''}` : '')) + (k === 'day' && f.day !== 'n' && f.dayHours ? `<small>${f.dayHours}</small>` : '');
+    return (f) => f[k] === 'n' ? none : (price[k](f) == null ? (k === 'stay' && stayNp(f) ? `<span class="nc">${TL.stayNp}</span>` : nc) : (k === 'stay' ? stayMoney(f) : dayMoney(f)) + (price[k](f) === lo ? ` <em class="low">${C.low}</em>` : '') + (k === 'stay' && f.off ? `<small>${basisText(f)}</small><small>${f.off.assoc ? UI.px.srcAssocShort : f.off.mon ? UI.px.srcMonShort : UI.px.srcOfficial}</small>${f.off.old ? `<small class="old">${UI.px.old}</small>` : ''}` : '')) + (k === 'day' && f.day !== 'n' && f.dayHours ? `<small>${f.dayHours}</small>` : '');
   };
   const source = (f) => /^https?:\/\//.test(f.srcUrl || '') ? (f.srcUrl === officialHref(f) ? C.same : `<a href="${f.srcUrl}" target="_blank" rel="noopener noreferrer">${T.sourcePage}<span class="vh">${UI.newWin}</span></a>`) : nc;
   const rows = [
@@ -446,7 +448,7 @@ function gallery(f) {
   return `
   <figure class="gal" data-gal="${f.id}">
     <div class="stage">
-      <img class="big" data-photo-kind="${s[3]?.kind || 'area'}" src="${shotUrl(s, 960)}" width="960" height="540" alt="${photoAlt(f, s)}" decoding="async">
+      <img class="big" data-photo-kind="${s[3]?.kind || 'unknown'}" src="${shotUrl(s, 960)}" width="960" height="540" alt="${photoAlt(f, s)}" decoding="async">
       ${many ? `<button type="button" class="nav prev" data-shot="prev" aria-label="${UI.prevPhoto}">${ic('left')}</button>
       <button type="button" class="nav next" data-shot="next" aria-label="${UI.nextPhoto}">${ic('right')}</button>
       <span class="counter" aria-live="polite">${i + 1} / ${f.shots.length}</span>` : ''}
@@ -489,7 +491,7 @@ function detailHtml(f) {
   const bathLines = bathInfo(f);
   const tiles = [
     [TL.stay, f.stay === 'n' ? `<span class="tv-t">${TL.noStay}</span>` : f.stayPrice != null ? stayMoney(f) : stayNp(f) ? `<span class="nc">${TL.stayNp}</span>` : nc, f.stay !== 'n' && f.stayPrice != null ? (f.off ? basisText(f) : TL.stayUnit) : ''],
-    [TL.day, f.day === 'n' ? `<span class="tv-t">${TL.noDay}</span>` : f.dayPrice != null ? money(f.dayPrice) : nc, f.day === 'n' ? '' : f.dayHours || ''],
+    [TL.day, f.day === 'n' ? `<span class="tv-t">${TL.noDay}</span>` : f.dayPrice != null ? dayMoney(f) : nc, f.day === 'n' ? '' : f.dayHours || ''],
     [TL.water, f.quality.length ? `<span class="tv-t">${qualityLinks(f, 99).join(' · ')}</span>` : nc, temp ? TL.temp(temp) : `${R.temp} ${T.nc}`],
     [TL.bath, bathLines.length ? `<span class="tv-t">${bathLines.map((l) => `<span>${l}</span>`).join('')}</span>` : nc, ''],
   ];

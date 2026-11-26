@@ -10,7 +10,7 @@
     ja: { title: 'どの地方へ行きますか？', hint: '地図を動かして地方を選んでください', step: '日本の温泉めぐり', region: '都道府県を選んでください', back: '全国地図', close: 'サイトに戻る', enter: '選択', failure: '地図を読み込めませんでした。サイトに戻ってください。' },
     en: { title: 'Where will you go?', hint: 'Move the map and choose a region', step: 'Explore Japan’s onsen', region: 'Choose a prefecture', back: 'All Japan', close: 'Return to the site', enter: 'Select', failure: 'The map could not load. Please return to the site.' }
   }[lang];
-  const destinations = { ko: 'index.html', ja: 'ja.html', en: 'en.html' };
+  const destinations = { ko: 'index.html?nointro', ja: 'ja.html?nointro', en: 'en.html?nointro' };
   const close = document.getElementById('map-close'), back = document.getElementById('map-back');
   const banner = document.getElementById('onsen-banner');
   const bannerClose = banner.querySelector('.banner-close');

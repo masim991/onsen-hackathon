@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { gsap } from 'gsap';
 
 const canvas = document.querySelector('#scene');
@@ -30,6 +31,10 @@ const destination = `../map-explore.html?lang=${lang}`;
 document.querySelector('#direct').href = destination;
 document.querySelector('#direct').firstChild.textContent = `${copy[6]} `;
 document.querySelector('#scroll-cue span:last-child').textContent = copy[0];
+const mobilePreview = document.querySelector('#mobile-preview');
+mobilePreview.href = `./mobile.html?lang=${lang}`;
+mobilePreview.firstChild.textContent = { ko: '모바일 화면 보기 ', ja: 'モバイル版を見る ', en: 'View mobile version ' }[lang];
+if (params.has('preview')) mobilePreview.hidden = true;
 
 const loadingManager = new THREE.LoadingManager();
 const scene = new THREE.Scene();
@@ -50,47 +55,48 @@ let navigating = false;
 const clock = new THREE.Clock();
 const mixerBank = [];
 
-function box(width, height, depth, material, x, y, z, parent = scene) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), material);
+function box(width, height, depth, material, x, y, z, parent = scene, radius = 0) {
+  const geometry = radius ? new RoundedBoxGeometry(width, height, depth, 2, radius) : new THREE.BoxGeometry(width, height, depth);
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z);
   parent.add(mesh);
   return mesh;
 }
 
-function surfaceTexture(kind) {
+function surfaceTexture(kind, relief = false) {
   const sheet = document.createElement('canvas');
-  sheet.width = sheet.height = 256;
+  sheet.width = sheet.height = 512;
   const c = sheet.getContext('2d');
   const bases = { wood: '#694538', darkWood: '#392821', tatami: '#afa57f', tatamiAlt: '#a79d76', plaster: '#b6a692', washi: '#e2d0af' };
-  c.fillStyle = bases[kind];
-  c.fillRect(0, 0, 256, 256);
-  let seed = 47;
+  c.fillStyle = relief ? '#808080' : bases[kind];
+  c.fillRect(0, 0, 512, 512);
+  let seed = kind === 'tatamiAlt' ? 903 : 47;
   const random = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
   if (kind.includes('Wood') || kind === 'wood') {
-    for (let y = 2; y < 256; y += 3) {
-      const offset = (random() - .5) * 7;
-      c.strokeStyle = random() > .5 ? 'rgba(28,14,10,.20)' : 'rgba(255,220,170,.12)';
-      c.lineWidth = random() * 1.3 + .35;
-      c.beginPath(); c.moveTo(0, y); c.bezierCurveTo(68, y + offset, 176, y - offset, 256, y + offset * .5); c.stroke();
+    for (let y = 2; y < 512; y += 2) {
+      const offset = (random() - .5) * 12;
+      c.strokeStyle = relief ? (random() > .5 ? 'rgba(255,255,255,.22)' : 'rgba(0,0,0,.18)') : (random() > .5 ? 'rgba(28,14,10,.20)' : 'rgba(255,220,170,.12)');
+      c.lineWidth = random() * 1.6 + .35;
+      c.beginPath(); c.moveTo(0, y); c.bezierCurveTo(136, y + offset, 352, y - offset, 512, y + offset * .5); c.stroke();
     }
   } else if (kind.startsWith('tatami')) {
-    for (let x = 0; x < 256; x += 4) {
-      c.strokeStyle = x % 12 ? 'rgba(47,53,37,.15)' : 'rgba(240,226,175,.25)';
+    for (let x = 0; x < 512; x += 3) {
+      c.strokeStyle = relief ? (x % 12 ? 'rgba(0,0,0,.13)' : 'rgba(255,255,255,.2)') : (x % 12 ? 'rgba(47,53,37,.15)' : 'rgba(240,226,175,.25)');
       c.lineWidth = 1;
-      c.beginPath(); c.moveTo(x, 0); c.lineTo(x + 1.5, 256); c.stroke();
+      c.beginPath(); c.moveTo(x, 0); c.lineTo(x + 1.5, 512); c.stroke();
     }
-    for (let y = 2; y < 256; y += 7) {
-      c.strokeStyle = 'rgba(61,64,42,.10)';
-      c.beginPath(); c.moveTo(0, y); c.lineTo(256, y); c.stroke();
+    for (let y = 2; y < 512; y += 7) {
+      c.strokeStyle = relief ? 'rgba(255,255,255,.13)' : 'rgba(61,64,42,.10)';
+      c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); c.stroke();
     }
   } else {
-    for (let i = 0; i < 4400; i++) {
-      c.fillStyle = random() > .5 ? 'rgba(91,65,42,.045)' : 'rgba(255,248,228,.07)';
-      c.fillRect(random() * 256, random() * 256, 1 + random() * 2, 1);
+    for (let i = 0; i < 11000; i++) {
+      c.fillStyle = relief ? (random() > .5 ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.13)') : (random() > .5 ? 'rgba(91,65,42,.045)' : 'rgba(255,248,228,.07)');
+      c.fillRect(random() * 512, random() * 512, 1 + random() * 3, 1);
     }
   }
   const texture = new THREE.CanvasTexture(sheet);
-  texture.colorSpace = THREE.SRGBColorSpace;
+  if (!relief) texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.anisotropy = 4;
   return texture;
@@ -191,29 +197,68 @@ function paperTexture(index) {
 }
 
 function buildProceduralScene() {
-  const wood = new THREE.MeshStandardMaterial({ map: surfaceTexture('wood'), roughness: .84 });
-  const darkWood = new THREE.MeshStandardMaterial({ map: surfaceTexture('darkWood'), roughness: .88 });
+  const wood = new THREE.MeshStandardMaterial({ map: surfaceTexture('wood'), roughness: .73 });
+  const darkWood = new THREE.MeshStandardMaterial({ map: surfaceTexture('darkWood'), roughness: .82 });
   const tatami = new THREE.MeshStandardMaterial({ map: surfaceTexture('tatami'), roughness: .98 });
   const tatamiAlt = new THREE.MeshStandardMaterial({ map: surfaceTexture('tatamiAlt'), roughness: .98 });
   const trim = new THREE.MeshStandardMaterial({ color: '#4b4039', roughness: .92 });
   const plaster = new THREE.MeshStandardMaterial({ map: surfaceTexture('plaster'), roughness: 1 });
-  const washi = new THREE.MeshStandardMaterial({ map: surfaceTexture('washi'), roughness: 1, transparent: true, opacity: .72, side: THREE.DoubleSide });
-  scene.add(new THREE.HemisphereLight('#f2d7ad', '#35282a', 1.45));
+  const washi = new THREE.MeshStandardMaterial({ map: surfaceTexture('washi'), bumpMap: surfaceTexture('washi', true), bumpScale: .002, roughness: 1, transparent: true, opacity: .78, side: THREE.DoubleSide });
+  scene.add(new THREE.HemisphereLight('#f2d7ad', '#35282a', .78));
   const lampLight = new THREE.PointLight('#ffbb74', 27, 8, 2);
   lampLight.position.set(-2.5, 2.25, -5.5);
   scene.add(lampLight);
   const doorwayGlow = new THREE.PointLight('#ffd3a3', 16, 5, 2);
   doorwayGlow.position.set(0, 1.8, -.8);
   scene.add(doorwayGlow);
+  if (renderer.shadowMap.enabled) {
+    const lampPool = new THREE.SpotLight('#ffe1b9', 14, 7, Math.PI / 3, .8, 2);
+    lampPool.position.set(-2.55, 2.7, -6.0);
+    lampPool.target.position.set(0, .2, -5);
+    lampPool.castShadow = true;
+    lampPool.shadow.mapSize.set(512, 512);
+    lampPool.shadow.bias = -.0002;
+    lampPool.shadow.normalBias = .015;
+    scene.add(lampPool, lampPool.target);
+  }
 
   // The front threshold is centred at x=0, so the entrance reads head-on.
-  box(9, .14, 15, darkWood, 0, -.15, -1.2);
+  const floorWood = darkWood.clone();
+  floorWood.map = darkWood.map.clone(); floorWood.map.repeat.set(5, 8); floorWood.map.needsUpdate = true;
+  floorWood.color.set('#967568');
+  box(9, .14, 15, floorWood, 0, -.15, -1.2);
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const loadPbr = (file, targets, slot, options = {}) => textureLoader.load(`./textures/${file}`, texture => {
+    if (slot === 'map') texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.anisotropy = 4;
+    for (const [material, variant] of targets) {
+      const t = variant ? texture.clone() : texture;
+      if (variant?.rotation) { t.center.set(.5, .5); t.rotation = variant.rotation; }
+      if (variant?.repeat) t.repeat.set(...variant.repeat);
+      if (variant?.offset) t.offset.set(...variant.offset);
+      if (variant?.matrix) { t.matrixAutoUpdate = false; t.matrix.set(...variant.matrix); }
+      t.needsUpdate = true;
+      material[slot] = t;
+      material.needsUpdate = true;
+    }
+    renderOnce = true;
+  }, undefined, () => { /* Procedural materials remain usable offline. */ });
+  loadPbr('wood.jpg', [[wood], [darkWood], [floorWood, { repeat: [5, 8] }]], 'map');
+  if (innerWidth >= 640) loadPbr('wood-normal.jpg', [[wood], [darkWood], [floorWood, { repeat: [5, 8] }]], 'normalMap');
+  const matCrop = { repeat: [1, .4], offset: [0, .055] };
+  const matCropTurned = { matrix: [0, -1, 1, .4, 0, .055, 0, 0, 1] };
+  loadPbr('tatami.jpg', [[tatami, matCrop], [tatamiAlt, matCropTurned]], 'map');
+  if (innerWidth >= 640) loadPbr('tatami-normal.jpg', [[tatami, matCrop], [tatamiAlt, matCropTurned]], 'normalMap');
+  darkWood.color.set('#967568');
+  tatamiAlt.color.set('#e3ddc7');
   box(8.5, .075, 10.1, trim, 0, -.04, -4.65);
   for (let row = 0; row < 5; row++) {
     for (let col = 0; col < 4; col++) {
       const x = (col - 1.5) * 2.05;
       const z = -8.55 + row * 1.95;
-      box(1.95, .027, 1.84, (row + col) % 2 ? tatami : tatamiAlt, x, .018, z);
+      const mat = box(1.95, .027, 1.84, (row + col) % 2 ? tatami : tatamiAlt, x, .018, z);
+      mat.receiveShadow = true;
       box(1.99, .009, .045, trim, x, .036, z + .91);
     }
   }
@@ -250,8 +295,11 @@ function buildProceduralScene() {
   table.position.set(0, 0, -5.0);
   scene.add(table);
   contactShadow(3.7, 2.25, 0, -5.0);
-  box(3.02, .14, 1.65, wood, 0, .67, 0, table);
-  box(2.85, .035, 1.49, new THREE.MeshStandardMaterial({ color: '#654336', roughness: .72 }), 0, .75, 0, table);
+  const tableBase = box(3.02, .14, 1.65, wood, 0, .67, 0, table, .025);
+  tableBase.castShadow = true;
+  const tableTop = box(2.85, .035, 1.49, wood, 0, .75, 0, table, .008);
+  tableTop.castShadow = true;
+  tableTop.receiveShadow = true;
   for (const x of [-1.21, 1.21]) for (const z of [-.57, .57]) box(.17, .57, .17, darkWood, x, .32, z, table);
   // Lamp shade and tokonoma give the inner room a warm focal point.
   const shade = new THREE.Mesh(new THREE.CylinderGeometry(.31, .39, .54, 8, 1, true), new THREE.MeshStandardMaterial({ color: '#f1c887', emissive: '#d88942', emissiveIntensity: .34, side: THREE.DoubleSide }));
@@ -283,7 +331,7 @@ function buildProceduralScene() {
   let parent = map;
   const panelWidth = .58;
   const paperEdge = new THREE.MeshStandardMaterial({ color: '#e2d1ad', roughness: 1, side: THREE.DoubleSide });
-  const paperBack = new THREE.MeshStandardMaterial({ map: surfaceTexture('washi'), roughness: 1, side: THREE.FrontSide });
+  const paperBack = new THREE.MeshStandardMaterial({ map: surfaceTexture('washi'), bumpMap: surfaceTexture('washi', true), bumpScale: .002, roughness: 1, side: THREE.FrontSide });
   for (let i = 0; i < 4; i++) {
     const hinge = new THREE.Group();
     if (i > 0) hinge.position.x = panelWidth;
@@ -297,6 +345,7 @@ function buildProceduralScene() {
     art.rotation.x = -Math.PI / 2;
     art.position.y = .003;
     panel.add(art);
+    art.castShadow = true;
     const back = new THREE.Mesh(sheetFace, paperBack);
     back.rotation.x = Math.PI / 2;
     back.position.y = -.003;
@@ -367,6 +416,7 @@ function restoreNearMap() {
 }
 
 function updateStage(progress) {
+  intro.inert = progress > .12;
   const time = masterTimeline.time();
   const phase = time < .96 ? 0 : time < 2.83 ? 1 : time < 3.93 ? 2 : 3;
   const nextCaption = time >= 6.28 ? copy[4] : [copy[1], copy[2], copy[2], copy[3]][phase];
@@ -431,10 +481,12 @@ async function init() {
     const gpuInfo = gl.getExtension('WEBGL_debug_renderer_info');
     const gpuName = gpuInfo ? String(gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL)) : '';
     lowGraphics = /SwiftShader|llvmpipe|software/i.test(gpuName) && !params.has('force3d');
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, innerWidth < 640 ? 1.25 : 1.5));
+    renderer.shadowMap.enabled = innerWidth >= 700 && !lowGraphics;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.45;
+    renderer.toneMappingExposure = 1.35;
     const nodes = buildProceduralScene();
     masterTimeline = bindAnimation(nodes);
     resize();

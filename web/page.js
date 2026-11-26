@@ -4,7 +4,7 @@
   const lang = (document.documentElement.lang || 'ko').slice(0, 2), kind = document.body.dataset.page;
   const L = {
     ko: {
-      brand: '온천 한눈에', tag: '일본 온천 숙소·당일 온천 찾기', home: 'index.html', homeAria: '온천 한눈에 홈', navAria: '주요 메뉴', lang: '언어', theme: '다크 모드', toc: '목차', results: 'index.html#results',
+      brand: '온천 한눈에', tag: '일본 온천 숙소·당일 온천 찾기', home: 'index.html?nointro', homeAria: '온천 한눈에 홈', navAria: '주요 메뉴', lang: '언어', theme: '다크 모드', toc: '목차', results: 'index.html#results',
       nav: [['온천 찾기', 'index.html#results'], ['온천수 안내', 'water.html'], ['료칸 숙박 안내', 'guide.html#ryokan'], ['가기 전 확인할 것', 'guide.html#guide'], ['결제 방법 안내', 'index.html#pay']],
       cover: {
         water: { eyebrow: '泉質のはなし', title: '온천수 안내', sub: '처음 보는 온천수, 쉽게 알아보기' },
@@ -13,7 +13,7 @@
       cap: { water: '노보리베쓰 온천 풍경', guide: '구로카와 온천 풍경' }, photo: '사진: ', resized: ' · 크기 조정', original: '사진 원본',
     },
     ja: {
-      brand: '温泉ひとめぐり', tag: '日本の温泉旅館を探す', home: 'ja.html', homeAria: '温泉ひとめぐり ホーム', navAria: 'メインメニュー', lang: '言語', theme: 'ダークモード', toc: '目次', results: 'ja.html#results',
+      brand: '温泉ひとめぐり', tag: '日本の温泉旅館を探す', home: 'ja.html?nointro', homeAria: '温泉ひとめぐり ホーム', navAria: 'メインメニュー', lang: '言語', theme: 'ダークモード', toc: '目次', results: 'ja.html#results',
       nav: [['温泉を求めて', 'ja.html#results'], ['泉質について', 'water-ja.html'], ['宿泊前の確認', 'guide-ja.html#guide'], ['温泉に行く前に', 'guide-ja.html#onsen'], ['支払い', 'ja.html#pay']],
       cover: {
         water: { eyebrow: '泉質のはなし', title: '泉質について', sub: '泉質は温泉の分析結果による分類です。' },
@@ -22,7 +22,7 @@
       cap: { water: '登別温泉の風景', guide: '黒川温泉の風景' }, photo: '写真：', resized: ' · サイズ変更', original: '原本',
     },
     en: {
-      brand: 'Onsen at a Glance', tag: 'Discover hot spring stays in Japan', home: 'en.html', homeAria: 'Onsen at a Glance home', navAria: 'Main navigation', lang: 'Language', theme: 'Dark mode', toc: 'On this page', results: 'en.html#results',
+      brand: 'Onsen at a Glance', tag: 'Discover hot spring stays in Japan', home: 'en.html?nointro', homeAria: 'Onsen at a Glance home', navAria: 'Main navigation', lang: 'Language', theme: 'Dark mode', toc: 'On this page', results: 'en.html#results',
       nav: [['Find a stay', 'en.html#results'], ['Water guide', 'water-en.html'], ['Ryokan guide', 'guide-en.html#ryokan'], ['Before bathing', 'guide-en.html#guide'], ['Payments', 'en.html#pay']],
       cover: {
         water: { eyebrow: '泉質のはなし', title: 'Understanding hot spring water', sub: 'Hot springs are classified by their temperature and dissolved substances.' },

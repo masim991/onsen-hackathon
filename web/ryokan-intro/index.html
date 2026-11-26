@@ -36,6 +36,7 @@
       <h1>문을 열면,<br>온천 여행이 시작됩니다.</h1>
       <p class="intro__description">다다미방의 지도를 펼쳐 여행할 곳을 골라보세요.</p>
       <p class="scroll-cue" id="scroll-cue"><span class="scroll-cue__line" aria-hidden="true"></span><span>아래로 스크롤해 입장하기</span></p>
+      <a class="mobile-preview-link" id="mobile-preview" href="./mobile.html?lang=ko">모바일 화면 보기 <span aria-hidden="true">↗</span></a>
       <p class="intro__hint" id="status" role="status" aria-live="polite">공간을 준비하고 있습니다.</p>
     </div>
   </main>
@@ -44,5 +45,13 @@
     <p class="scene-ui__progress" id="progress" aria-hidden="true">01 / 04</p>
   </div>
   <noscript><p class="no-script">JavaScript를 켜야 3D 입장을 볼 수 있습니다. <a href="../map-explore.html?lang=ko">온천 지도 보기</a></p></noscript>
+  <script>
+    setTimeout(() => {
+      if (document.documentElement.classList.contains('ready')) return;
+      const lang = new URLSearchParams(location.search).get('lang');
+      document.querySelector('#status').textContent = lang === 'ja' ? '3D空間を読み込めませんでした。地図へ進んでください。' : lang === 'en' ? 'The 3D room could not load. Please open the map.' : '3D 공간을 불러오지 못했습니다. 지도로 바로 이동해 주세요.';
+      document.querySelector('#direct').classList.add('direct-link--fallback');
+    }, 9000);
+  </script>
 </body>
 </html>

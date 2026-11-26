@@ -1,0 +1,1 @@
+The 1K JPG color and OpenGL normal maps are from Poly Haven's [Tatami Mat](https://polyhaven.com/a/tatami_mat) by Charlotte Baglioni and [Fine Grained Wood](https://polyhaven.com/a/fine_grained_wood) by Rob Tuytel. Both assets are CC0. Filenames are shortened for the intro; the original downloads are available from the linked source pages.
