@@ -1,0 +1,22 @@
+/* One dark palette for the catalogue, guides and source ledger. Load after dark.css. */
+:root[data-theme="dark"]{
+  --ai-900:#1c2520;--ai-800:#c0d2bd;--ai-700:#a9c2a8;--ai-100:#314135;--ai-ink:#d4e1d1;
+  --shu:#c9a172;--shu-ink:#e3c39d;--shu-soft:#39372d;
+  --washi:#202821;--kinari:#29342b;--hinoki:#324034;--card-bg:#2a352d;--white:#2a352d;
+  --ink:#f3f0e6;--ink-2:#d1d3c7;--muted:#d1d3c7;
+  --rule:#516255;--rule-soft:#455749;--line:#516255;--line-soft:#455749;
+  --paper:var(--washi);--panel:var(--kinari);--moss:var(--hinoki);--moss-ink:#e2e9d9;
+  --act:#546b51;--act-hover:#667e62;--focus-outline-color:#e5c49e;
+}
+html[data-theme="dark"],html[data-theme="dark"] body{background:var(--washi);color:var(--ink)}
+[data-theme="dark"] :is(.top,header.top),[data-theme="dark"] header:not(.top){background:#1d2820;border-color:var(--rule)}
+[data-theme="dark"] .hero{background:#1d2820}
+[data-theme="dark"] .card.sel,[data-theme="dark"] :is(.card:hover,.card.sel){background:#354438}
+[data-theme="dark"] :is(select,input[type="text"],input[type="search"],input:not([type]),textarea),
+[data-theme="dark"] .language-switch select,html[data-theme="dark"] header.top .language-switch select,
+html[data-theme="dark"].cover-on header.top select{background:#26332a;color:var(--ink);border-color:#617260}
+[data-theme="dark"] .leaflet-tooltip,[data-theme="dark"] :is(.leaflet-popup-content-wrapper,.leaflet-popup-tip){background:#334236;color:var(--ink)}
+[data-theme="dark"] .source-pager>span{color:var(--ink-2)}
+[data-theme="dark"] .source-pager button{background:var(--kinari);color:var(--ink);border-color:var(--rule)}
+[data-theme="dark"] .source-pager button[aria-current="page"]{background:var(--act);color:#fff;border-color:var(--act)}
+[data-theme="dark"] .source-pager button:focus-visible{outline-color:var(--focus-outline-color)}
