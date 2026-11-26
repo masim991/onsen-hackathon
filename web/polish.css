@@ -1,0 +1,22 @@
+/* 모바일·카드 다듬기. 기존 CSS는 건드리지 않고 마지막에 읽혀서 덮어쓴다. 되돌리려면 이 파일의 <link>만 지우면 된다. */
+
+/* 1) 모바일 메뉴는 가로로 밀어서 보는 구조다. 오른쪽 끝을 흐리게 해서 "더 있다"는 것을 알려 준다.
+     마지막 항목이 흐린 영역 밖으로 나올 수 있게 오른쪽 여백을 둔다. */
+@media (max-width: 700px) {
+  .top nav {
+    padding-inline-end: 32px;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+  }
+}
+
+/* 2) 카드: 가격을 가장 먼저 읽히게, 보조 정보는 한 단계 낮춘다. 글자 크기는 !important 규칙과 충돌하지 않도록 b에 직접 지정한다. */
+.card .prices .price:not(.noprice) b { display: block; margin-top: 2px; font-size: 22px; line-height: 1.2; letter-spacing: -.01em; }
+.card .prices .price:not(.noprice) i { display: block; font-style: normal; font-size: 14px; color: var(--ink-2); }
+.card .loc { color: var(--ink-2); }
+.card .off-note { display: block; color: var(--ink-2); opacity: .85; }
+.card-off { font-weight: 600; }
+
+@media (max-width: 700px) {
+  .card .prices .price:not(.noprice) b { font-size: 21px; }
+}

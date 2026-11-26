@@ -88,7 +88,8 @@
       if (img) {
         imgs.push(img);
         const url = img.currentSrc || img.src;
-        if (url) img.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(url) + ')');
+        // 로드가 끝난 사진만 흐린 배경으로 쓴다. CSS 배경은 loading=lazy를 무시하고 즉시 내려받아 지연 로딩이 무력화된다.
+        if (url && img.complete && img.naturalWidth) img.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(url) + ')');
         if (!img.complete) img.addEventListener('load', () => fitRow(row, imgs), { once: true });
       }
     }
@@ -96,7 +97,7 @@
   }
   function fitRow(row, imgs) {
     const w = row.firstElementChild?.clientWidth || 240;
-    imgs.forEach(i => { const u = i.currentSrc || i.src; if (u) i.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(u) + ')'); });
+    imgs.forEach(i => { const u = i.currentSrc || i.src; if (u && i.complete && i.naturalWidth) i.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(u) + ')'); });
     const hs = imgs.filter(i => i.naturalWidth).map(i => (w * i.naturalHeight) / i.naturalWidth);
     const h = hs.length ? Math.min(220, Math.max(130, Math.round(Math.max(...hs)))) : 170;
     row.style.setProperty('--ph-h', h + 'px');
