@@ -31,11 +31,11 @@ const I18N = {
       upTo: (text) => `최대 ${text}`, more: (n) => `성분 ${n}가지 더 보기`, less: '접기',
     },
     label: { day: '당일 이용', stay: '숙박', open: '노천탕', priv: '대절탕', room: '객실 노천탕', flow: '원천 방류', solo: '1인 숙박 가능', sudo: '식사 없이 숙박 가능', card: '카드 결제', shuttle: '송영', park: '주차장' },
-    results: { before: '검색 결과 ', after: '건', chips: '적용한 조건', sort: '정렬', byName: '가나다 순', byPrice: '숙박 요금 낮은 순', byOpen: '노천탕 많은 순', detail: '시설 상세' },
+    results: { before: '검색 결과 ', after: '건', chips: '적용한 조건', sort: '정렬', byFeature: '사진·가격 우선', byName: '가나다 순', byPrice: '숙박 요금 낮은 순', byOpen: '노천탕 많은 순', detail: '시설 상세' },
     chip: { clear: (label) => `${label} 조건 지우기`, price: (text) => `1박 1인 ${text} 이하`, fav: '찜한 시설만', photo: '사진 있는 곳만', priced: '가격 있는 곳만', noUnp: '가격 미확인 시설 제외', wide: '검색 중: 숙박·유형 조건 해제', wideClear: '숙박 가능·료칸 조건 다시 적용' },
     home: {
       searchAria: '온천 검색', regionLabel: '지역', regionAll: '전국', textLabel: '시설명·온천지 검색', ph: '시설명, 온천지, 도도부현', btn: '검색',
-      chips: '등록 시설이 많은 온천지', chipAria: (name) => `${name} 온천지로 찾기`, regionsTitle: '지역으로 찾기', regionsLead: '지역을 고르면 그곳에 등록된 시설을 모두 보여 드립니다.',
+      chips: '등록 시설이 많은 온천지', chipAria: (name) => `${name} 온천지로 찾기`, regionsTitle: '지역으로 찾기', regionsLead: '현재 조건에 맞는 시설 수입니다. 지역을 선택하면 아래 결과에 바로 반영됩니다.',
       regionN: (n) => `${n}곳`, regionAria: (name, n) => `${name}, 등록 시설 ${n}곳 보기`, regionsAria: '지역 목록', trustAria: '이용 안내',
       trust: [['공개 자료 기반', '시설 정보는 공식 사이트와 공개 자료에서 모았습니다.'], ['추정하지 않습니다', '확인하지 못한 값은 “미확인”으로 표시합니다.'], ['방문 전 확인', '요금·시간·운영 상태는 바뀔 수 있으니 시설에 직접 확인하세요.']],
       summary: (n, desc) => `${desc ? `${desc} 조건으로 ` : ''}${n}곳을 찾았습니다.`, searchChip: (q) => `검색어 “${q}”`,
@@ -126,11 +126,11 @@ const I18N = {
       upTo: (text) => `${text}以下`, more: (n) => `泉質をあと${n}種類表示`, less: '閉じる',
     },
     label: { day: '日帰り入浴', stay: '宿泊', open: '露天風呂', priv: '貸切風呂', room: '露天風呂付き客室', flow: '源泉かけ流し', solo: '1人で宿泊できる', sudo: '素泊まりできる', card: 'カード決済', shuttle: '送迎', park: '駐車場' },
-    results: { before: '検索結果 ', after: '件', chips: '適用中の条件', sort: '並び順', byName: '五十音順', byPrice: '宿泊料金が安い順', byOpen: '露天風呂が多い順', detail: '施設の詳細' },
+    results: { before: '検索結果 ', after: '件', chips: '適用中の条件', sort: '並び順', byFeature: '写真・料金を優先', byName: '五十音順', byPrice: '宿泊料金が安い順', byOpen: '露天風呂が多い順', detail: '施設の詳細' },
     chip: { clear: (label) => `${label}の条件を解除`, price: (text) => `1名1泊 ${text}以下`, fav: 'お気に入りのみ', photo: '写真ありのみ', priced: '料金ありのみ', noUnp: '料金未確認を除外', wide: '検索中: 宿泊・タイプ条件を解除中', wideClear: '宿泊可・旅館の条件を再適用' },
     home: {
       searchAria: '温泉を検索', regionLabel: '地域', regionAll: '全国', textLabel: '施設名・温泉地で検索', ph: '施設名、温泉地、都道府県', btn: '検索',
-      chips: '登録施設が多い温泉地', chipAria: (name) => `${name}で探す`, regionsTitle: '地域から探す', regionsLead: '地域を選ぶと、登録されている施設をすべて表示します。',
+      chips: '登録施設が多い温泉地', chipAria: (name) => `${name}で探す`, regionsTitle: '地域から探す', regionsLead: '現在の条件に合う施設数です。地域を選ぶと結果に反映されます。',
       regionN: (n) => `${n}件`, regionAria: (name, n) => `${name}、登録施設${n}件を見る`, regionsAria: '地域の一覧', trustAria: 'ご利用にあたって',
       trust: [['公開資料にもとづく', '施設情報は公式サイトなどの公開資料から集めています。'], ['推測しません', '確認できなかった項目は「未確認」と表示します。'], ['訪問前に確認', '料金・時間・営業状況は変わることがあります。施設へ直接ご確認ください。']],
       summary: (n, desc) => `${desc ? `${desc}の条件で ` : ''}${n}件が見つかりました。`, searchChip: (q) => `キーワード「${q}」`,
@@ -220,11 +220,11 @@ const I18N = {
       upTo: (text) => `Up to ${text}`, more: (n) => `Show ${n} more water types`, less: 'Show fewer',
     },
     label: { day: 'Day use', stay: 'Overnight stay', open: 'Open-air bath', priv: 'Private bath', room: 'In-room open-air bath', flow: 'Free-flowing spring water', solo: 'Solo stay', sudo: 'Room only, no meals', card: 'Card payment', shuttle: 'Shuttle', park: 'Parking' },
-    results: { before: 'Search results: ', after: '', chips: 'Active filters', sort: 'Sort', byName: 'A–Z', byPrice: 'Lowest overnight rate', byOpen: 'Most open-air baths', detail: 'Property details' },
+    results: { before: 'Search results: ', after: '', chips: 'Active filters', sort: 'Sort', byFeature: 'Photos & prices first', byName: 'A–Z', byPrice: 'Lowest overnight rate', byOpen: 'Most open-air baths', detail: 'Property details' },
     chip: { clear: (label) => `Remove filter: ${label}`, price: (text) => `Up to ${text} per night`, fav: 'Favorites only', photo: 'With photo only', priced: 'With price only', noUnp: 'Unpriced excluded', wide: 'Searching: stay/type filters off', wideClear: 'Reapply stay and ryokan filters' },
     home: {
       searchAria: 'Search hot springs', regionLabel: 'Region', regionAll: 'All Japan', textLabel: 'Search by name or area', ph: 'Name, hot spring area or prefecture', btn: 'Search',
-      chips: 'Areas with the most listings', chipAria: (name) => `Search ${name}`, regionsTitle: 'Browse by region', regionsLead: 'Choose a region to see every property listed there.',
+      chips: 'Areas with the most listings', chipAria: (name) => `Search ${name}`, regionsTitle: 'Browse by region', regionsLead: 'Counts reflect the current filters. Choose a region to update the results.',
       regionN: (n) => `${n} listed`, regionAria: (name, n) => `${name}: view ${n} listed properties`, regionsAria: 'Regions', trustAria: 'Before you use this site',
       trust: [['Based on public sources', 'Property details come from official sites and public records.'], ['Nothing is guessed', 'Anything we could not confirm is shown as “Not confirmed”.'], ['Check before you go', 'Rates, hours and operating status can change. Confirm with the property.']],
       summary: (n, desc) => `${n} propert${n === 1 ? 'y' : 'ies'} found${desc ? ` for ${desc}` : ''}.`, searchChip: (q) => `Keyword “${q}”`,
@@ -365,7 +365,6 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
       <summary>${ic('filter')}${R.title}<span id="activeCount" class="badge"></span></summary>
       <div class="rail-top"><p id="railHint"></p><button type="reset" class="link">${R.clear}</button></div>
       <section class="fbox">
-        <p class="map-help">${R.mapHelp}</p><div class="map-panel"><div id="prefMap" aria-label="${R.mapAria}"></div><p id="mapStatus" class="map-help" role="status">${R.mapLoading}</p></div>
         <select name="pref" aria-label="${R.prefAria}" id="prefSel"></select>
         <select name="region" aria-label="${R.areaAria}" id="regionSel"></select>
       </section>
@@ -407,7 +406,7 @@ document.body.insertAdjacentHTML('afterbegin', (() => {
         <h2 id="results-h">${U.results.before}<span id="count">…</span>${U.results.after}</h2>
         <ul id="chips" class="chips" aria-label="${U.results.chips}"></ul>
         <label class="sort"><span class="vh">${U.results.sort}</span>
-          <select id="sort"><option value="">${U.results.byName}</option><option value="price">${U.results.byPrice}</option><option value="open">${U.results.byOpen}</option></select>
+          <select id="sort"><option value="">${U.results.byFeature}</option><option value="name">${U.results.byName}</option><option value="price">${U.results.byPrice}</option><option value="open">${U.results.byOpen}</option></select>
         </label>
       </div>
       <p id="catalog-state" class="catalog-state" role="status" hidden></p>

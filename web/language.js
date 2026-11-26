@@ -51,5 +51,8 @@
   const existing = document.getElementById('fx'); // 환율 표시는 site.js가 만든다(ja는 없음)
   if (existing) tools.append(existing);
   header.append(tools);
+  const regions = document.getElementById('regions');
+  const trust = regions?.querySelector('.trust');
+  if (trust) regions.prepend(trust);
   document.querySelector('.cover-cta')?.addEventListener('click', () => { const panel = document.querySelector('#filters details, #filterPanel'); if (panel) panel.open = true; });
 })();

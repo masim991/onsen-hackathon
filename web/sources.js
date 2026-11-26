@@ -49,9 +49,55 @@
     return [...found].map(u=>safeLink(u,new URL(u).hostname.replace(/^www\./,''))).join(' · ');
   }
   function show(rows,photos,fallback){
-    const grouped=new Map();for(const p of photos){if(!grouped.has(String(p.facility_id)))grouped.set(String(p.facility_id),[]);grouped.get(String(p.facility_id)).push(p);}
-    const render=()=>{const q=$('search').value.toLocaleLowerCase().trim(),matching=rows.filter(r=>[r.name_ko,r.name_ja,r.name_en,r.area,r.prefecture].some(v=>String(v||'').toLocaleLowerCase().includes(q)));$('status').textContent=(fallback?t.fail+' ':'')+(matching.length?t.total(matching.length):t.none);$('sources').innerHTML=matching.map(r=>{const id=String(r.id), name=(lang==='ko'?r.name_ko:lang==='ja'?r.name_ja:r.name_en||r.name_ja)||r.name_ko||id, list=grouped.get(id)||[];return `<article class="entry" id="facility-${esc(id)}"><h3>${esc(name)}</h3><p class="meta">${esc(r.prefecture||'')} ${esc((lang==='ja'?r.area_ja:lang==='en'?r.area_en:r.area)||((lang==='ko'||!/[가-힣]/.test(r.area||''))?r.area:'')||'')}${r.source_checked?' · '+esc(t.checked)+': '+esc(r.source_checked):''}</p><p class="source-links">${safeLink(r.source_url,t.source)}${url(r.official_url)&&r.official_url!==r.source_url?' · '+safeLink(r.official_url,t.official):''}${safeRelated(r)?' · '+safeRelated(r):''}</p>${list.length?`<ul>${list.map(p=>safeShotInfo([p.image_key,p.author,p.license,p.metadata||{}],p.caption)).join('')}</ul>`:''}</article>`}).join('');if(location.hash&&!q){let target=null;try{target=document.getElementById(decodeURIComponent(location.hash.slice(1)))}catch{}if(target)target.scrollIntoView();}};
-    $('search').addEventListener('input',render);render();
+    const grouped=new Map();
+    for(const p of photos){
+      if(['official/orihashi-kagoshima-2428.jpg','official/koshikano-kagoshima-2394.jpg'].includes(p.image_key))continue;
+      const id=String(p.facility_id);
+      if(!grouped.has(id))grouped.set(id,[]);
+      grouped.get(id).push(p);
+    }
+    const labels={
+      ko:{region:'지역 선택',all:'모든 지역',previous:'이전',next:'다음',page:(n,total)=>`${n} / ${total} 페이지`},
+      ja:{region:'地域を選択',all:'すべての地域',previous:'前へ',next:'次へ',page:(n,total)=>`${n} / ${total} ページ`},
+      en:{region:'Choose a region',all:'All regions',previous:'Previous',next:'Next',page:(n,total)=>`Page ${n} of ${total}`}
+    }[lang];
+    $('sourceRegionLabel').textContent=labels.region;
+    $('sourceRegion').innerHTML=`<option value="">${labels.all}</option>`+DATA_I18N.regions.map((r,i)=>`<option value="${i}">${esc(r[{ko:0,ja:1,en:2}[lang]])}</option>`).join('');
+    let page=1;
+    const pageSize=10;
+    const facilityHTML=r=>{
+      const id=String(r.id),name=(lang==='ko'?r.name_ko:lang==='ja'?r.name_ja:r.name_en||r.name_ja)||r.name_ko||id;
+      const list=grouped.get(id)||[];
+      const area=(lang==='ja'?r.area_ja:lang==='en'?r.area_en:r.area)||((lang==='ko'||!/[가-힣]/.test(r.area||''))?r.area:'')||'';
+      const related=safeRelated(r);
+      return `<article class="entry" id="facility-${esc(id)}"><h3>${esc(name)}</h3><p class="meta">${esc(r.prefecture||'')} ${esc(area)}${r.source_checked?' · '+esc(t.checked)+': '+esc(r.source_checked):''}</p><p class="source-links">${safeLink(r.source_url,t.source)}${url(r.official_url)&&r.official_url!==r.source_url?' · '+safeLink(r.official_url,t.official):''}${related?' · '+related:''}</p>${list.length?`<ul>${list.map(p=>safeShotInfo([p.image_key,p.author,p.license,p.metadata||{}],p.caption)).join('')}</ul>`:''}</article>`;
+    };
+    const render=()=>{
+      const q=$('search').value.toLocaleLowerCase().trim(),region=$('sourceRegion').value;
+      const matching=rows.filter(r=>(region===''||String(DATA_I18N.prefs[r.prefecture]?.[0])===region)&&[r.name_ko,r.name_ja,r.name_en,r.area,r.prefecture].some(v=>String(v||'').toLocaleLowerCase().includes(q)));
+      const pages=Math.max(1,Math.ceil(matching.length/pageSize));
+      page=Math.min(Math.max(page,1),pages);
+      $('status').textContent=(fallback?t.fail+' ':'')+(matching.length?t.total(matching.length):t.none);
+      $('sources').innerHTML=matching.slice((page-1)*pageSize,page*pageSize).map(facilityHTML).join('');
+      const button=(label,target,disabled,current=false)=>`<button type="button" data-page="${target}" ${disabled?'disabled':''} ${current?'aria-current="page"':''}>${esc(label)}</button>`;
+      const start=Math.max(1,Math.min(page-2,pages-4)),end=Math.min(pages,start+4);
+      let pager=button(labels.previous,page-1,page===1);
+      for(let n=start;n<=end;n++)pager+=button(n,n,false,n===page);
+      pager+=button(labels.next,page+1,page===pages);
+      $('sourcePager').innerHTML=`<span>${esc(labels.page(page,pages))}</span><div>${pager}</div>`;
+      $('sourcePager').hidden=matching.length<=pageSize;
+    };
+    $('search').addEventListener('input',()=>{page=1;render()});
+    $('sourceRegion').addEventListener('change',()=>{page=1;render()});
+    $('sourcePager').addEventListener('click',e=>{
+      const button=e.target.closest('button[data-page]');if(!button||button.disabled)return;
+      page=Number(button.dataset.page);render();$('facilitiesTitle').scrollIntoView({block:'start'});
+    });
+    if(location.hash){
+      try{const id=decodeURIComponent(location.hash.slice(1)).replace(/^facility-/,'');const index=rows.findIndex(r=>String(r.id)===id);if(index>=0)page=Math.floor(index/pageSize)+1}catch{}
+    }
+    render();
+    if(location.hash)requestAnimationFrame(()=>document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView());
   }
   (async()=>{try{const [fac,photos]=await Promise.all([getAll('onsen_facilities','id.asc'),getAll('onsen_photos','facility_id.asc,sort_order.asc,image_key.asc')]);show(fac.map(r=>({...r,name_en:r.record?.name_en,area_ja:r.record?.area_ja,area_en:r.record?.area_en})),photos,false)}catch(e){const fac=RAW.map(r=>({id:r.id,name_ko:r.n,name_ja:r.jp,name_en:r.name_en,prefecture:r.pref,area:r.a,official_url:r.hp,source_url:r.srcUrl||(r.src==='official'?r.hp:SPA(r.id)),source_checked:r.checked}));const photos=RAW.flatMap(r=>(PHOTOS[r.im||IM_FIX[r.id]]?.shots||[]).filter(s=>LOCAL_PHOTOS[s[0]]).map(s=>({facility_id:r.id,image_key:s[0],author:s[1],license:s[2],metadata:s[3]||{},caption:PHOTOS[r.im||IM_FIX[r.id]]?.cap})));show(fac,photos,true)}})();
 })();

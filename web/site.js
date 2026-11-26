@@ -129,6 +129,13 @@ const photoCredit = (shot) => {
 };
 // 사진 설명: ko는 자료의 한국어 설명, ja·en은 시설/온천지 기준으로 만든 문장
 const photoAlt = (f, shot) => LANG === 'ko' ? (shot[3]?.caption || PHOTOS[f.img].cap) : shot[3]?.kind === 'facility' ? UI.alt.facility(f.name) : UI.alt.area(f.prefName);
+const coverageCredit = (shot) => {
+  const m = shot[3];
+  if (!m?.coverage) return '';
+  const area = m.kind === 'area';
+  const label = LANG === 'ja' ? (area ? '地域の風景 · 施設の写真ではありません' : '施設写真') : LANG === 'en' ? (area ? 'Regional view · not this facility' : 'Facility photo') : (area ? '지역 사진 · 시설 사진 아님' : '시설 사진');
+  return `<span class="coverage-label">${label}</span><small class="coverage-credit"><a href="${m.source}" target="_blank" rel="noopener">${m.title} © ${shot[1]}</a>${m.terms ? ` · <a href="${m.terms}" target="_blank" rel="noopener">${shot[2]}</a>` : ` · ${shot[2]}`}</small>`;
+};
 
 // 환율: 엔화 자료를 원화(ko)·달러(en)로 바꿔 보여 줍니다. 일본어는 엔화만. 값을 못 받으면 엔화 그대로 둡니다.
 const fx = { rate: null, when: null, stale: false, status: null };
@@ -257,7 +264,7 @@ function fillHome() {
   const H = UI.home, count = new Map();
   FAC.forEach((f) => count.set(f.region, (count.get(f.region) || 0) + 1));
   const max = Math.max(1, ...count.values());
-  $('#regionGrid').innerHTML = D.regions.map((_, i) => count.get(i) ? `<li><button type="button" data-rg="${i}" aria-label="${H.regionAria(regionName(i), count.get(i))}"><b>${regionName(i)}</b><span class="rn">${H.regionN(count.get(i).toLocaleString(UI.loc))}</span><i style="--w:${(count.get(i) / max * 100).toFixed(1)}%"></i></button></li>` : '').join('');
+  $('#regionGrid').innerHTML = D.regions.map((_, i) => count.get(i) ? `<li><button type="button" data-rg="${i}" aria-label="${H.regionAria(regionName(i), count.get(i))}"><b>${regionName(i)}</b><span class="rn">${H.regionN(count.get(i).toLocaleString(UI.loc))}</span><i style="width:${(count.get(i) / max * 100).toFixed(1)}%"></i></button></li>` : '').join('');
   const byArea = new Map();
   FAC.forEach((f) => byArea.set(f.area, (byArea.get(f.area) || 0) + 1));
   quickAreas = [...byArea].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([a]) => a);
@@ -339,7 +346,7 @@ function card(f) {
   const sel = state.sel === f.id;
   return `
   <article class="card${sel ? ' sel' : ''}" data-id="${f.id}">
-    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'area'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>
+    <div class="ph"><img class="pic" data-photo-kind="${f.shots[0][3]?.kind || 'area'}" src="${shotUrl(f.shots[0], 500)}" width="500" height="375" alt="${photoAlt(f, f.shots[0])}" loading="lazy" decoding="async">${f.shots.length > 1 ? `<span class="pcount">${ic('photo')}${f.shots.length}</span>` : ''}${coverageCredit(f.shots[0])}<small class="card-credit" hidden>${photoCredit(f.shots[0])}</small></div>
     <div class="body">
       ${badges(f)}
       <h3><button type="button" class="pick" aria-expanded="${sel}" data-pick="${f.id}">${f.name}</button></h3>
@@ -693,6 +700,35 @@ function restoreFromUrl() {
 
 // 결과 집합: 지역·검색어·찜 조건으로 먼저 거른 뒤(pool), 가격을 제외한 조건에 맞는 것(fit), 가격 조건까지 맞는 것(hit)
 const matches = (f, c) => judge(f, c).every((v) => v === 'y') && priceOk(f, c);
+const regionCountFrames = new WeakMap();
+function updateRegionGrid(c) {
+  const counts = new Map();
+  const withoutLocation = { ...c, rg: null, pref: '', area: '' };
+  for (const f of FAC) {
+    if (c.kind !== 'all' && f.kind !== c.kind) continue;
+    if (c.qt.length && !c.qt.every((w) => f.hay.includes(w))) continue;
+    if (state.favOnly && !favs.has(f.id)) continue;
+    if (state.photo && !f.shots.length) continue;
+    if (state.priced && !hasPrice(f)) continue;
+    if (!matches(f, withoutLocation)) continue;
+    counts.set(f.region, (counts.get(f.region) || 0) + 1);
+  }
+  const max = Math.max(1, ...counts.values());
+  for (const button of document.querySelectorAll('#regionGrid [data-rg]')) {
+    const region = +button.dataset.rg, n = counts.get(region) || 0;
+    const number = button.querySelector('.rn'), previous = +(number.dataset.count ?? n);
+    cancelAnimationFrame(regionCountFrames.get(number));
+    number.dataset.count = n;
+    button.setAttribute('aria-label', UI.home.regionAria(regionName(region), n));
+    button.setAttribute('aria-pressed', state.rg === region ? 'true' : 'false');
+    button.querySelector('i').style.width = `${(n / max * 100).toFixed(1)}%`;
+    const print = value => { number.textContent = UI.home.regionN(value.toLocaleString(UI.loc)); };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !number.dataset.liveReady || previous === n) { print(n); number.dataset.liveReady = '1'; continue; }
+    const start = performance.now(), duration = 320;
+    const tick = now => { const p = Math.min(1, (now - start) / duration), eased = 1 - Math.pow(1 - p, 3); print(Math.round(previous + (n - previous) * eased)); if (p < 1) regionCountFrames.set(number, requestAnimationFrame(tick)); };
+    regionCountFrames.set(number, requestAnimationFrame(tick));
+  }
+}
 // 직전 조건 상태로 되돌리기(결과 0건일 때 "마지막 조건 해제")
 const fields = () => [...form.elements].filter((e) => e.name);
 const snapKey = () => JSON.stringify([fields().map((e) => e.type === 'checkbox' ? e.checked : e.value), state.favOnly, state.photo, state.priced, state.rg, state.q]);
@@ -712,6 +748,7 @@ function render() {
   const pool = scope.filter((f) => (!state.photo || f.shots.length) && (!state.priced || hasPrice(f)));
   const fit = pool.filter((f) => judge(f, c).every((v) => v === 'y'));
   const hit = c.dayMax ? fit.filter((f) => priceOk(f, c)) : fit;
+  updateRegionGrid(c);
   // 이용 방식·조건 칸의 숫자: 지금 결과 집합에서 그 조건을 켰을 때 남는 곳 수(전체 결과보다 커질 수 없다)
   document.querySelectorAll('[data-n]').forEach((el) => {
     const k = el.dataset.n, flags = c.flags.includes(k) ? c.flags : [...c.flags, k];
@@ -860,7 +897,15 @@ document.addEventListener('click', (e) => {
     return;
   }
   const rgBtn = e.target.closest('#regionGrid [data-rg]');
-  if (rgBtn) return quick({ rg: +rgBtn.dataset.rg });
+  if (rgBtn) {
+    const rg = +rgBtn.dataset.rg;
+    state.rg = state.rg === rg ? null : rg;
+    form.elements.pref.value = '';
+    form.elements.region.value = '';
+    syncHero(); render();
+    setTimeout(() => { $('#results').scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' }); $('#results').focus({ preventScroll: true }); }, 60);
+    return;
+  }
   const qa = e.target.closest('#hsChips [data-qa]');
   if (qa) return quick({ area: quickAreas[+qa.dataset.qa] });
   const act = e.target.closest('#detail [data-act]');
@@ -921,7 +966,7 @@ if (matchMedia('(max-width: 900px)').matches) form.querySelector('details').open
 const restored = restoreFromUrl();
 showFx();
 render();
-if (restored && document.documentElement.dataset.mapReturn !== '1') setTimeout(() => { $('#results').scrollIntoView({ behavior: 'auto', block: 'start' }); }, 400);
+if (restored) setTimeout(() => { $('#results').scrollIntoView({ behavior: 'auto', block: 'start' }); }, 80);
 loadFx().then(() => { showFx(); render(); });
 // 열려 있는 동안 60분마다(탭이 보일 때), 그리고 오래 숨겨졌다가 다시 보일 때 60분이 지났으면 새로 받아 화면을 갱신한다.
 const FX_EVERY = 3600e3;

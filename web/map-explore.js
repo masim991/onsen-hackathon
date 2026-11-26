@@ -38,6 +38,19 @@
   const idx = {ko:0,ja:1,en:2}[lang], names = Object.keys(DATA_I18N.prefs), reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const map = L.map('explore-map', { zoomControl:false, attributionControl:false, scrollWheelZoom:true, zoomSnap:.1, minZoom:3, maxZoom:9, worldCopyJump:false, fadeAnimation:false, zoomAnimation:false });
   const mapHost=document.getElementById('explore-map');
+  // Small irregular fibre tile keeps the paper tactile without an animated shader.
+  const grain=document.createElement('canvas');grain.width=grain.height=128;
+  const grainCtx=grain.getContext('2d');
+  if(grainCtx){
+    let seed=82491;const rand=()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296);
+    for(let i=0;i<2800;i++){
+      const x=rand()*128,y=rand()*128,length=.3+rand()*2.6;
+      grainCtx.strokeStyle=rand()>.42?'rgba(75,59,40,.052)':'rgba(255,250,230,.16)';
+      grainCtx.lineWidth=.2+rand()*.8;grainCtx.beginPath();grainCtx.moveTo(x,y);
+      grainCtx.lineTo(x+length*(rand()-.5),y+length*(rand()-.5));grainCtx.stroke();
+    }
+    mapHost.style.setProperty('--paper-grain',`url("${grain.toDataURL()}")`);
+  }
   L.control.zoom({position:matchMedia('(max-width: 700px)').matches?'topright':'bottomright'}).addTo(map);
   // 현 경계의 로컬 지리 데이터로 화면을 그려 외부 타일 로딩 없이 탐색한다.
   const features = L.featureGroup().addTo(map), labels = L.layerGroup().addTo(map);
@@ -50,8 +63,14 @@
     svg.prepend(defs);
   }
   let foldOnEntry = false;
+  let arrivedFromScroll = false;
   try {
-    if (sessionStorage.getItem('onsen-desk-entry') === '1') {
+    arrivedFromScroll = sessionStorage.getItem('onsen-intro-unfolded') === '1';
+    sessionStorage.removeItem('onsen-intro-unfolded');
+    if (arrivedFromScroll) {
+      sessionStorage.removeItem('onsen-desk-entry');
+      document.documentElement.classList.add('from-scroll-intro');
+    } else if (sessionStorage.getItem('onsen-desk-entry') === '1') {
       sessionStorage.removeItem('onsen-desk-entry');
       foldOnEntry = !reduced.matches;
       document.body.classList.add('desk-arrival');
@@ -248,25 +267,28 @@
     regionRail.replaceChildren(railHeading,railList);
   }
   picker.addEventListener('change',()=>{const value=picker.value;if(!value)return;if(active)leave(value);else{const group=groups.find(item=>item.names[1]===value);if(group)selectRegion(group);}picker.value='';});
+  // A separate paper inset gives Hokkaido a readable geographic target.
   const inset = document.createElement('button');
-  inset.type = 'button'; inset.className = 'hokkaido-inset';
+  inset.type = 'button';
+  inset.className = 'hokkaido-inset';
   inset.setAttribute('aria-label', groups[0].names[idx] + ' · ' + tr.enter);
-  const icon = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  icon.setAttribute('viewBox','0 0 200 140'); icon.setAttribute('aria-hidden','true');
-  const shape = JAPAN_PREFECTURES.features.find(feature => Number(feature.properties.id) === 1);
-  const allPolygons = shape.geometry.type === 'Polygon' ? [shape.geometry.coordinates] : shape.geometry.coordinates;
-  // 작은 미니맵은 가장 큰 섬의 윤곽을 크게 보여 주며 실제 지도 선택 범위는 유지한다.
-  const polygons = [allPolygons.reduce((best, poly) => {
-    const area = ring => { const x=ring.map(p=>p[0]), y=ring.map(p=>p[1]); return (Math.max(...x)-Math.min(...x))*(Math.max(...y)-Math.min(...y)); };
-    return area(poly[0]) > area(best[0]) ? poly : best;
-  })];
-  const points = polygons.flatMap(poly => poly[0]);
-  const xs = points.map(point => point[0]), ys = points.map(point => point[1]);
+  const island = JAPAN_PREFECTURES.features.find(feature => Number(feature.properties.id) === 1);
+  const islands = island.geometry.type === 'Polygon' ? [island.geometry.coordinates] : island.geometry.coordinates;
+  const areaOf = ring => {
+    const xs = ring.map(point => point[0]), ys = ring.map(point => point[1]);
+    return (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
+  };
+  const ring = islands.reduce((best, polygon) => areaOf(polygon[0]) > areaOf(best[0]) ? polygon : best)[0];
+  const xs = ring.map(point => point[0]), ys = ring.map(point => point[1]);
   const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-  const scale = Math.min(184/(maxX-minX), 120/(maxY-minY));
-  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d', polygons.map(poly => poly[0].map(([x,y],i) => `${i?'L':'M'}${(8+(x-minX)*scale).toFixed(1)} ${(130-(y-minY)*scale).toFixed(1)}`).join(' ')+'Z').join(' '));
-  icon.append(path); inset.append(icon, document.createTextNode(groups[0].names[idx]));
+  const scale = Math.min(180 / (maxX - minX), 120 / (maxY - minY));
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 200 140');
+  svg.setAttribute('aria-hidden', 'true');
+  const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  outline.setAttribute('d', ring.map(([x,y],i) => `${i ? 'L' : 'M'}${(10 + (x-minX)*scale).toFixed(1)} ${(130 - (y-minY)*scale).toFixed(1)}`).join(' ') + 'Z');
+  svg.append(outline);
+  inset.append(svg, document.createTextNode(groups[0].names[idx]));
   document.body.append(inset);
   inset.addEventListener('click', () => selectRegion(groups[0]));
   let moving = false;
@@ -303,7 +325,7 @@
   }
   back.addEventListener('click',()=>{
     if (moving || leaving) return;
-    active=null; inset.hidden=false; document.body.classList.remove('map-arrived'); draw();
+    active=null; inset.hidden = false; document.body.classList.remove('map-arrived'); draw();
     fitHome(!reduced.matches);
   });
   // 브라우저 뒤로 가기로 복원되면 이전 선택 잠금과 잔상을 해제한다.

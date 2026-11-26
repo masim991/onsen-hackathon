@@ -1,4 +1,4 @@
-// 목록을 이름순(가나다 / あいうえお / abc)으로 정렬하고, 20건씩(4열 x 5행) 나눠 행 단위로 쌓이는 스크롤 효과를 준다.
+// 기본 목록은 사진과 확인된 가격을 우선 표시하고, 이름순 선택 시 언어별 이름으로 정렬한다.
 // 스택 효과는 CodyHouse "How to create stacking cards" 방식(sticky + 스크롤 진행도에 따른 scale)을 행에 적용한 것.
 (() => {
   const list = document.querySelector('#list');
@@ -39,6 +39,7 @@
     return ['', nameOf(el)];
   };
   const compare = (a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : collator.compare(a[1], b[1]));
+  const photoPriceRank = el => el.querySelector('.ph img') ? (el.querySelector('.prices .price:not(.noprice):not(.ref)') ? 0 : 1) : 2;
 
   let cards = [], sig = '', page = 1, cols = 4, lastY = 0;
   const pager = document.createElement('nav');
@@ -97,7 +98,7 @@
     const w = row.firstElementChild?.clientWidth || 240;
     imgs.forEach(i => { const u = i.currentSrc || i.src; if (u) i.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(u) + ')'); });
     const hs = imgs.filter(i => i.naturalWidth).map(i => (w * i.naturalHeight) / i.naturalWidth);
-    const h = hs.length ? Math.min(260, Math.max(140, Math.round(Math.max(...hs)))) : 190;
+    const h = hs.length ? Math.min(220, Math.max(130, Math.round(Math.max(...hs)))) : 170;
     row.style.setProperty('--ph-h', h + 'px');
   }
 
@@ -142,11 +143,12 @@
     mo.disconnect();
     // 앱이 목록 전체를 다시 그린 직후 focus()가 23만px 아래로 스크롤시키므로, 그 전의 위치(lastY)로 되돌린다(찜 클릭 시 맨 아래로 튀던 문제).
     const y = cards.length ? lastY : scrollY;
-    const sorted = document.querySelector('#sort')?.value === '' || !document.querySelector('#sort');
+    const mode = document.querySelector('#sort')?.value || '';
+    const sorted = mode === '' || mode === 'name';
     // 같은 순서로 다시 그려진 경우(찜 토글 등)에는 현재 페이지를 유지하고, 결과 집합이 바뀌면 1페이지로.
     cards = fresh.map(el => ({ el, key: sortKey(el) }));
-    if (sorted) cards.sort((a, b) => compare(a.key, b.key));
-    const next = cards.map(c => c.el.dataset.id).sort().join(',') + '|' + sorted;
+    if (sorted) cards.sort((a, b) => (mode === '' ? photoPriceRank(a.el) - photoPriceRank(b.el) : 0) || compare(a.key, b.key));
+    const next = cards.map(c => c.el.dataset.id).sort().join(',') + '|' + mode;
     if (next !== sig) { page = 1; sig = next; }
     cards.forEach(c => c.el.remove()); // 현재 페이지 밖의 카드는 DOM에서 빼 둔다(메모리에만 보관)
     build();

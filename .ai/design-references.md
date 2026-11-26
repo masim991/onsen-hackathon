@@ -29,3 +29,10 @@
 1. Awwwards·Siteinspire·Land-book에서 ryokan/onsen/japan hospitality 사례 각 3개 이상 실제로 열어 스크린샷(데스크톱·모바일)과 쓴 글꼴·색·모션을 기록.
 2. 우리 사이트(web/)와 나란히 비교해 "카드 가격 영역 통일", "참고가 배지", "모바일 필터 바텀시트" 3가지에 대한 구체 변경안을 CSS 토큰(theme.css 기준) 수준으로 제안. 기존 CONFIG·디자인 토큰은 임의로 깨지 않는다.
 3. 제안 중 위험이 낮은 것부터 구현하고 Chromium/WebKit·모바일·reduced-motion 스크린샷 검증. 60fps 실측은 실기기에서만 가능하니 "미측정"으로 남긴다.
+
+## 2026-11-26 인트로 레퍼런스 직접 확인 (Codex)
+- [FŪDO](https://jesse-ellie.com/contents/fudo/): 1440×900 실화면과 스크롤 650/1300/1950px 확인. 첫 화면은 지역 사진 격자+거대 한자, 이후 검은 여백·문장·해안 윤곽으로 순서를 전환한다.
+- [Doors](https://doors-io.vercel.app/?ref=threejsresources): 로딩 뒤 중앙의 발광 문, 바닥의 빛, 아주 큰 타이포가 겹친다. 문 자체는 포트폴리오 포털이며 우리의 옆으로 미는 쇼지와 동작 구조는 다르다.
+- [Hanamurasaki](https://www.hana-mura.com/): 여백이 큰 흰 화면 한가운데 어두운 실사 사진을 크게 놓는다. 재질감과 호텔 맥락은 우리 절차적 씬보다 훨씬 강하다.
+- [Ameen Abdullah](https://ameen-abdullah.dev/): WebGL 입자 로더와 효과 실험을 확인했다. 로딩 화면 뒤 본 콘텐츠는 이 테스트 환경에서 확인하지 못했다.
+- 결론: 첫 구현의 플랫한 목재·종이 재질과 임의 지형 그림은 레퍼런스 수준에 못 미친다. 사진 복제 대신 프로젝트의 기존 생성 자산 및 절제된 재질·조명·카메라 연출을 활용한다.
