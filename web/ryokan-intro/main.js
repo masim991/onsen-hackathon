@@ -277,11 +277,13 @@ function buildProceduralScene() {
   });
 
   const map = new THREE.Group();
-  map.position.set(-1.16, .788, 0);
+  map.position.set(-.29, .776, 0);
   table.add(map);
   const folds = [];
   let parent = map;
   const panelWidth = .58;
+  const paperEdge = new THREE.MeshStandardMaterial({ color: '#e2d1ad', roughness: 1, side: THREE.DoubleSide });
+  const paperBack = new THREE.MeshStandardMaterial({ map: surfaceTexture('washi'), roughness: 1, side: THREE.FrontSide });
   for (let i = 0; i < 4; i++) {
     const hinge = new THREE.Group();
     if (i > 0) hinge.position.x = panelWidth;
@@ -289,13 +291,18 @@ function buildProceduralScene() {
     const panel = new THREE.Group();
     panel.position.x = panelWidth / 2;
     hinge.add(panel);
-    box(panelWidth, .014, .95, new THREE.MeshStandardMaterial({ color: '#ead9b7', roughness: 1, side: THREE.DoubleSide }), 0, 0, 0, panel);
-    const art = new THREE.Mesh(new THREE.PlaneGeometry(panelWidth - .018, .93), new THREE.MeshBasicMaterial({ map: paperTexture(i), transparent: false, side: THREE.DoubleSide }));
+    box(panelWidth, .005, .95, paperEdge, 0, 0, 0, panel);
+    const sheetFace = new THREE.PlaneGeometry(panelWidth - .004, .946);
+    const art = new THREE.Mesh(sheetFace, new THREE.MeshStandardMaterial({ map: paperTexture(i), roughness: 1, side: THREE.FrontSide }));
     art.rotation.x = -Math.PI / 2;
-    art.position.y = .009;
+    art.position.y = .003;
     panel.add(art);
+    const back = new THREE.Mesh(sheetFace, paperBack);
+    back.rotation.x = Math.PI / 2;
+    back.position.y = -.003;
+    panel.add(back);
     if (i > 0) {
-      hinge.rotation.z = i % 2 ? Math.PI - .045 : -Math.PI + .045;
+      hinge.rotation.z = i % 2 ? Math.PI - .09 : -Math.PI + .09;
       folds.push(hinge);
     }
     parent = hinge;
@@ -305,26 +312,29 @@ function buildProceduralScene() {
 
 // Replace the returned scene bindings with GLB nodes and add an AnimationMixer
 // here when production models are available; the master timeline stays intact.
-function bindAnimation({ doorLeft, doorRight, folds }) {
+function bindAnimation({ doorLeft, doorRight, folds, map }) {
   const compact = innerWidth < 640;
-  const tl = gsap.timeline({ paused: true, defaults: { overwrite: 'auto' } });
+  const tl = gsap.timeline({ paused: true });
   tl.addLabel('doors', 0)
     .to(doorLeft.position, { x: -2.84, duration: 1.6, ease: 'power2.inOut' }, 'doors')
     .to(doorRight.position, { x: 2.84, duration: 1.6, ease: 'power2.inOut' }, 'doors')
     .to(intro, { opacity: 0, duration: .85, ease: 'power2.inOut' }, 'doors+=.22')
     .addLabel('walk', .96)
-    .to(cameraBase, { z: compact ? -2.35 : -2.72, y: compact ? 1.94 : 1.53, duration: 2.6, ease: 'power2.inOut' }, 'walk')
-    .to(lookTarget, { z: -5.0, y: 1.05, duration: 1.8, ease: 'power2.inOut' }, 'walk+=.7')
+    .to(cameraBase, { z: compact ? -2.35 : -2.72, y: compact ? 1.94 : 1.53, duration: 1.87, ease: 'power2.inOut' }, 'walk')
+    .to(lookTarget, { z: -5.0, y: 1.05, duration: 1.17, ease: 'power2.inOut' }, 'walk+=.7')
     .addLabel('approach', 2.83)
-    .to(cameraBase, { z: compact ? -4.4 : -4.05, y: compact ? 2.85 : 1.72, duration: 1.06, ease: 'power2.out' }, 'approach')
-    .to(lookTarget, { z: -5.0, y: .75, duration: .95, ease: 'power2.out' }, 'approach')
-    .addLabel('unfold', 3.68);
-  // Each hinge opens inside the same timeline, with deliberate overlap.
-  folds.forEach((fold, index) => {
-    tl.to(fold.rotation, { z: 0, duration: .72, ease: index === folds.length - 1 ? 'back.out(1.2)' : 'power2.inOut' }, `unfold+=${index * .3}`);
-  });
-  tl.addLabel('mapOpen', 5.0)
-    .to(mapReveal, { opacity: 1, duration: .18, ease: 'power2.inOut' }, 'mapOpen');
+    .to(cameraBase, { z: -3.0, y: 2.85, duration: 1.28, ease: 'power2.inOut' }, 'approach')
+    .to(lookTarget, { z: -5.0, y: .75, duration: 1.28, ease: 'power2.inOut' }, 'approach')
+    .addLabel('unfold', 3.93);
+  // The first two opposing creases open as a pair. Their angles cancel, so
+  // the next leaf stays above the tabletop while the map expands.
+  tl.to(folds[0].rotation, { z: 0, duration: 1.25, ease: 'sine.inOut' }, 'unfold')
+    .to(folds[1].rotation, { z: 0, duration: 1.25, ease: 'sine.inOut' }, 'unfold')
+    .to(map.position, { x: -.87, duration: 1.25, ease: 'sine.inOut' }, 'unfold')
+    .to(folds[2].rotation, { z: 0, duration: 1.1, ease: 'sine.inOut' }, 'unfold+=1.25')
+    .to(map.position, { x: -1.16, duration: 1.1, ease: 'sine.inOut' }, 'unfold+=1.25');
+  tl.addLabel('mapOpen', 6.8)
+    .to(mapReveal, { opacity: 1, duration: .22, ease: 'power2.inOut' }, 'mapOpen');
   return tl;
 }
 
@@ -358,18 +368,18 @@ function restoreNearMap() {
 
 function updateStage(progress) {
   const time = masterTimeline.time();
-  const phase = time < .96 ? 0 : time < 2.83 ? 1 : time < 3.68 ? 2 : 3;
-  const nextCaption = [copy[1], copy[2], copy[2], copy[3]][phase];
+  const phase = time < .96 ? 0 : time < 2.83 ? 1 : time < 3.93 ? 2 : 3;
+  const nextCaption = time >= 6.28 ? copy[4] : [copy[1], copy[2], copy[2], copy[3]][phase];
   if (caption.textContent !== nextCaption) caption.textContent = nextCaption;
   progressLabel.textContent = `0${phase + 1} / 04`;
-  sceneUi.hidden = progress < .11 || time >= 5.0;
+  sceneUi.hidden = progress < .11 || time >= 6.8;
   isWalking = time >= .96 && time < 3.55 && Math.abs(targetProgress - currentProgress) > .001;
 }
 
 function resize() {
   if (!renderer) return;
   camera.aspect = innerWidth / innerHeight;
-  camera.fov = innerWidth < 640 ? 100 : 59;
+  camera.fov = innerWidth < 640 ? 100 : innerHeight > innerWidth ? innerWidth < 900 ? 68 : 64 : 59;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight, false);
   renderOnce = true;
