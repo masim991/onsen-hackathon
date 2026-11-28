@@ -5,15 +5,11 @@
 .stack-row:last-child { margin-bottom: 0; }
 /* 세로형 카드 */
 .stack-row > .card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; border-radius: 6px; min-width: 0; }
-.stack-row > .card .ph { display: block; }
-.stack-row > .card .pic, .stack-row > .card .nophoto { width: 100%; height: 190px; aspect-ratio: auto; border-radius: 0; }
 .stack-row > .card .body { padding: 14px 16px 6px; flex: 1; min-width: 0; }
 .stack-row > .card h3 { font-size: 18px; }
 .stack-row > .card .blurb { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .stack-row > .card .side { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 16px 14px; border-top: 1px solid var(--rule-soft); }
 .stack-row > .listing { min-width: 0; }
-.stack-row > .listing img { height: 190px; aspect-ratio: auto; }
-.stack-row > .listing .no-image { height: 190px; }
 .stack-row > .listing h3 { font-size: 18px; }
 /* 페이지 이동 */
 .pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 34px 0 6px; }
@@ -45,12 +41,10 @@
 /* 카드 가격 칸: 숙박 줄 아래에 당일 입욕 줄을 따로 쌓는다 */
 .card .prices { display: grid; gap: 8px; justify-items: end; }
 
-/* 사진 칸: 사진 비율에 맞춰 높이를 정하고 남는 부분은 같은 사진을 흐리게 깐다 */
-.stack-row .ph { position: relative; height: var(--ph-h, 190px); overflow: hidden; background: var(--hinoki); display: block; }
-.stack-row .ph::before { content: ""; position: absolute; inset: -24px; background: var(--bg, none) center / cover; filter: blur(22px) saturate(1.1); opacity: .9; }
-.stack-row .ph > img, .stack-row .ph > .pic, .stack-row .ph > .nophoto { position: relative; width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; border-radius: 0; margin: 0; }
-.stack-row .ph > img[data-photo-kind="area"] { object-fit: cover !important; }
-.stack-row .ph > .nophoto, .stack-row .ph > .no-image { display: grid; place-content: center; }
+/* 사진 로딩 전에도 모든 카드의 배너 영역을 같은 비율로 확보한다. */
+.stack-row .ph { position: relative; width: 100%; aspect-ratio: 16 / 10; align-self: stretch; flex: none; border-radius: 0; overflow: hidden; background: var(--hinoki); }
+.stack-row .ph > :is(img, .nophoto, .no-image) { display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; border-radius: 0; margin: 0; }
+.stack-row .ph > :is(.nophoto, .no-image) { display: grid; place-content: center; }
 /* 조건 검색 배너를 한 단계 크게(한국어 .rail, 일본어·영어 .filters) */
 .rail summary, .filters summary { min-height: 84px; padding: 26px 24px; font-size: 24px; gap: 12px; }
 .rail summary .ic, .filters summary .ic { width: 26px; height: 26px; }
@@ -58,7 +52,6 @@
 .rail-top { padding: 14px 24px 16px; font-size: 16px; }
 .rail .fbox, .filters .fbox { padding-left: 24px; padding-right: 24px; }
 .rail .fbox h3, .filters h3 { font-size: 20px; }
-.stack-row .ph { width: 100%; align-self: stretch; flex: none; }
 .stack-row > .card h3, .stack-row > .listing h3 { font-size: 21px; line-height: 1.3; }
 #filterPanel > summary, .filters details > summary { min-height: 84px; padding: 26px 24px; font-size: 24px; gap: 12px; }
 /* 모바일에서는 겹치는 행의 위쪽 어두운 그림자를 없앤다. 동작 줄이기에서는 겹침 자체를 끈다(위 @media). 지역 타일 이름은 손글씨 24px 이상 */

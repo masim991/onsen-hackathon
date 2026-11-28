@@ -61,46 +61,17 @@
       row.style.setProperty('--i', frag.childElementCount);
       row.style.setProperty('--cols', cols);
       row.append(...slice.map(s => s.el).slice(i, i + cols));
+      for (const banner of row.querySelectorAll(':scope > .listing > :is(img, .no-image)')) {
+        const frame = document.createElement('div');
+        frame.className = 'ph';
+        banner.before(frame);
+        frame.append(banner);
+      }
       frag.append(row);
     }
     list.prepend(frag);
-    list.querySelectorAll('.stack-row').forEach(fitPhotos);
     renderPager();
     stackFrame();
-  }
-
-  // 사진 칸을 사진 비율에 맞춘다: 같은 행에서 가장 큰 사진 높이(140~260px)로 칸을 잡고, 남는 부분은 같은 사진을 흐리게 깔아 채운다.
-  // 시설 사진은 원본을 자르지 않고(contain) 그대로 보여 준다.
-  function fitPhotos(row) {
-    const imgs = [];
-    for (const card of row.children) {
-      let img = card.querySelector('.ph > img, .pic');
-      if (!img) {
-        const el = card.querySelector(':scope > img, :scope > .no-image');
-        if (el) {
-          const ph = document.createElement('div');
-          ph.className = 'ph';
-          el.before(ph);
-          ph.append(el);
-          if (el.tagName === 'IMG') img = el;
-        }
-      }
-      if (img) {
-        imgs.push(img);
-        const url = img.currentSrc || img.src;
-        // 로드가 끝난 사진만 흐린 배경으로 쓴다. CSS 배경은 loading=lazy를 무시하고 즉시 내려받아 지연 로딩이 무력화된다.
-        if (url && img.complete && img.naturalWidth) img.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(url) + ')');
-        if (!img.complete) img.addEventListener('load', () => fitRow(row, imgs), { once: true });
-      }
-    }
-    fitRow(row, imgs);
-  }
-  function fitRow(row, imgs) {
-    const w = row.firstElementChild?.clientWidth || 240;
-    imgs.forEach(i => { const u = i.currentSrc || i.src; if (u && i.complete && i.naturalWidth) i.parentElement.style.setProperty('--bg', 'url(' + JSON.stringify(u) + ')'); });
-    const hs = imgs.filter(i => i.naturalWidth).map(i => (w * i.naturalHeight) / i.naturalWidth);
-    const h = hs.length ? Math.min(220, Math.max(130, Math.round(Math.max(...hs)))) : 170;
-    row.style.setProperty('--ph-h', h + 'px');
   }
 
   function renderPager() {
