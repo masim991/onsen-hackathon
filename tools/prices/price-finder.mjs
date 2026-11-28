@@ -17,7 +17,7 @@ const F = { cache: path.join(HERE, 'cache.json'), cand: path.join(HERE, 'candida
 const UA = 'OnsenPriceFinder/1.0 (read-only; official site price check)';
 // Sites answering 406 to an Accept header without */*  (see source-tracker.mjs).
 const ACCEPT_HTML = 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8';
-const LIM = { timeoutMs: 20000, robotsTimeoutMs: 10000, maxBody: 1.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 1100, robotsMax: 256 * 1024, maxPages: 3, maxCrawlDelayMs: 20000 };
+const LIM = { timeoutMs: 20000, robotsTimeoutMs: 10000, maxBody: 2.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 1100, robotsMax: 256 * 1024, maxPages: 3, maxCrawlDelayMs: 20000 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function renameRetry(from, to) {

@@ -41,7 +41,7 @@ const TOOL = 'OnsenHackathonSourceTracker/1.0';
 const UA = TOOL;
 // Some sites answer 406 unless the Accept header ends with */*  (the HTML types alone are read as "this client takes nothing else").
 const ACCEPT_HTML = 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8';
-export const LIM = { timeoutMs: 20000, robotsTimeoutMs: 10000, maxBody: 1.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 2000, robotsMax: 512 * 1024, maxCrawlDelayMs: 30000, changedWindowDays: 14 };
+export const LIM = { timeoutMs: 20000, robotsTimeoutMs: 10000, maxBody: 2.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 2000, robotsMax: 512 * 1024, maxCrawlDelayMs: 30000, changedWindowDays: 14 };
 const DAY = 86400000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const sha = (s, n = 16) => crypto.createHash('sha256').update(s).digest('hex').slice(0, n);
