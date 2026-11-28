@@ -57,13 +57,13 @@ Do not deploy `tools/`. Only `web/data/source-status.json` belongs on the site.
 - `price-keyword`, `hours-keyword`: price revision or hours change wording. Hours need a change word, since most pages mention opening hours.
 - `content changed`: normalized text hash differs (dates, clock times, counters, copyright years are ignored). Often cosmetic.
 - `changed` state lasts 14 days after the change, then returns to `ok`.
-- `unreachable` is published only after 2 consecutive failures (or if the URL never worked). `blocked` (robots.txt, HTTP 401/403/429, non-HTML, refused URL, TLS/certificate errors) is never shown as unreachable; the last successful check date stays in state (`lastOk`) and the queue.
+- `unreachable` is published only after 2 consecutive failures (or if the URL never worked). `blocked` (robots.txt, HTTP 401/403, non-HTML, refused URL, TLS/certificate errors) is never shown as unreachable; the last successful check date stays in state (`lastOk`) and the queue. HTTP 429 (rate limit) and 5xx are treated as `unreachable` so they are retried with backoff instead of pinning the target.
 - Snippets are untrusted third-party text. Verify on the official page, then edit data by hand.
 
 ## Ethics and limits
 
 - Obeys robots.txt (per host, including Crawl-delay up to 30 s). Disallowed pages are skipped, not worked around.
-- User-Agent `OnsenHackathonSourceTracker/1.0`; one request at a time per host, >= 2 s apart; max 4 concurrent overall; 12 s timeout; 1.5 MB body cap; HTML only; max 3 redirects, each re-validated.
+- User-Agent `OnsenHackathonSourceTracker/1.0`; one request at a time per host, >= 2 s apart; max 4 concurrent overall; 20 s timeout (one in-request retry, robots.txt 10 s); 2.5 MB body cap (a larger body is used truncated, not failed); `Accept` ends with `*/*` (some sites answer 406 otherwise); HTML only; max 3 redirects, each re-validated. An `http://` source that cannot connect is retried once over https on the same host, DNS gets one retry on transient resolver errors and IPv4 addresses come first.
 - SSRF guard: http/https only, ports 80/443 only, no credentials in URLs, DNS result checked at connect time and private/loopback/link-local/metadata ranges refused.
 - Pages are never rendered or executed; raw HTML is never stored; control characters are stripped.
 - JavaScript-only pages and sites that block bots cannot be watched. This is a hint for humans, not proof a facility is open or closed.
