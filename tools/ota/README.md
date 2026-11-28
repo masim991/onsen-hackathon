@@ -1,14 +1,12 @@
-# 예약 사이트(OTA) 참고가: Rakuten Travel
+# 라쿠텐 트래블 참고가
 
-시설 공식 요금과 **섞지 않는** 별도 표(`ota_prices`)에만 저장한다. 공식 요금(`record.monitor.price`)을 덮어쓰지 않고, 사이트 표시는 아직 연결하지 않았다.
+라쿠텐 트래블 결과는 `ota_prices`에 저장합니다. 이용자 화면의 시설 공식 요금은 기존 데이터에서 읽습니다.
 
-## 사용자가 해야 할 일 (계정 생성은 대신할 수 없음)
-1. https://webservice.rakuten.co.jp/ 에서 무료 개발자 등록 후 **애플리케이션 ID**를 받는다. (공식 문서가 열리지 않던 시점에 작성했으므로 엔드포인트·필드명이 바뀌었다면 `RAKUTEN_ENDPOINT`로 바꾼다.)
-2. 약관 원문을 읽고 확인한다: 크레딧 표기 문구, 가격 저장·캐시 허용 범위, 제휴(어필리에이트) 표시 의무. 이 사이트의 이용약관은 현재 "제휴 수수료 없음"으로 적혀 있다(`web/legal/terms*.html`).
-3. GitHub 저장소 > Settings > Secrets > `RAKUTEN_APP_ID` 등록. (등록 전에는 워크플로 단계가 건너뛴다.)
+1. [라쿠텐 웹서비스](https://webservice.rakuten.co.jp/)에서 App ID와 Access Key를 준비합니다.
+2. [키워드 검색 API](https://webservice.rakuten.co.jp/documentation/keyword-hotel-search)의 정책에서 저장·갱신·표시 조건을 확인합니다.
+3. GitHub 저장소의 Actions Secrets에 `RAKUTEN_APP_ID`와 `RAKUTEN_ACCESS_KEY`를 등록합니다. 기존 `SUPABASE_SERVICE_ROLE_KEY`는 쓰기에 필요합니다.
+4. 환경변수로 인증값을 설정한 뒤 `node tools/ota/rakuten.mjs --probe "旅館壱の井"`로 한 곳을 조회합니다. 이 명령에는 Supabase 키가 필요 없고, 검색 결과 건수만 출력합니다.
 
-## 동작
-- 숙박 가능 + 공식 요금 없음 시설을 아직 확인하지 않은 순서로 실행당 40곳, 초당 1회 이하로 조회한다.
-- 같은 도도부현 + 이름 정규화 후 상호 포함일 때만 일치로 본다. 일치하면 `hotelMinCharge`(최저요금), 시설 URL을 저장한다. 최저요금이 1인 기준인지 객실 기준인지는 공식 문서로 확인해야 한다(미확인). 확인 전에는 사이트에 금액으로 표시하지 않는다.
-- 키/한도 오류(401/403/429)가 나면 그 실행은 중단한다.
-- 로컬 검사: `node tools/ota/rakuten.mjs --selftest`. 시험 실행: `RAKUTEN_APP_ID=... SUPABASE_SERVICE_ROLE_KEY=... node tools/ota/rakuten.mjs --dry --limit 5`.
+워크플로는 조건에 맞는 시설을 조회하고, 도도부현과 정규화한 시설명이 일치하는 결과가 하나일 때만 참고가를 기록합니다. `hotelMinCharge`는 객실 1실·1박 기준의 최저가 참고값입니다. 인증 오류·호출 제한은 라쿠텐 단계의 실패로 표시합니다.
+
+모의 응답 검사: `node tools/ota/rakuten.mjs --selftest`.

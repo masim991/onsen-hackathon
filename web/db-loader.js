@@ -11,7 +11,7 @@
       catalogState.textContent = {ko:`저장된 자료${date ? ` (${date} 기준)` : ''}를 표시하고 있습니다. 연결이 복구되면 갱신됩니다.`,ja:`保存済みの資料${date ? `（${date}時点）` : ''}を表示中です。接続が戻ると更新します。`,en:`Showing saved data${date ? ` from ${date}` : ''}. It will update when the connection returns.`}[lang] || 'Showing saved data.';
     }
   }
-  const scripts = ['site.js?v=20261126regions','language.js?v=20261126layout','stack-list.js?v=20261126layout','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
+  const scripts = ['site.js?v=20261128facts','language.js?v=20261126layout','stack-list.js?v=20261126layout','hires.js?v=20270105','footer.js?v=20270105','motion.js?v=20270105'];
   // 보안: DB 값은 innerHTML로 렌더링되므로 수신 시점에 HTML 이스케이프 + URL 스킴(http/https) 검증
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clean = v => typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map(clean) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)])) : v;

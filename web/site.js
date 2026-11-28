@@ -107,7 +107,7 @@ function refStay(f) {
   const [pool, scope] = p && p.length >= 3 ? [p, 'pref'] : r && r.length >= 3 ? [r, 'region'] : [refCache.all, 'all'];
   return pool.length >= 3 ? { yen: Math.round(medianOf(pool) / 100) * 100, n: pool.length, scope } : null;
 }
-const refText = (f) => { const x = refStay(f); return x ? UI.refStay(moneyText(x.yen), x.n, x.scope) : ''; };
+const refText = (f) => { const x = refStay(f); return x ? UI.refStay(fx.rate ? conv(x.yen) : yen(x.yen), x.n, x.scope) : ''; };
 const refLine = (f) => { const t = refText(f); return t ? `<p class="price ref"><small>${t}</small></p>` : ''; };
 
 const LABEL = UI.label;
@@ -335,6 +335,34 @@ const PREF_SHORT = (() => {
   return Object.fromEntries(up.map(([jp, n]) => { let l = 3; while (l < n.length && up.some(([o, m]) => o !== jp && m.startsWith(n.slice(0, l)))) l++; return [jp, n.slice(0, l)]; }));
 })();
 const prefChip = (f) => escQ(PREF_SHORT[f.pref] || Array.from(unesc(f.prefName)).slice(0, 3).join(''));
+const CARD_FACTS = {
+  ko: ['숙박 요금', '당일 입욕료', '입욕 가능 시간', '미확인'],
+  ja: ['宿泊料金', '日帰り入浴料', '入浴時間', '未確認'],
+  en: ['Stay price', 'Day-bath fee', 'Bath hours', 'Unconfirmed']
+}[LANG];
+function cardFacts(f) {
+  const [stay, dayFee, hours, unknown] = CARD_FACTS;
+  const unknownValue = `<span class="card-fact-unknown">${unknown}</span>`;
+  const mon = f.monHours?.label === 'day' ? f.monHours : null;
+  const evidence = (source, label) => source
+    ? `<small>${UI.price.checked(source.checked)} · <a href="${escQ(source.src)}" target="_blank" rel="noopener noreferrer">${label}<span class="vh">${UI.newWin}</span></a>${source.old ? ` · ${UI.px.old}` : ''}</small>` : '';
+  const item = (label, value, detail = '') => `<div><dt>${label}</dt><dd>${value}${detail}</dd></div>`;
+  const stayValue = f.stayPrice == null ? unknownValue : stayMoney(f);
+  const dayValue = dayShown(f) ? dayMoney(f) : unknownValue;
+  const hoursValue = f.dayHours || mon?.text || unknownValue;
+  let stayDetail = '';
+  if (f.off) stayDetail = `<small>${basisText(f)}</small>` + evidence(f.off, f.off.assoc ? UI.px.srcAssocShort : UI.px.srcOfficial);
+  else if (f.stayPrice != null) stayDetail = `<small>${UI.stayBasis}</small>`;
+  else {
+    const reference = refText(f);
+    if (reference) stayDetail = `<small>${reference}</small>`;
+  }
+  if (f.stay === 'n' && f.day === 'n') return '';
+  return `<dl class="card-facts">
+    ${f.stay !== 'n' ? item(stay, stayValue, stayDetail) : ''}
+    ${f.day !== 'n' ? item(dayFee, dayValue) + item(hours, hoursValue, !f.dayHours ? evidence(mon, UI.px.srcOfficial) : '') : ''}
+  </dl>`;
+}
 function compactCard(f) {
   const sel = state.sel === f.id;
   const known = [f.stayPrice != null && f.stay !== 'n' && `${UI.stayShort} ${moneyText(f.stayPrice, f.off ? '〜' : '')} (${f.off ? basisText(f) : UI.stayBasis})`, dayShown(f) ? `${UI.dayPriceLabel} ${moneyText(f.dayPrice, f.dayPriceRange ? '〜' : '')}` : f.day === 'y' && UI.dayNoPrice, stayNp(f) && UI.noStayPrice, refText(f), UI.det.checkedOn(f.checked)].filter(Boolean).join(' · ');
@@ -344,7 +372,9 @@ function compactCard(f) {
     <div class="body">
       <h3><button type="button" class="pick" aria-expanded="${sel}" data-pick="${f.id}">${f.name}</button></h3>
       <p class="loc">${f.areaName}</p>
-      <p class="np-line">${known}${officialLink(f, 'card-off')}</p>
+      <p class="np-line">${known}</p>
+      ${cardFacts(f)}
+      ${officialLink(f, 'card-off')}
     </div>
     <div class="side">${heart(f)}</div>
   </article>`;
@@ -363,6 +393,7 @@ function card(f) {
       ${f.blurb ? `<p class="blurb">${f.blurb}</p>` : ''}
       ${f.x.notice ? `<p class="why">${UI.notice}</p>` : ''}
       <ul class="tags">${tags(f)}</ul>
+      ${cardFacts(f)}
       ${officialLink(f, 'card-off') ? officialLink(f, 'card-off') + `<small class="off-note">${UI.px.book}</small>` : ''}
     </div>
     <div class="side">

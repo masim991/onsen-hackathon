@@ -151,7 +151,8 @@ const H_BATH = /温泉|入浴|大浴場|浴場|風呂|湯/;
 const H_MULTI = /^\s*[)）]?\s*(?:[/／・、,，]|および|及び|と)\s*\d{1,2}:\d{2}/;
 export function extractHours(rows) {
   const out = [];
-  for (const row of rows) {
+  for (const raw of rows) {
+    const row = raw.normalize('NFKC');
     if (row.length > 300) continue;
     if (H_PHONE.test(row) || H_FOOD.test(row)) continue;
     for (const m of row.matchAll(H_RE)) {
@@ -164,7 +165,7 @@ export function extractHours(rows) {
       if (kind === 'business' && (!H_BATH.test(row) || H_WEEK.test(before) || H_WEEK.test(after))) continue; // a bare 営業時間 line could be the front desk / shop / restaurant
       const [o, c] = [+m[1] * 60 + +m[2], +m[3] * 60 + +m[4]];
       if (+m[2] > 59 || +m[4] > 59 || o < 4 * 60 || o > 16 * 60 || c <= o + 60 || c > 24 * 60 || /[~〜～-]\s*翌/.test(ctx)) continue;
-      out.push({ kind, open: `${pad(+m[1])}:${m[2]}`, close: `${pad(+m[3])}:${m[4]}`, quote: cleanText(row.slice(Math.max(0, m.index - 30), m.index + m[0].length + 10)).slice(0, 80) });
+      out.push({ kind, restricted: H_WEEK.test(row), open: `${pad(+m[1])}:${m[2]}`, close: `${pad(+m[3])}:${m[4]}`, quote: cleanText(row.slice(Math.max(0, m.index - 30), m.index + m[0].length + 10)).slice(0, 80) });
     }
   }
   return out;
@@ -173,7 +174,7 @@ export function extractHours(rows) {
 export function pickHours(cands) {
   const day = cands.filter((c) => c.kind === 'dayuse');
   const distinct = new Set(day.map((c) => c.open + c.close));
-  if (day.length && distinct.size === 1) return { ...day[0], confidence: 'high' };
+  if (day.length && distinct.size === 1 && day.some((c) => !c.restricted)) return { ...day.find((c) => !c.restricted), confidence: 'high' };
   const any = day[0] || cands[0];
   return any ? { ...any, confidence: 'medium' } : null;
 }
@@ -562,16 +563,40 @@ let priceJson = null;
 const jsonFrom = (fid) => { priceJson ??= readJson(path.join(ROOT, 'web', 'data', 'prices.json'), { items: {} }); return priceJson.items?.[fid]?.from ?? null; };
 const jsonPrice = (fid) => { priceJson ??= readJson(path.join(ROOT, 'web', 'data', 'prices.json'), { items: {} }); const x = priceJson.items?.[fid]; return x && /2食/.test(x.basis || '') ? x.from : null; };
 
+function pickBathLinks(html, base) {
+  const host = new URL(base).hostname.replace(/^www\./, '');
+  const links = linksOf(html, base).filter(({url, text}) => {
+    const u = new URL(url);
+    return u.protocol === 'https:' && u.hostname.replace(/^www\./, '') === host &&
+      url !== base && !/\.(pdf|zip|jpg|png|webp)$/i.test(u.pathname) &&
+      !/予約|プラン|貸切|食事|ランチ|レストラン/.test(text) &&
+      (/日帰り|日帰入浴|立ち?寄り|入浴案内|入浴時間|ご入浴/.test(text) ||
+        /^(温泉|お風呂|大浴場|浴場)(のご案内)?$/.test(text) ||
+        /\/(day-use|dayuse|bath|onsen|higaeri)\/?$/i.test(u.pathname));
+  });
+  return [...new Set(links.map(({url}) => url))].slice(0, 2);
+}
+
+function bathHoursRows(rows) {
+  return rows.map((row, i) => {
+    const label = rows[i - 1] || '';
+    return /^(日帰り入浴|立ち寄り湯|入浴時間)(のご案内|時間)?$/.test(label) &&
+      /^(営業時間\s*[:：|]\s*)?[0-9０-９]{1,2}[:：]/.test(row) ? label + ' ' + row : row;
+  });
+}
+
 export async function jobPriceHours(job, sink) {
   const home = await getPage(job.url);
-  const urls = [home.finalUrl, ...pickLinks(home.html, home.finalUrl)];
+  const stayUrls = pickLinks(home.html, home.finalUrl);
+  const bathUrls = pickBathLinks(home.html, home.finalUrl);
+  const urls = [...new Set([home.finalUrl, ...stayUrls, ...bathUrls])];
   const prices = [], hours = [];
   for (const [i, u] of urls.entries()) {
     let p = home;
     if (i) { try { p = await getPage(u); } catch { continue; } }
-    const rows = htmlToRows(p.html);
-    prices.push(...extractPrices(rows).map((c) => ({ ...c, sourceUrl: p.finalUrl })));
-    hours.push(...extractHours(rows).map((c) => ({ ...c, sourceUrl: p.finalUrl })));
+    const rows = htmlToRows(p.html).map((row) => row.normalize('NFKC'));
+    if (!i || stayUrls.includes(u)) prices.push(...extractPrices(rows).map((c) => ({ ...c, sourceUrl: p.finalUrl })));
+    hours.push(...extractHours(bathHoursRows(rows)).map((c) => ({ ...c, sourceUrl: p.finalUrl })));
   }
   const price = bestPrice(prices), hr = pickHours(hours);
   const hash = sha(JSON.stringify([price && [price.kind, price.minYen, price.maxYen], hr && [hr.kind, hr.open, hr.close, hr.confidence]]), 20);
@@ -591,9 +616,11 @@ export async function jobPriceHours(job, sink) {
   if (price) {
     const nv = { kind: price.kind, minYen: price.minYen, ...(price.maxYen ? { maxYen: price.maxYen } : {}), unit: price.unit };
     const old = st.monitor?.price?.minYen ?? jsonPrice(fid);
-    if (old !== price.minYen) {
+    const prior = st.monitor?.price;
+    const changedTerms = prior && ((prior.kind && prior.kind !== price.kind) || (prior.unit && prior.unit !== price.unit) || (prior.kind && (prior.maxYen ?? null) !== (price.maxYen ?? null)));
+    if (old !== price.minYen || changedTerms) {
       const wild = old && (price.minYen / old > 5 || price.minYen / old < 0.2); // SECURITY.md 5.6: 0.2x-5x needs a second look
-      await change('price', old ? { minYen: old } : null, nv, price, decideApply({ level, field: 'price', cand: price, jobUrl: job.url, assoc, known: st.monitor?.price?.minYen ?? jsonFrom(fid), wild, valid: ok('price', nv, price) }));
+      await change('price', prior ?? (old ? { minYen: old } : null), nv, price, changedTerms ? 'review' : decideApply({ level, field: 'price', cand: price, jobUrl: job.url, assoc, known: st.monitor?.price?.minYen ?? jsonFrom(fid), wild, valid: ok('price', nv, price) }));
     }
   }
   if (hr) {
@@ -1008,6 +1035,9 @@ async function selftest() {
   t('hours business-only => medium', pickHours(extractHours(rows('<p>温泉 営業時間 9:00～21:00</p>')))?.confidence === 'medium');
   t('hours R6: restaurant/phone/morning-only/split/weekday-only rows rejected', extractHours(rows('<p>営業時間 11:30~13:30(オーダーストップ13:00)</p><p>TEL.0570-039866(営業時間/月~金 10:00-17:00)</p><p>日帰り 朝湯5:00~9:00</p><p>入浴時間:15:00~21:00/6:00~7:00</p><p>営業時間 平日 10:00~17:00 温泉</p><p>営業時間 10:00~17:00 フロント</p>')).length === 0);
   t('hours R6: bath-labelled business hours and plain day-use still extracted', extractHours(rows('<p>温泉 営業時間 10:00~22:00</p>')).length === 1 && extractHours(rows('<p>日帰り入浴 10:00~15:00</p>')).length === 1);
+  t('bath links: dedicated page included, dining and external links ignored', pickBathLinks('<a href="/dayuse">日帰り入浴</a><a href="/dining">日帰りランチ</a><a href="https://else.example/bath">入浴案内</a>', 'https://e.com/').join() === 'https://e.com/dayuse');
+  t('hours: split labels and full-width times are recognized', pickHours(extractHours(bathHoursRows(rows('<dl><dt>日帰り入浴時間</dt><dd>１０：００～１５：００</dd></dl>'))))?.open === '10:00');
+  t('hours: a single weekday range is review-only', pickHours(extractHours(rows('<p>日帰り入浴 平日 10:00～15:00</p>')))?.confidence === 'medium');
   t('hours reject checkin/LO/unlabelled', extractHours(rows('<p>チェックイン 15:00～18:00</p><p>日帰り入浴 最終受付 14:00～15:00</p><p>10:00～15:00</p>')).length === 0);
   t('parseDate', parseDate('2026.11.3 お知らせ') === '2026-11-03' && parseDate('令和8年4月1日') === '2026-04-01' && parseDate('11月3日') === null);
   const html = '<h2>お知らせ</h2><ul><li><a href="/n/1">2026.11.05 年末年始の営業について</a></li><li>2026年11月01日 設備点検のため臨時休業します</li></ul><p>© 2026</p>';
@@ -1098,6 +1128,10 @@ async function selftest() {
   mem.changes.length = 0; mem.snaps.clear();
   await jobPriceHours(job, stub({ dayH: '9:00～21:00', monitor: { price: { minYen: 12000 } } }));
   t('policy: equal to stored => no change rows', mem.changes.length === 0);
+  reset();
+  page('<p>１泊２食 お一人様 １２，０００円〜</p>');
+  await jobPriceHours(job, stub({ monitor: { price: { kind: 'per-person-room-only', minYen: 12000, unit: 'person/night' } } }));
+  t('policy: same full-width price with changed meal basis goes to review', st()('price') === 'pending_review' && mem.changes[0]?.new_value.kind === 'per-person-2meals' && mem.records.length === 0);
   const n0 = { title: '臨時休業のお知らせ', original_excerpt: '臨時休業', notice_date: '2026-11-20', summary_ko: '임시 휴업', source_url: 'https://e.com/news' };
   process.env.AUTO_PUBLISH_NOTICES = 'on';
   const nt = Date.parse('2026-11-23');

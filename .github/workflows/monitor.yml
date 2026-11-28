@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 40
     env:
       HAS_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
-      HAS_RAKUTEN: ${{ secrets.RAKUTEN_APP_ID != '' }}
+      HAS_RAKUTEN: ${{ secrets.RAKUTEN_APP_ID != '' && secrets.RAKUTEN_ACCESS_KEY != '' }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -34,7 +34,7 @@ jobs:
           AUTO_APPLY: ${{ vars.AUTO_APPLY || 'strict' }}
           AUTO_PUBLISH_NOTICES: ${{ vars.AUTO_PUBLISH_NOTICES || 'on' }}
           AI_MAX_IMAGES: ${{ vars.AI_MAX_IMAGES || '20' }}
-      # Optional: Rakuten Travel reference prices into the separate ota_prices table (skipped until the RAKUTEN_APP_ID secret exists; never fails the run).
+      # Optional: Rakuten Travel reference prices into the separate ota_prices table (skipped until both Rakuten secrets exist; never fails the run).
       - if: env.HAS_KEY == 'true' && env.HAS_RAKUTEN == 'true'
         continue-on-error: true
         run: node tools/ota/rakuten.mjs --limit 40
@@ -42,6 +42,7 @@ jobs:
           SUPABASE_URL: https://frncsllpkxrsgxyqsfwd.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
       - name: Report failure
         if: failure()
         run: echo "::error::monitor run failed - see the log above and the red banner on /admin/monitor"

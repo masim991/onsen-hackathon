@@ -119,7 +119,7 @@
     }};
   }
   // 목록 화면 골격: 필터 폼 + 목록 + 페이저. build(query)는 REST 경로, row(r)는 항목 노드.
-  function listView({filters, path, row, empty, initial = {}}) {
+  function listView({filters, path, row, empty, initial = {}, loadPage}) {
     const state = {page: 0}, box = el('div', {}), status = msgBox(), form = el('form', {class: 'tools'}), pg = pager(state, () => run());
     let sequence = 0;
     const ctl = {};
@@ -132,7 +132,8 @@
       say(status, '불러오는 중…');
       try {
         const v = Object.fromEntries(Object.entries(ctl).map(([k, n]) => [k, n.value]));
-        const {data, total} = await api(`${path(v)}&limit=${SIZE}&offset=${state.page * SIZE}`, {count: true});
+        const offset = state.page * SIZE;
+        const {data, total} = await (loadPage ? loadPage(path(v), v, offset) : api(`${path(v)}&limit=${SIZE}&offset=${offset}`, {count: true}));
         if (request !== sequence) return;
         box.replaceChildren(...(data.length ? data.map((r) => row(r, run)) : [el('p', {class: 'msg'}, empty || '데이터가 없습니다.')]));
         pg.update(total, data.length); say(status, '');
@@ -447,20 +448,47 @@
   }
 
   // ---- 탭: 오류 로그 ----
+  async function loadLogPage(path, filters, offset) {
+    if (filters.group !== 'yes') return api(`${path}&limit=${SIZE}&offset=${offset}`, {count: true});
+    const groups = new Map(), records = [];
+    // Anchor to the first page so new inserts cannot shift later pages.
+    let before = '';
+    for (;;) {
+      const {data} = await api(`${path}${before}&limit=500`);
+      for (const log of data) {
+        if (!['warn', 'error'].includes(log.level) || !log.error_cause) { records.push(log); continue; }
+        const key = JSON.stringify([log.facility_id, log.job_kind, log.level, log.result, log.error_cause]);
+        const group = groups.get(key);
+        if (group) { group.count++; group.first = log.ts; }
+        else {
+          const entry = {...log, count: 1, first: log.ts};
+          groups.set(key, entry); records.push(entry);
+        }
+      }
+      if (data.length < 500) break;
+      const last = data.at(-1), ts = encodeURIComponent(last.ts);
+      before = `&and=(or(ts.lt.${ts},and(ts.eq.${ts},id.lt.${last.id})))`;
+    }
+    return {data: records.slice(offset, offset + SIZE), total: records.length};
+  }
+
   function viewLogs(initial = {}) {
     const v = listView({
-      initial: {level: 'error', ...initial},
+      initial: {level: 'error', days: '7', group: 'yes', ...initial},
+      loadPage: loadLogPage,
       filters: [['fid', '시설 id', el('input', {maxlength: 80})], ['kind', '종류', sel('kind', [['', '전체'], ...KINDS.map((k) => [k, KIND_KO[k]])])], ['result', '결과', el('input', {maxlength: 40, placeholder: 'failed, skipped…'})],
-        ['level', '수준', sel('level', [['', '전체'], ['info', 'info'], ['warn', 'warn'], ['error', 'error']])], ['q', '본문 검색', el('input', {maxlength: 60})]],
-      path: (v) => `monitor_logs?select=*&order=ts.desc${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}${v.kind ? `&job_kind=eq.${v.kind}` : ''}${clean(v.result) ? `&result=ilike.*${encodeURIComponent(clean(v.result))}*` : ''}${v.level ? `&level=eq.${v.level}` : ''}${clean(v.q) ? `&or=(error_cause.ilike.*${encodeURIComponent(clean(v.q))}*,result.ilike.*${encodeURIComponent(clean(v.q))}*)` : ''}`,
+        ['level', '수준', sel('level', [['', '전체'], ['info', 'info'], ['warn', 'warn'], ['error', 'error']])],
+        ['days', '기간', sel('days', [['1', '최근 24시간'], ['7', '최근 7일'], ['30', '최근 30일']])],
+        ['group', '보기', sel('group', [['yes', '반복 오류 묶기'], ['', '개별 기록']])], ['q', '본문 검색', el('input', {maxlength: 60})]],
+      path: (v) => `monitor_logs?select=*&order=ts.desc,id.desc&ts=gte.${new Date(Date.now() - Number(v.days) * 864e5).toISOString()}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}${v.kind ? `&job_kind=eq.${v.kind}` : ''}${clean(v.result) ? `&result=ilike.*${encodeURIComponent(clean(v.result))}*` : ''}${v.level ? `&level=eq.${v.level}` : ''}${clean(v.q) ? `&or=(error_cause.ilike.*${encodeURIComponent(clean(v.q))}*,result.ilike.*${encodeURIComponent(clean(v.q))}*)` : ''}`,
       row: (l) => el('article', {class: 'item record-item'},
         el('div', {class: 'record-heading'}, tag(l.level, l.level === 'error' ? 'bad' : l.level === 'warn' ? 'warn' : ''),
-          el('strong', {}, `${KIND_KO[l.job_kind] || l.job_kind || '시스템'} · ${l.result || '기록'}`), el('span', {class: 'meta'}, when(l.ts))),
-        el('div', {class: 'meta record-facility'}, l.facility_id || '시설 없음', l.job_id ? ` · 작업 #${l.job_id}` : ''),
+          el('strong', {}, `${KIND_KO[l.job_kind] || l.job_kind || '시스템'} · ${l.result || '기록'}`), el('span', {class: 'meta'}, l.count > 1 ? `마지막 ${when(l.ts)}` : when(l.ts))),
+        el('div', {class: 'meta record-facility'}, l.facility_id || '시설 없음', l.count > 1 ? ` · ${l.count}건 · 최초 ${when(l.first)}` : l.job_id ? ` · 작업 #${l.job_id}` : ''),
         l.error_cause ? el('p', {class: 'record-preview'}, l.error_cause) : null,
         l.meta ? el('details', {class: 'record-details'}, el('summary', {}, '상세 데이터'), el('pre', {}, pretty(l.meta))) : null)});
     const quick = el('div', {class: 'quick-filters'}, [['error', '오류'], ['warn', '경고'], ['', '전체 로그']].map(([level, label]) => el('button', {type: 'button', class: 'btn', on: {click: () => v.setFilters({level})}}, label)));
-    return {node: el('div', {}, el('h2', {}, '오류 로그'), el('p', {class: 'msg'}, '오류를 먼저 보여 줍니다. 시설 id나 본문으로 검색하고, 상세 데이터는 필요한 기록만 펼치세요.'), quick, v.node), run: v.run};
+    return {node: el('div', {}, el('h2', {}, '오류 로그'), el('p', {class: 'msg'}, '일반 로그는 30일 보존합니다. 묶은 기록에는 선택한 기간의 발생 횟수와 최초·마지막 시각이 표시됩니다.'), quick, v.node), run: v.run};
   }
 
   // ---- 탭: AI 사용량 ----
