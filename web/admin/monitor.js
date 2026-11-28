@@ -369,22 +369,85 @@
     await load(); return root;
   }
 
+  const LOCAL_CATALOG_PHOTO = /^images\/[a-z\d_-]+(?:\/[a-z\d_-]+)*(?:\.[a-z\d_-]+)*\.(?:jpg|jpeg|png|webp)$/i;
+  const COMMONS_CATALOG_PHOTO = /^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/[a-f\d]\/[a-f\d]{2}\/[a-z\d_%().!,~+-]+\.(?:jpg|jpeg|png|webp)$/i;
+  const CATALOG_LICENSES = ['CC BY 4.0', 'CC BY-SA 4.0', 'CC BY 3.0', 'CC BY-SA 3.0', 'CC BY 2.0', 'CC BY-SA 2.0', 'CC0 1.0', 'Public domain', 'Permission granted'];
+  const catalogPhoto = (p) => Array.isArray(p.catalog) ? p.catalog[0] : p.catalog;
+
+  function catalogApproval(p, rerun, box) {
+    if (['logo_review', 'logo_approved', 'rejected', 'check_failed'].includes(p.publish_state)
+      || ['logo', 'map_doc'].includes(p.ai_label) || p.license_status === 'rejected') return null;
+    const current = catalogPhoto(p);
+    const input = (value, max, placeholder) => {
+      const n = el('input', {required: true, maxlength: max, placeholder}); n.value = value || ''; return n;
+    };
+    const commons = COMMONS_CATALOG_PHOTO.test(p.image_url || '');
+    const image = input(current?.image_path || (commons ? p.image_url : ''), 450, 'images/파일명.jpg');
+    const source = input(current?.metadata?.source || (commons ? 'https://commons.wikimedia.org/wiki/File:' + p.image_url.split('/').at(-1) : ''), 450, 'https://원출처');
+    const caption = input(current?.caption, 200);
+    const author = input(current?.author, 120);
+    const license = sel('catalog_license', [['', '선택'], ...CATALOG_LICENSES.map((l) => [l, l])]);
+    license.required = true;
+    license.value = current?.license || '';
+    const permission = input(current?.license === 'Permission granted' ? current.metadata?.terms : '', 450, 'https://재게시-허가-문서');
+    const permissionField = field('공개 가능한 재게시 허가 문서', permission);
+    const syncPermission = () => { permissionField.hidden = license.value !== 'Permission granted'; permission.required = !permissionField.hidden; };
+    license.addEventListener('change', syncPermission);
+    syncPermission();
+    const confirmed = el('input', {type: 'checkbox', required: true});
+    const submit = el('button', {type: 'submit', class: 'btn primary'}, current ? '공개 정보 수정' : '승인하고 사이트에 반영');
+    const form = el('form', {on: {submit: async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      say(box, '사진을 확인하는 중입니다.');
+      try {
+        const imagePath = image.value.trim();
+        if (LOCAL_CATALOG_PHOTO.test(imagePath)) {
+          const response = await fetch(new URL('../' + imagePath, document.baseURI), {cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(10000)});
+          if (!response.ok || !/^image\//.test(response.headers.get('content-type') || '')) throw new Error('사이트에 배포된 이미지 파일을 찾을 수 없습니다.');
+          const bytes = await response.arrayBuffer();
+          if (bytes.byteLength > 5 * 1024 * 1024) throw new Error('공개 사진은 5MB 이하여야 합니다.');
+          const hash = await crypto.subtle.digest('SHA-256', bytes);
+          const hex = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('');
+          if (hex !== p.sha256) throw new Error('배포된 파일이 승인 대상의 원본과 일치하지 않습니다.');
+        } else if (imagePath !== p.image_url || !COMMONS_CATALOG_PHOTO.test(imagePath)) {
+          throw new Error('사이트에 배포된 images/ 파일 또는 후보의 Wikimedia Commons 원본을 입력하세요.');
+        }
+        const {data} = await api('rpc/publish_monitor_photo', {method: 'POST', body: {
+          p_id: p.id, p_facility_id: p.facility_id, p_asset_url: p.image_url, p_sha256: p.sha256,
+          p_image_path: imagePath, p_caption: caption.value.trim(), p_author: author.value.trim(),
+          p_license: license.value, p_source_url: source.value.trim(),
+          p_permission_url: permission.required ? permission.value.trim() : null
+        }});
+        if (data !== true) throw new Error('사진 공개를 확인할 수 없습니다.');
+        rerun();
+      } catch (error) { say(box, error.message, 'err'); }
+      finally { submit.disabled = false; }
+    }}}, el('p', {class: 'meta'}, '재게시 허가가 있는 사이트 파일이나 Commons 원본을 등록합니다. 비공개 시설은 시설 공개 후 사이트에 표시됩니다.'),
+    field('공개 이미지 경로', image), field('원출처 주소', source), field('사진 설명', caption), field('촬영자·저작자', author),
+    field('라이선스', license), permissionField, field('이 시설의 사진이며 재게시 조건을 확인했습니다', confirmed),
+    el('div', {class: 'acts'}, submit));
+    return el('details', {class: 'record-details'}, el('summary', {}, current ? '사이트 공개 정보 수정' : '사이트 공개 정보 입력'), form);
+  }
+
   // ---- 탭: 이미지 ----
   function viewPhotos() {
     return listView({
       filters: [['lic', '라이선스', sel('lic', [['', '전체'], ['unverified', 'unverified'], ['verified', 'verified'], ['rejected', 'rejected']])], ['fid', '시설 id', el('input', {maxlength: 80})]],
-      path: (v) => `photo_assets?select=*&order=discovered_at.desc${v.lic ? `&license_status=eq.${v.lic}` : ''}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}`,
+      path: (v) => `photo_assets?select=*,catalog:onsen_photos!onsen_photos_monitor_asset_id_fkey(image_path,caption,author,license,metadata)&order=discovered_at.desc${v.lic ? `&license_status=eq.${v.lic}` : ''}${clean(v.fid) ? `&facility_id=ilike.*${encodeURIComponent(clean(v.fid))}*` : ''}`,
       row: (p, rerun) => {
         const box = msgBox(), lic = sel('license_status', ['unverified', 'verified', 'rejected'].map((s) => [s, s])); lic.value = p.license_status;
         const go = (body) => async () => { const r = await patch(`photo_assets?id=eq.${p.id}`, body, box); if (r) rerun(); };
+        const current = catalogPhoto(p);
         // 라이선스가 verified 에서 벗어나면 공개도 같이 내린다(공개는 verified 일 때만 가능).
         const saveLic = el('button', {type: 'button', class: 'btn', on: {click: async () => go(lic.value === 'verified' ? {license_status: 'verified'} : {license_status: lic.value, published: false})()}}, '라이선스 저장');
-        return el('div', {class: 'item'}, el('div', {}, tag(p.published ? '공개' : '비공개', p.published ? 'good' : 'warn'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
+        return el('div', {class: 'item'}, el('div', {}, tag(current ? '사이트 사진 등록됨' : '사이트 사진 미등록', current ? 'good' : 'warn'), ` #${p.id} · ${p.facility_id} · ${when(p.discovered_at)}`),
           el('div', {class: 'photo-item-layout'}, photoPreview(p), el('div', {class: 'photo-item-details'},
             el('div', {class: 'meta'}, '이미지 주소: ', link(p.image_url)), el('div', {class: 'meta'}, `sha256 ${p.sha256}`),
             p.ai_checked_at ? el('div', {class: 'meta'}, `AI 분류: ${LABEL_KO[p.ai_label] || p.ai_label || '-'} (${p.ai_confidence ?? '-'}) · 상태 ${STATE_KO[p.publish_state] || p.publish_state}`) : null,
             field('라이선스 상태', lic), el('div', {class: 'acts'}, saveLic,
-              el('button', {type: 'button', class: 'btn primary', disabled: p.license_status !== 'verified', title: p.license_status !== 'verified' ? '라이선스 확인(verified) 후에만 공개할 수 있습니다' : '', on: {click: go({published: !p.published})}}, p.published ? '공개 해제' : '공개')), box)));
+              p.published ? el('button', {type: 'button', class: 'btn', on: {click: go({published: false})}}, '공개 해제') : null),
+            catalogApproval(p, rerun, box), box)));
       }});
   }
 
@@ -441,8 +504,8 @@
             el('div', {class: 'meta'}, `AI 신뢰도 ${p.ai_confidence ?? '-'} · ${p.ai_reason || '-'}`),
             el('div', {class: 'meta'}, `라이선스 ${p.license_status} · 출처 ${p.license_source || '미기록'}${p.license_note ? ` · ${p.license_note}` : ''}`),
             el('div', {class: 'meta'}, '이미지 주소: ', link(p.image_url)),
-            el('p', {class: 'meta'}, logo ? '로고는 시설 공식 사이트 링크 옆 작은 식별용으로만 쓸 후보입니다. 승인해도 사진으로 공개되지는 않습니다.' : '공식/출처 불명 사진은 공개하지 않고 공식 페이지 링크만 둡니다. 사용 허락·라이선스를 직접 확인한 경우에만 승인하세요(승인 = verified + 공개).'),
-            el('div', {class: 'acts'}, logo ? act('로고 사용 승인', 'primary', {publish_state: 'logo_approved'}, '이 로고를 식별용 후보로 승인합니다.') : act('라이선스 확인함 · 승인(공개)', 'primary', {license_status: 'verified', publish_state: 'approved', published: true}, '사용 허락/라이선스를 직접 확인했고 공개합니다. 계속할까요?'),
+            logo ? el('p', {class: 'meta'}, '로고는 시설 공식 사이트 링크 옆 작은 식별용 후보로 승인할 수 있습니다.') : catalogApproval(p, rerun, box),
+            el('div', {class: 'acts'}, logo ? act('로고 사용 승인', 'primary', {publish_state: 'logo_approved'}, '이 로고를 식별용 후보로 승인합니다.') : null,
               act('반려', 'danger', {publish_state: 'rejected', published: false})), box)));
       }});
   }

@@ -16,19 +16,30 @@
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clean = v => typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map(clean) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clean(x)])) : v;
   const safeUrl = v => { try { const u = new URL(v); return /^https?:$/.test(u.protocol) ? esc(u.href) : ''; } catch { return ''; } };
-  async function readRows(table, order, filter = '') {
+  async function readRows(table, order, filter = '', select = '*') {
     const rows = [];
-    for (let offset = 0; ; offset += 1000) {
-      const response = await fetch(`${project}/rest/v1/${table}?select=*&order=${order}${filter}&offset=${offset}&limit=1000`, {headers:{apikey:key, Authorization:`Bearer ${key}`}, signal:AbortSignal.timeout(8000)});
+    let total;
+    for (;;) {
+      const offset = rows.length;
+      const response = await fetch(`${project}/rest/v1/${table}?select=${select}&order=${order}${filter}&offset=${offset}&limit=1000`, {
+        headers:{apikey:key, Authorization:`Bearer ${key}`, ...(offset === 0 ? {Prefer:'count=exact'} : {})},
+        cache:'no-store',
+        signal:AbortSignal.timeout(8000)
+      });
       if (!response.ok) throw new Error(`${table}: HTTP ${response.status}`);
       const batch = await response.json();
       if (!Array.isArray(batch)) throw new Error('Invalid catalog response');
+      if (offset === 0) {
+        const count = /\/(\d+)$/.exec(response.headers.get('Content-Range') || '');
+        if (count) total = Number(count[1]);
+      }
       rows.push(...batch);
-      if (batch.length < 1000) return rows;
+      if (total !== undefined && rows.length > total) throw new Error(`${table}: count changed while reading`);
+      if (rows.length === total || (!batch.length && total === undefined)) return rows;
+      if (!batch.length) throw new Error(`${table}: incomplete result`);
     }
   }
   // 승인(published)된 공지만: RLS가 익명에게는 그 행만 보여 준다. 값은 받는 즉시 이스케이프·URL 검증한다.
-  const NOTICE_Q = 'facility_notices?select=id,facility_id,title,notice_date,summary_ko,source_url,detected_at&published=eq.true&summary_ko=not.is.null&order=detected_at.desc&limit=500';
   const rest = async (path) => {
     const response = await fetch(`${project}/rest/v1/${path}`, {headers:{apikey:key, Authorization:`Bearer ${key}`}, cache:'no-store', signal:AbortSignal.timeout(8000)});
     if (!response.ok) throw new Error(`${path.split('?')[0]}: HTTP ${response.status}`);
@@ -36,7 +47,7 @@
     if (!Array.isArray(body)) throw new Error('Invalid response');
     return body;
   };
-  const readNotices = () => rest(NOTICE_Q);
+  const readNotices = () => readRows('facility_notices', 'detected_at.desc,id.desc', '&published=eq.true&summary_ko=not.is.null', 'id,facility_id,title,notice_date,summary_ko,source_url,detected_at');
   const readRevision = async () => {
     const rows = await rest('onsen_catalog_revision?select=revision&id=eq.true&limit=1');
     if (rows.length !== 1 || !Number.isSafeInteger(rows[0].revision)) throw new Error('Invalid catalog revision');
@@ -64,13 +75,13 @@
       if (strict && (photos === null || notices === null)) throw new Error('Incomplete catalog refresh');
       const after = await readRevision().catch(() => null);
       if (before === after && after !== null) return {rows, photos, notices, revision:after};
-      if (before === null && after === null) return {rows, photos, notices, revision:null};
-      if (attempt === 1) return {rows, photos, notices, revision:null};
+      if (!strict && before === null && after === null) return {rows, photos, notices, revision:null};
     }
+    throw new Error('Catalog changed while loading');
   }
   function applyCatalog({rows, photos, notices}, partial) {
-    if (notices) setNotices(notices);
     const publishedIds = new Set(rows.map(row => String(row.id)));
+    if (notices) setNotices(notices.filter(notice => publishedIds.has(notice.facility_id)));
     if (!partial) for (let i=RAW.length-1; i>=0; i--) if (!publishedIds.has(String(RAW[i].id))) RAW.splice(i,1);
     const local = new Map(RAW.map(r => [String(r.id), r]));
     for (const row of rows) {
@@ -158,7 +169,8 @@
     catch (error) {
       document.documentElement.dataset.catalog = 'local'; console.warn('Supabase catalog unavailable; using local data.',error);
       const snapshot = await jget('data/catalog-snapshot.json');
-      if (Array.isArray(snapshot?.rows) && snapshot.rows.length >= 400 && Array.isArray(snapshot.photos) && Array.isArray(snapshot.notices)) {
+      if (Array.isArray(snapshot?.rows) && snapshot.rows.length && Array.isArray(snapshot.photos) && Array.isArray(snapshot.notices)) {
+        snapshot.photos = snapshot.photos.filter(photo => photo.metadata?.monitor_approved !== true);
         applyCatalog(snapshot, false);
         document.documentElement.dataset.catalog = 'local';
         showCatalogState(true, snapshot.generated);

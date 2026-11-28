@@ -50,16 +50,28 @@ export async function runBatch({ facilities, appId, accessKey, fetchImpl, put, s
   }
   return st;
 }
-function restSink() {
-  const base = (process.env.SUPABASE_URL || 'https://frncsllpkxrsgxyqsfwd.supabase.co').replace(/\/$/, ''), key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+function restSink(fetchImpl = fetch, key = process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  const base = (process.env.SUPABASE_URL || 'https://frncsllpkxrsgxyqsfwd.supabase.co').replace(/\/$/, '');
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
   const h = { apikey: key, authorization: 'Bearer ' + key, 'content-type': 'application/json' };
-  const rq = async (method, path, body, prefer) => { const r = await fetch(base + '/rest/v1/' + path, { method, headers: { ...h, ...(prefer ? { prefer } : {}) }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(30000) }); if (!r.ok) throw new Error(method + ' ' + path.split('?')[0] + ' HTTP ' + r.status); return r.status === 204 ? null : r.json(); };
+  const rq = async (method, path, body, prefer) => { const r = await fetchImpl(base + '/rest/v1/' + path, { method, headers: { ...h, ...(prefer ? { prefer } : {}) }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(30000) }); if (!r.ok) throw new Error(method + ' ' + path.split('?')[0] + ' HTTP ' + r.status); return r.status === 204 ? null : r.json(); };
+  async function readAll(path) {
+    const rows = [];
+    for (;;) {
+      const batch = await rq('GET', `${path}&offset=${rows.length}&limit=1000`);
+      if (!Array.isArray(batch)) throw new Error('Invalid Supabase page');
+      if (!batch.length) return rows;
+      rows.push(...batch);
+    }
+  }
   return {
     // stay-capable public facilities without an official price, never-checked first, then oldest check
     async pick(n) {
-      const facs = await rq('GET', 'onsen_facilities?unlisted=eq.false&select=id,name_ja,prefecture,record&limit=2000');
-      const checks = new Map((await rq('GET', 'ota_prices?ota=eq.rakuten&select=facility_id,checked_at&limit=5000')).map((x) => [x.facility_id, x.checked_at]));
+      const [facs, prices] = await Promise.all([
+        readAll('onsen_facilities?unlisted=eq.false&select=id,name_ja,prefecture,record&order=id.asc'),
+        readAll('ota_prices?ota=eq.rakuten&select=facility_id,checked_at&order=facility_id.asc')
+      ]);
+      const checks = new Map(prices.map((x) => [x.facility_id, x.checked_at]));
       const need = facs.filter((f) => f.name_ja && f.record && f.record.stay === '可' && !(f.record.monitor && f.record.monitor.price) && !(Number(f.record.room) > 0));
       need.sort((a, b) => String(checks.get(a.id) || '').localeCompare(String(checks.get(b.id) || '')));
       return need.slice(0, n).map((f) => ({ id: f.id, name_ja: f.name_ja, prefecture: f.prefecture }));
@@ -82,6 +94,13 @@ async function selftest() {
   t('batch: one matched, one nomatch, both recorded', st.matched === 1 && st.nomatch === 1 && puts.length === 2 && puts[0][1] === 19000 && puts[1][1] === null);
   const stop = await runBatch({ facilities: [fac, fac], appId: 'BAD', fetchImpl: async () => ({ ok: false, status: 403 }), put: async () => {}, sleepMs: 0 });
   t('batch: bad key (403) stops the run', stop.errors === 1 && stop.checked === 0);
+  const facilities = Array.from({length:2729}, (_, i) => ({id:`f-${i}`, name_ja:'温泉宿', prefecture:'長野県', record:{ stay:'可' }}));
+  const prices = facilities.slice(0, -1).map(f => ({facility_id:f.id, checked_at:'2026-11-28T00:00:00Z'}));
+  const sink = restSink(async (url) => {
+    const u = new URL(url), offset = Number(u.searchParams.get('offset'));
+    return {ok:true, status:200, json:async () => (u.pathname.endsWith('/ota_prices') ? prices : facilities).slice(offset, offset + 437)};
+  }, 'TEST');
+  t('batch selection includes all facilities with a smaller server page cap', (await sink.pick(1))[0]?.id === facilities.at(-1).id);
   console.log(bad ? 'SELFTEST FAILED (' + bad + ')' : 'SELFTEST PASSED'); process.exit(bad ? 1 : 0);
 }
 async function main() {
