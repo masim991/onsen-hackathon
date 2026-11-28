@@ -87,7 +87,7 @@ const I18N = {
     sites: { title: '다른 예약 사이트에서 보기', jalan: '자란넷', rakuten: '라쿠텐 트래블', rating: (s, c) => `평점 ${s}${c ? `, 후기 ${c}건` : ''}`, note: '요금과 빈 객실은 날짜에 따라 달라 각 사이트에서 확인합니다.', ratingNote: (d) => ` 평점은 ${d}에 본 값입니다.` },
     must: '꼭 확인할 것', prefer: '취향에 따라 볼 것', know: '알아 두면 좋은 것',
     row: {
-      dayHours: '당일 입욕 시간', noDayTake: '당일 입욕 받지 않음', privateBath: '대절탕 예약·요금', dayUse: (d) => `당일 이용 안내${d ? ` (${d} 확인)` : ''}`, closed: '휴관 안내', mixed: '남녀 구분·혼욕',
+      address: '주소', dayHours: '당일 입욕 시간', noDayTake: '당일 입욕 받지 않음', privateBath: '대절탕 예약·요금', dayUse: (d) => `당일 이용 안내${d ? ` (${d} 확인)` : ''}`, closed: '휴관 안내', mixed: '남녀 구분·혼욕',
       payment: '결제 수단', cardOk: '카드 가능', access: '가는 길·송영', shuttle: '송영 있음', towels: '수건·세면도구', open: '노천탕', priv: '대절탕', room: '객실 노천탕',
       flow: '원천 방류', flowYes: '방류', flowNo: '방류 아님', color: '물 색상', temp: '원천 온도', tempNote: '탕 온도와 다름', solo: '1인 숙박', sudo: '식사 없이 숙박', ci: '체크인·체크아웃', park: '주차장',
     },
@@ -181,7 +181,7 @@ const I18N = {
     sites: { title: 'ほかの予約サイトで見る', jalan: 'じゃらん', rakuten: '楽天トラベル', rating: (s, c) => `評価 ${s}${c ? `、口コミ ${c}件` : ''}`, note: '料金と空室は日付によって変わるため、各サイトでご確認ください。', ratingNote: (d) => ` 評価は${d}時点の値です。` },
     must: '必ず確認したいこと', prefer: '好みに応じて確認すること', know: '知っておくと役立つこと',
     row: {
-      dayHours: '日帰り入浴の時間', noDayTake: '日帰り入浴は受け付けていません', privateBath: '貸切風呂の予約・料金', dayUse: (d) => `日帰り利用の案内${d ? `（${d}確認）` : ''}`, closed: '休館日', mixed: '男女別・混浴',
+      address: '住所', dayHours: '日帰り入浴の時間', noDayTake: '日帰り入浴は受け付けていません', privateBath: '貸切風呂の予約・料金', dayUse: (d) => `日帰り利用の案内${d ? `（${d}確認）` : ''}`, closed: '休館日', mixed: '男女別・混浴',
       payment: '支払い方法', cardOk: 'カード利用可', access: 'アクセス・送迎', shuttle: '送迎あり', towels: 'タオル・アメニティ', open: '露天風呂', priv: '貸切風呂', room: '露天風呂付き客室',
       flow: '源泉かけ流し', flowYes: 'かけ流し', flowNo: 'かけ流しではない', color: 'お湯の色', temp: '源泉温度', tempNote: '浴槽の湯温とは異なります', solo: '1人宿泊', sudo: '素泊まり', ci: 'チェックイン／アウト', park: '駐車場',
     },
@@ -275,7 +275,7 @@ const I18N = {
     sites: { title: 'See on other booking sites', jalan: 'Jalan', rakuten: 'Rakuten Travel', rating: (s, c) => `Rating ${s}${c ? `, ${c} reviews` : ''}`, note: 'Rates and availability vary by date, so check each site.', ratingNote: (d) => ` Ratings were seen on ${d}.` },
     must: 'Check before you go', prefer: 'Depending on your preferences', know: 'Good to know',
     row: {
-      dayHours: 'Day-use hours', noDayTake: 'Day-use bathing not accepted', privateBath: 'Private bath booking and rates', dayUse: (d) => `Day-use information${d ? ` (checked ${d})` : ''}`, closed: 'Closures', mixed: 'Gender arrangements and mixed bathing',
+      address: 'Address', dayHours: 'Day-use hours', noDayTake: 'Day-use bathing not accepted', privateBath: 'Private bath booking and rates', dayUse: (d) => `Day-use information${d ? ` (checked ${d})` : ''}`, closed: 'Closures', mixed: 'Gender arrangements and mixed bathing',
       payment: 'Payment methods', cardOk: 'Cards accepted', access: 'Access and shuttle', shuttle: 'Shuttle available', towels: 'Towels and amenities', open: 'Open-air bath', priv: 'Private bath', room: 'In-room open-air bath',
       flow: 'Free-flowing water', flowYes: 'Free-flowing', flowNo: 'Not free-flowing', color: 'Water color', temp: 'Source temperature', tempNote: 'differs from bath temperature', solo: 'Solo stay', sudo: 'Room only', ci: 'Check-in / check-out', park: 'Parking',
     },

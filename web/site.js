@@ -77,7 +77,7 @@ const makeFacility = (r) => {
     kind: r.kind || 'unknown', id: String(r.id),
     name: LANG === 'ko' ? r.n : LANG === 'ja' ? (r.jp || UI.unk) : (roman || r.jp || UI.unk),
     alt: LANG === 'ko' ? r.jp : LANG === 'en' && roman ? r.jp : '', // 이름 아래 작은 일본어 표기
-    area: r.a, areaName: areaName(r.a), pref: r.pref, prefName: prefName(r.pref), region, regionName: regionName(region),
+    area: r.a, areaName: areaName(r.a), address: r.address, pref: r.pref, prefName: prefName(r.pref), region, regionName: regionName(region),
     blurb: tr(r.b), img, shots: (PHOTOS[img]?.shots || []).filter((shot) => LOCAL_PHOTOS[shot[0]]), hp: r.hp,
     official, srcUrl: official ? r.srcUrl : SPA(r.id), checked: r.checked || CHECKED,
     monHours: monitorHours(r), day: x.dayStatus || yn(r.day), dayPrice: x.dayPrice === undefined ? dayPrice : x.dayPrice, dayPriceRange: x.dayPrice === undefined && /[~〜～-]/.test(r.dayP || ''), dayHours: tr(x.dayHours === undefined ? (r.dayH || '').replace(/～/g, '~') : x.dayHours), dayNote: tr(x.dayNote || r.dayNote),
@@ -498,7 +498,7 @@ const mapLinkList = (f, T) => {
     const ll = encodeURIComponent(`${c.lat.toFixed(6)},${c.lon.toFixed(6)}`);
     return [[T.mapOpen, `https://www.google.com/maps/search/?api=1&query=${ll}`], [T.mapDir, `https://www.google.com/maps/dir/?api=1&destination=${ll}`]];
   }
-  return [[T.mapOpen, `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(unesc(f.alt || f.name) + ' ' + unesc(f.pref))}`]];
+  return [[T.mapOpen, `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([f.alt || f.name, f.address || f.pref].map(unesc).join(' '))}`]];
 };
 const collator = new Intl.Collator({ ko: 'ko', ja: 'ja', en: 'en' }[LANG], { numeric: true, sensitivity: 'base' });
 // 승인된 공식 공지(db-loader가 받을 때 이스케이프·URL 검증을 마친 값). 없으면 빈 문자열이라 화면이 그대로다.
@@ -541,6 +541,7 @@ function detailHtml(f) {
 
   // 시설 정보 표: 값이 있는 줄만
   const rows = [
+    f.address ? row(R.address, `<span lang="ja">${f.address}</span>`) : '',
     row(R.dayHours, f.day === 'n' ? R.noDayTake : t(f.dayHours)),
     f.monHours && (f.day !== 'n' || f.monHours.label === 'biz') ? row(UI.px.monH[f.monHours.label], monHoursHtml(f)) : '', // 원본 시간은 그대로 두고, 모니터링 시간은 출처·확인일과 함께 별도 줄
     x.privateBath ? row(R.privateBath, sv(x.privateBath)) : '',
