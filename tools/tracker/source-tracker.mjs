@@ -39,7 +39,9 @@ const F = {
 };
 const TOOL = 'OnsenHackathonSourceTracker/1.0';
 const UA = TOOL;
-export const LIM = { timeoutMs: 12000, maxBody: 1.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 2000, robotsMax: 512 * 1024, maxCrawlDelayMs: 30000, changedWindowDays: 14 };
+// Some sites answer 406 unless the Accept header ends with */*  (the HTML types alone are read as "this client takes nothing else").
+const ACCEPT_HTML = 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8';
+export const LIM = { timeoutMs: 20000, robotsTimeoutMs: 10000, maxBody: 1.5 * 1024 * 1024, maxRedirects: 3, hostDelayMs: 2000, robotsMax: 512 * 1024, maxCrawlDelayMs: 30000, changedWindowDays: 14 };
 const DAY = 86400000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const sha = (s, n = 16) => crypto.createHash('sha256').update(s).digest('hex').slice(0, n);
@@ -203,13 +205,19 @@ export function robotsAllows(group, pathQuery) {
 
 // ---------- safe fetch ----------
 const err = (kind, msg) => Object.assign(new Error(msg), { kind });
+const TRANSIENT_DNS = /^(?:EAI_AGAIN|ETIMEOUT|ESERVFAIL|ECONNREFUSED)$/;
 function safeLookup(hostname, opts, cb) {
-  dns.lookup(hostname, { all: true, verbatim: true }, (e, addrs) => {
-    if (e) return cb(e);
+  const attempt = (left) => dns.lookup(hostname, { all: true, verbatim: true }, (e, addrs) => {
+    if (e) {
+      if (left > 0 && TRANSIENT_DNS.test(e.code || '')) { setTimeout(() => attempt(left - 1), 300); return; } // one short retry: resolvers on CI runners answer EAI_AGAIN under load
+      return cb(e);
+    }
     if (!addrs.length || addrs.some((a) => isPrivateIp(a.address))) return cb(err('blocked', 'private address'));
-    if (opts && opts.all) return cb(null, addrs);
-    cb(null, addrs[0].address, addrs[0].family);
+    const sorted = [...addrs].sort((a, b) => (a.family === b.family ? 0 : a.family === 4 ? -1 : 1)); // IPv4 first: runners have no IPv6 route
+    if (opts && opts.all) return cb(null, sorted);
+    cb(null, sorted[0].address, sorted[0].family);
   });
+  attempt(1);
 }
 const hostChain = new Map(), hostLast = new Map(), hostDelay = new Map();
 function gate(host, fn) { // one request at a time per host, >=2 s apart
@@ -222,7 +230,7 @@ function gate(host, fn) { // one request at a time per host, >=2 s apart
   hostChain.set(host, run.catch(() => {}));
   return run;
 }
-function requestOnce(url, accept, maxBody, anyType) {
+function requestOnce(url, accept, maxBody, anyType, timeoutMs = LIM.timeoutMs) {
   return new Promise((resolve, reject) => {
     const u = new URL(url);
     const mod = u.protocol === 'https:' ? https : http;
@@ -231,22 +239,34 @@ function requestOnce(url, accept, maxBody, anyType) {
     const req = mod.request(u, { method: 'GET', lookup: safeLookup, headers: { 'User-Agent': UA, Accept: accept, 'Accept-Encoding': 'identity', 'Accept-Language': 'ja,en;q=0.8,ko;q=0.5' } }, (res) => {
       const chunks = []; let n = 0;
       if (!anyType && res.statusCode < 300 && !/^(text\/html|application\/xhtml\+xml)/i.test(String(res.headers['content-type'] || ''))) { res.destroy(); return finish(resolve, { res, body: Buffer.alloc(0), truncated: false }); }
-      res.on('data', (c) => { n += c.length; if (n > maxBody) { chunks.push(c.subarray(0, c.length - (n - maxBody))); res.destroy(); finish(resolve, { res, body: Buffer.concat(chunks), truncated: true }); } else chunks.push(c); });
+      // A body over the cap is a usable prefix, not a failure: resolve first, then drop the rest of the stream
+      // (destroy() emits 'aborted'/'error', which used to reject the promise as a network error on large pages).
+      res.on('data', (c) => {
+        n += c.length;
+        if (n > maxBody) { const keep = c.length - (n - maxBody); if (keep > 0) chunks.push(c.subarray(0, keep)); finish(resolve, { res, body: Buffer.concat(chunks), truncated: true }); res.destroy(); return; }
+        chunks.push(c);
+      });
       res.on('end', () => finish(resolve, { res, body: Buffer.concat(chunks), truncated: false }));
       res.on('error', (e) => finish(reject, e));
       res.on('aborted', () => finish(reject, err('unreachable', 'aborted')));
     });
-    const timer = setTimeout(() => { req.destroy(); finish(reject, err('unreachable', 'timeout')); }, LIM.timeoutMs);
+    const timer = setTimeout(() => { req.destroy(); finish(reject, err('unreachable', 'timeout')); }, timeoutMs);
     req.on('error', (e) => finish(reject, e.kind ? e : e.message === 'private address' ? err('blocked', e.message) : /^(?:CERT_|UNABLE_TO_|DEPTH_ZERO|SELF_SIGNED|ERR_TLS|ERR_SSL|ERR_OSSL|HOSTNAME_MISMATCH|ERR_CERT)|ALTNAME/.test(e.code || '') ? err('blocked', 'TLS/certificate: ' + e.code) : err('unreachable', e.code || e.message)));
     req.end();
   });
+}
+// One gated request; a timeout gets a second try (slow shared hosts stall for a few seconds, then answer).
+async function requestWithRetry(url, accept, maxBody, anyType, timeoutMs) {
+  const one = () => gate(new URL(url).host, () => requestOnce(url, accept, maxBody, anyType, timeoutMs));
+  try { return await one(); }
+  catch (e) { if (e.message !== 'timeout') throw e; await sleep(1200); return one(); }
 }
 const robotsCache = new Map();
 function robotsFor(url) {
   const u = new URL(url), key = u.origin;
   if (!robotsCache.has(key)) robotsCache.set(key, (async () => {
     try {
-      const r = await fetchSafe(key + '/robots.txt', { accept: 'text/plain,*/*;q=0.5', maxBody: LIM.robotsMax, skipRobots: true, anyType: true });
+      const r = await fetchSafe(key + '/robots.txt', { accept: 'text/plain,*/*;q=0.5', maxBody: LIM.robotsMax, skipRobots: true, anyType: true, timeoutMs: LIM.robotsTimeoutMs, retryTimeout: false });
       if (r.status >= 500) return { deny: true };
       if (r.status >= 400) return { rules: [], delay: 0 };
       const g = parseRobots(r.body.toString('utf8'));
@@ -257,7 +277,20 @@ function robotsFor(url) {
   return robotsCache.get(key);
 }
 // Follows <=3 redirects; every hop is re-validated (URL filter, robots, DNS->IP guard at connect time).
-export async function fetchSafe(url, { accept = 'text/html,application/xhtml+xml;q=0.9', maxBody = LIM.maxBody, skipRobots = false, anyType = false } = {}) {
+export async function fetchSafe(url, { accept = ACCEPT_HTML, maxBody = LIM.maxBody, skipRobots = false, anyType = false, timeoutMs = LIM.timeoutMs, retryTimeout = true } = {}) {
+  try { return await fetchHops(url, { accept, maxBody, skipRobots, anyType, timeoutMs, retryTimeout }); }
+  catch (e) {
+    // An http:// source whose port is closed while https on the same host answers: retry once over https (reported as finalUrl).
+    const conn = /^(?:timeout|ECONNRESET|ECONNREFUSED|EPIPE|EHOSTUNREACH|ENETUNREACH)$/.test(e.message || '') || /^(?:ECONNRESET|ECONNREFUSED|EPIPE|EHOSTUNREACH|ENETUNREACH)$/.test(e.code || '');
+    if (e.kind === 'unreachable' && conn && /^http:\/\//i.test(String(url))) {
+      const alt = 'https://' + String(url).slice(7);
+      const r = await fetchHops(alt, { accept, maxBody, skipRobots, anyType, timeoutMs, retryTimeout });
+      return { ...r, upgradedFrom: url };
+    }
+    throw e;
+  }
+}
+async function fetchHops(url, { accept, maxBody, skipRobots, anyType, timeoutMs, retryTimeout }) {
   let cur = url;
   for (let hop = 0; hop <= LIM.maxRedirects; hop++) {
     const ok = watchUrl(cur);
@@ -268,7 +301,9 @@ export async function fetchSafe(url, { accept = 'text/html,application/xhtml+xml
       const g = await robotsFor(cur);
       if (g.deny || !robotsAllows(g, u.pathname + u.search)) throw err('blocked', 'robots.txt');
     }
-    const { res, body, truncated } = await gate(u.host, () => requestOnce(cur, accept, maxBody, anyType));
+    const { res, body, truncated } = retryTimeout
+      ? await requestWithRetry(cur, accept, maxBody, anyType, timeoutMs)
+      : await gate(u.host, () => requestOnce(cur, accept, maxBody, anyType, timeoutMs));
     const code = res.statusCode;
     if (code >= 300 && code < 400 && res.headers.location) {
       try { cur = new URL(res.headers.location, cur).href; } catch { throw err('unreachable', 'bad redirect'); }

@@ -669,16 +669,16 @@ async function processJob(job, sink, opts, stats) {
     stats['err:' + cause] = (stats['err:' + cause] || 0) + 1;
     if (e.kind === 'blocked') { // robots / forbidden / SSRF: not retried, not counted as failure
       await sink.finish(job, { status: 'skipped', error: cause }, { last_checked_at: nowIso(), last_status: 'blocked:' + cause, next_check_at: new Date(now() + interval).toISOString() });
-      return log('warn', { ...base, result: 'skipped', error_cause: cause });
+      return log('warn', { ...base, result: 'skipped', error_cause: cause, meta: { detail: errText(e).slice(0, 120) } });
     }
     if (RETRYABLE.has(cause) && job.attempts < MAX_ATTEMPTS) {
       const wait = opts.backoffMin * 60000 * 2 ** (job.attempts - 1);
       await sink.finish(job, { status: 'queued', error: cause, run_after: new Date(now() + wait).toISOString() });
-      return log('warn', { ...base, result: 'retry', error_cause: cause, meta: { attempt: job.attempts } });
+      return log('warn', { ...base, result: 'retry', error_cause: cause, meta: { attempt: job.attempts, detail: errText(e).slice(0, 120) } });
     }
     const fails = (await sink.failCount(job.target_id)) + 1;
     await sink.finish(job, { status: 'failed', error: cause }, { last_checked_at: nowIso(), last_status: 'failed:' + cause, fail_count: fails, next_check_at: new Date(now() + Math.max(interval, Math.min(interval * Math.min(2 ** fails, 8), 7 * 864e5))).toISOString() });
-    log('error', { ...base, result: 'failed', error_cause: cause });
+    log('error', { ...base, result: 'failed', error_cause: cause, meta: { detail: errText(e).slice(0, 120) } });
   }
 }
 async function run(sink, opts) {
