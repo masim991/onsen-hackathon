@@ -134,7 +134,8 @@ async function fetchHops(url, { accept, maxBody, skipRobots, anyType, timeoutMs,
       try { cur = new URL(res.headers.location, cur).href; } catch { throw err('unreachable', 'bad redirect'); }
       continue;
     }
-    if (code === 401 || code === 403 || code === 429) throw err('blocked', 'HTTP ' + code);
+    if (code === 401 || code === 403) throw err('blocked', 'HTTP ' + code);
+    if (code === 429) throw err('unreachable', 'HTTP 429');
     if (code >= 400) throw err('unreachable', 'HTTP ' + code);
     const ct = String(res.headers['content-type'] || '').toLowerCase();
     if (!anyType && !/^(text\/html|application\/xhtml\+xml)/.test(ct)) throw err('blocked', 'not html');

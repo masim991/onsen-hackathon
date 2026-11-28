@@ -54,6 +54,7 @@ function log(level, f = {}) {
 export function causeOf(e) {
   const m = String(e.message || e);
   if (e.kind === 'blocked') return /robots/.test(m) ? 'robots' : /^HTTP/.test(m) ? 'http_blocked' : /TLS/.test(m) ? 'tls' : /not html/.test(m) ? 'not_html' : 'ssrf_refused';
+  if (/^HTTP 429/.test(m)) return 'http_429'; // rate limited: retry with backoff
   if (/^HTTP 4/.test(m)) return 'http_4xx';
   if (/^HTTP 5/.test(m)) return 'http_5xx';
   if (/timeout/i.test(m)) return 'timeout';
@@ -61,7 +62,7 @@ export function causeOf(e) {
   if (/too many redirects|bad redirect/.test(m)) return 'redirect';
   return e.kind === 'unreachable' ? 'network' : 'internal';
 }
-const RETRYABLE = new Set(['timeout', 'dns', 'http_5xx', 'network']);
+const RETRYABLE = new Set(['timeout', 'dns', 'http_5xx', 'http_429', 'network']);
 
 // ---------- page cache (one fetch per URL per process) ----------
 export const pages = new Map(); // exported for the offline selftest (pre-seeded pages)
